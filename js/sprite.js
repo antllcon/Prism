@@ -17,11 +17,11 @@
         },
 
         render: function(canvasContext) {
-            var frame;
+            let frame;
 
             if(this.speed > 0) {
-                var max = this.frames.length;
-                var idx = Math.floor(this._index);
+                let max = this.frames.length;
+                let idx = Math.floor(this._index);
                 frame = this.frames[idx % max];
 
                 if(this.once && idx >= max) {
@@ -34,8 +34,8 @@
             }
 
 
-            var x = this.pos[0];
-            var y = this.pos[1];
+            let x = this.pos[0];
+            let y = this.pos[1];
 
             if(this.dir == 'vertical') {
                 y += frame * this.size[1];
