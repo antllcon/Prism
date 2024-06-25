@@ -19,14 +19,26 @@ const canvasHeight = 400;
 let player = {
     pos: [0, 0],
     size: 10,
-    color: 'brown',
+    color: '#00A86B',
     speed: 200
 };
 
 let Game = {
     width: canvasWidth,
     height: canvasHeight,
-    background: 'grey'
+    background: '#333'
+}
+
+let Point = {
+    pos: [200, 200],
+    width: 10,
+    height: 10,
+    line: 10,
+    color: '#666',
+    active: true,
+    type: 0, // 0 - point, 1 - line, 2 - cross
+    time: 5000,
+    team: 1
 }
 
 canvas.width = Game.width;
@@ -39,10 +51,12 @@ function drawBackground() {
     canvasContext.fillStyle = Game.background;
     canvasContext.fillRect(Game.width, Game.height, 0, 0);
 }
+
 function drawPlayer() {
     canvasContext.fillStyle = player.color;
     canvasContext.fillRect(player.pos[0], player.pos[1], player.size, player.size);
 }
+
 function drawFrame() {
     canvasContext.clearRect(0, 0, Game.width, Game.height);
     drawBackground();
