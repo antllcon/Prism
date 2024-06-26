@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    overflow-y: hidden;
+}
+
+.name-game {
+    position: relative;
+    background-image: url("../img/border_name.png");
+    width: 433px;
+    height: 154px;
+    margin-left: 60px;
+    margin-top: 56px;
+}
+
+.name-game__title {
+    position: absolute;
+    margin-left: 13px;
+    margin-top: 12px;
+    color: white;
+    font: 700 120px/146px Montserrat;
+}
+
+.central-part {
+    display: flex;
+}
+
+.central-part__menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu__title {
+    color: white;
+    font: 700 184px/224px Montserrat;
+    margin-left: 60px;
+    margin-top: 99px;
+}
+
+.menu__button {
+    background-color: white;
+    width: 504px;
+    height: 88px;
+    color: black;
+    font: 700 55px/67px Montserrat;
+    margin-left: 60px;
+    margin-top: 21px;
+}
+
+.player {
+    margin-top: 41px;
+}
+
+.logo {
+    position: absolute;
+    margin: 0 0 331px 771px;
+    width: 1149px;
+    height: 749px;
+    background-size: cover;
+}
+
+
+.container-name {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.container-name__name-chapter {
+    position: relative;
+    background-image: url("../img/border_main-menu.png");
+    width: 791px;
+    height: 155px;
+    margin-right: 70px;
+    margin-bottom: 57px;
+    margin-top: 99px;
+}
+
+.name-chapter__title {
+    position: absolute;
+    margin-right: 15px;
+    color: white;
+    font: 700 120px/146px Montserrat;
+}
+
+
+
+
+
