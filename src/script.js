@@ -1,3 +1,4 @@
+import { isDown } from './js/input.js';
 // A cross-browser requestAnimationFrame
 // See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
 let requestAnimFrame = (function(){
@@ -22,7 +23,6 @@ let player = {
     color: 'brown',
     speed: 200
 };
-
 let Game = {
     width: canvasWidth,
     height: canvasHeight,
@@ -72,30 +72,34 @@ init();
 
 function update(dt) {
     gameTime += dt;
+
     handleInput(dt);
     // updateEntities(dt);
+
+
+
     checkCollisions();
 };
 
 function handleInput(dt) {
-    if(input.isDown('DOWN') || input.isDown('s')) {
+    if(isDown('DOWN') || isDown('s')) {
         player.pos[1] += player.speed * dt;
     }
 
-    if(input.isDown('UP') || input.isDown('w')) {
+    if(isDown('UP') || isDown('w')) {
         player.pos[1] -= player.speed * dt;
     }
 
-    if(input.isDown('LEFT') || input.isDown('a')) {
+    if(isDown('LEFT') || isDown('a')) {
         player.pos[0] -= player.speed * dt;
     }
 
-    if(input.isDown('RIGHT') || input.isDown('d')) {
+    if(isDown('RIGHT') || isDown('d')) {
         player.pos[0] += player.speed * dt;
     }
 }
 function updateEntities(dt) {
-    
+
 }
 function checkCollisions() {
     checkPlayerBounds();

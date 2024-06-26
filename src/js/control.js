@@ -1,9 +1,9 @@
 (function() {
-    var pressedKeys = {};
+    let pressedKeys = {};
 
     function setKey(event, status) {
-        var code = event.keyCode;
-        var key;
+        let code = event.keyCode;
+        let key;
 
         switch(code) {
             case 32:
@@ -41,4 +41,8 @@
             return pressedKeys[key.toUpperCase()];
         }
     };
+
+    console.log("im in cotrol")
+
+    export const input = window.input;
 })();
