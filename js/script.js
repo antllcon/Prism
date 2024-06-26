@@ -8,6 +8,7 @@ const gray = "#666";
 const black = "#111";
 const lineSize = 300;
 const startPos = [20, 20];
+let angle = 0;
 
 let GAME = {
     width: canvasWidth,
@@ -64,8 +65,13 @@ function drawPlayer() {
 function drawPoint() {
     if (POINT.active) {
         if (POINT.type === 1) {
+            angle += 1 * Math.PI / 180;
+            ctx.save();
+            ctx.translate(POINT.pos[0] + POINT.width / 2, POINT.pos[1] + POINT.height / 2);
+            ctx.rotate(angle);
             ctx.fillStyle = POINT.color;
-            ctx.fillRect(POINT.pos[0], POINT.pos[1], POINT.width, POINT.height);
+            ctx.fillRect(-POINT.width/2, -POINT.height/2, POINT.width, POINT.height);
+            ctx.restore();
         }
         if (POINT.type === 2) {
 
@@ -103,7 +109,7 @@ function main() {
     let dt = (now - lastTime) / 1000.0;
 
     update(dt);
-    render();
+    render(); 
 
     lastTime = now;
     requestAnimFrame(main);
@@ -139,7 +145,7 @@ function handleInput(dt) {
 
 function checkCollisions(dt) {
     checkPlayerBounds();
-    checkEntitiyBounds();
+    checkEntitiesBounds();
 }
 
 function checkPlayerBounds() {
@@ -157,14 +163,23 @@ function checkPlayerBounds() {
     }
 }
 
-function checkEntitiyBounds() {
-    if (POINT.pos[0] + POINT.width > PLAYER.pos[0] &&
+function checkEntitiesBounds() {
+    if (POINT.active === false &&
+        POINT.pos[0] + POINT.width > PLAYER.pos[0] &&
         POINT.pos[0] < PLAYER.pos[0] + PLAYER.size &&
         POINT.pos[1] + POINT.height > PLAYER.pos[1] &&
-        POINT.pos[1] < PLAYER.pos[1] + PLAYER.size) {
-        
+        POINT.pos[1] < PLAYER.pos[1] + PLAYER.size) 
+    {
         POINT.active = true;
-    } 
+    }
+    if (POINT.active === true &&
+        POINT.pos[0] + POINT.width > PLAYER.pos[0] &&
+        POINT.pos[0] < PLAYER.pos[0] + PLAYER.size &&
+        POINT.pos[1] + POINT.height > PLAYER.pos[1] &&
+        POINT.pos[1] < PLAYER.pos[1] + PLAYER.size) 
+    {
+        console.log('Collision');
+    }
 }
 
 function updateEntities() {

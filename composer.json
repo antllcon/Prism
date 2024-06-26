@@ -1,0 +1,15 @@
+{
+    "name": "user/prism",
+    "autoload": {
+        "psr-4": {
+            "User\\Prism\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "w1ldhoneyp1e",
+            "email": "k_yashmetov@mail.ry"
+        }
+    ],
+    "require": {}
+}
