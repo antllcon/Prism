@@ -28,7 +28,7 @@ let POINT = {
     pos: [200, 200],
     width: 10,
     height: 10,
-    type: 0,
+    type: 1,
     active: false,
     team: 0,
     color: gray
