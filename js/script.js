@@ -21,7 +21,9 @@ let PLAYER = {
     size: 10,
     color: black,
     speed: 200,
+    //enum red/blue
     team: 1, 
+    // true
     live: 1
 };
 
@@ -74,7 +76,7 @@ function drawPoint() {
             ctx.restore();
         }
         if (POINT.type === 2) {
-
+        //дописать типы
         }
     } else {
         ctx.fillStyle = POINT.color;
@@ -143,6 +145,7 @@ function handleInput(dt) {
     }
 }
 
+//проблема с тем, что если оставить так, то непонятно, для кого конрктено мы обрабатываем коллизию. Точнее, мы обрабатвыаем ее не для всех. Непонятно, кто главный, кто второстепенный.
 function checkCollisions(dt) {
     checkPlayerBounds();
     checkEntitiesBounds();
@@ -155,7 +158,7 @@ function checkPlayerBounds() {
     } else if(PLAYER.pos[0] > GAME.width) {
         PLAYER.pos[0] = 0;
     }
-
+//баг - герой может быть невидимым +30px (ширина)
     if(PLAYER.pos[1] < 0) {
         PLAYER.pos[1] = GAME.height;
     } else if(PLAYER.pos[1] > GAME.height) {
@@ -185,11 +188,13 @@ function checkEntitiesBounds() {
 function updateEntities() {
     if (POINT.active) {
         if (POINT.team === 0) {
+            //установить вариативность типов
             POINT.type = 1;
             POINT.team = PLAYER.team;
             POINT.width = lineSize;
             POINT.pos[0] = POINT.pos[0] - POINT.width / 2;
-            pointActiveTime = Date.now();
+            //время жизни
+            pointActiveTime = Date.now(); //переименовать 
         }
         if (POINT.team === PLAYER.team) {
             POINT.color = PLAYER.color;
@@ -197,8 +202,11 @@ function updateEntities() {
             PLAYER.live = 0;
             PLAYER.color = black;
             PLAYER.pos = startPos;
+            //маркер столкновения
             POINT.color = red;
         }
+
+        // можно использовать конструкцию !() {}
         if (Date.now() - pointActiveTime < timeExist) {
             pointActiveExist = true;
         } else {
@@ -212,6 +220,9 @@ function updateEntities() {
         POINT.color = gray;
     }     
 }    
+
+
+//надо подумать что делать с описанием состояний жизни
 
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
