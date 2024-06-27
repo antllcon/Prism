@@ -60,7 +60,7 @@ function drawPlayer() {
         ctx.fillStyle = PLAYER.color;
         ctx.fillRect(PLAYER.pos[0], PLAYER.pos[1], PLAYER.size, PLAYER.size);
     }
-    if (PLAYER.isAlive == false) {
+    if (PLAYER.isAlive === false) {
         PLAYER.color = red;
         setTimeout(() => {
             PLAYER.color = green;
@@ -69,14 +69,12 @@ function drawPlayer() {
             PLAYER.isAlive = true
           }, 1000);
     }
-    
-    
 }
 
 function drawPoint() {
     if (POINT.active) {
         if (POINT.type === 1) {
-            POINT.angle += 1 * Math.PI / 180;
+            POINT.angle += 2 * Math.PI / 180;
             ctx.save();
             ctx.translate(POINT.pos[0] + POINT.width / 2, POINT.pos[1] + POINT.height / 2);
             ctx.rotate(POINT.angle);
@@ -92,14 +90,6 @@ function drawPoint() {
         ctx.fillRect(POINT.pos[0], POINT.pos[1], POINT.width, POINT.height);
     }
 }
-
-function drawFrame() {
-    ctx.clearRect(0, 0, GAME.width, GAME.height);
-    drawBackground();
-    drawPoint();
-    drawPlayer();
-}
-
 let lastTime;
 let timeExist = 30000;
 let pointActiveTime = null;
@@ -155,7 +145,7 @@ function handleInput(dt) {
 }
 
 //проблема с тем, что если оставить так, то непонятно, для кого конрктено мы обрабатываем коллизию. Точнее, мы обрабатвыаем ее не для всех. Непонятно, кто главный, кто второстепенный.
-function checkCollisions(dt) {
+function checkCollisions() {
     checkPlayerBounds();
     checkEntitiesBounds();
     checkLaserBounds();
