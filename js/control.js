@@ -1,9 +1,9 @@
 (function() {
-    var pressedKeys = {};
+    let pressedKeys = {};
 
     function setKey(event, status) {
-        var code = event.keyCode;
-        var key;
+        let code = event.keyCode;
+        let key;
 
         switch(code) {
             case 32:
