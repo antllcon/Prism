@@ -5,6 +5,21 @@
     overflow-y: hidden;
 }
 
+.logo {
+    position: absolute;
+    margin: 0 0 331px 771px;
+    width: 1149px;
+    height: 749px;
+    background-size: cover;
+    background-image: url("../img/prism.png");
+}
+
+.logo:hover {
+    width: 1149px;
+    height: 749px;
+    background-image: url("../img/prism_dark.png");
+}
+
 .name-game {
     position: relative;
     background-image: url("../img/border_name.png");
@@ -29,6 +44,30 @@
 .central-part__menu {
     display: flex;
     flex-direction: column;
+    text-align: center;
+    align-items: center;
+    width: 600px;
+    height: 570px;
+}
+
+.central-part__bot {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    width: 600px;
+    height: 370px;
+    margin-top: 200px;
+}
+
+.central-part__player {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    width: 600px;
+    height: 370px;
+    margin-top: 200px;
 }
 
 .menu__title {
@@ -39,6 +78,8 @@
 }
 
 .menu__button {
+    border: none;
+    cursor: pointer;
     background-color: white;
     width: 504px;
     height: 88px;
@@ -46,30 +87,116 @@
     font: 700 55px/67px Montserrat;
     margin-left: 60px;
     margin-top: 21px;
+    box-shadow: 0 0 10px white;
+    text-align: center;
+}
+
+.menu__button:hover {
+    box-shadow: 0 0 30px white;
+}
+
+.menu__button:active {
+    box-shadow: 0 0 30px white;
+    transform: scale(0.96);
+}
+
+.bot__button {
+    border: none;
+    cursor: pointer;
+    background-color: white;
+    width: 504px;
+    height: 88px;
+    color: black;
+    font: 700 55px/67px Montserrat;
+    margin-left: 60px;
+    margin-top: 21px;
+    box-shadow: 0 0 10px white;
+    text-align: center;
+}
+
+.bot__button:hover {
+    box-shadow: 0 0 30px white;
+}
+
+.bot__button:active {
+    box-shadow: 0 0 30px white;
+    transform: scale(0.96);
+}
+
+.player__button {
+    border: none;
+    cursor: pointer;
+    background-color: white;
+    width: 504px;
+    height: 88px;
+    color: black;
+    font: 700 55px/67px Montserrat;
+    margin-left: 60px;
+    margin-top: 21px;
+    box-shadow: 0 0 10px white;
+    text-align: center;
+}
+
+.player__button:hover {
+    box-shadow: 0 0 30px white;
+}
+
+.player__button:active {
+    box-shadow: 0 0 30px white;
+    transform: scale(0.96);
 }
 
 .player {
-    margin-top: 41px;
+    margin-top: 50px;
 }
 
-.logo {
-    position: absolute;
-    margin: 0 0 331px 771px;
-    width: 1149px;
-    height: 749px;
-    background-size: cover;
+.player__input {
+    outline: none;
+    width: 335px;
+    height: 63px;
+    background-color: white;
+    margin: 37px auto;
 }
-
 
 .container-name {
     display: flex;
     justify-content: flex-end;
 }
 
-.container-name__name-chapter {
+.container-name__name-chapter-menu {
     position: relative;
     background-image: url("../img/border_main-menu.png");
     width: 791px;
+    height: 155px;
+    margin-right: 70px;
+    margin-bottom: 57px;
+    margin-top: 99px;
+}
+
+.container-name__name-chapter-menu {
+    position: relative;
+    background-image: url("../img/border_main-menu.png");
+    width: 791px;
+    height: 155px;
+    margin-right: 70px;
+    margin-bottom: 57px;
+    margin-top: 99px;
+}
+
+.container-name__name-chapter-bot {
+    position: relative;
+    background-image: url("../img/border_with-bot.png");
+    width: 699px;
+    height: 155px;
+    margin-right: 70px;
+    margin-bottom: 57px;
+    margin-top: 99px;
+}
+
+.container-name__name-chapter-player {
+    position: relative;
+    background-image: url("../img/border_with-player.png");
+    width: 907px;
     height: 155px;
     margin-right: 70px;
     margin-bottom: 57px;
