@@ -8,7 +8,6 @@ const gray = "#666";
 const black = "#111";
 const lineSize = 300;
 const startPos = [20, 20];
-let angle = 0;
 
 let GAME = {
     width: canvasWidth,
@@ -24,17 +23,19 @@ let PLAYER = {
     //enum red/blue
     team: 1, 
     // true
-    live: 1
+    isAlive: true
 };
 
 let POINT = {
     pos: [200, 200],
     width: 10,
     height: 10,
+    laserWidth: 300,
     type: 0,
     active: false,
     team: 0,
-    color: gray
+    color: gray,
+    angle: 0
 };
 
 canvas.width = GAME.width;
@@ -49,28 +50,36 @@ function drawBackground() {
 }
 
 function drawPlayer() {
-    if (PLAYER.live === 1) {
+    if (PLAYER.isAlive === true) {
         if (PLAYER.team === 1) {
             PLAYER.color = green;
         }
         if (PLAYER.team === 2) {
             PLAYER.color = red;
         }    
-    } else {
-        PLAYER.color = black
+        ctx.fillStyle = PLAYER.color;
+        ctx.fillRect(PLAYER.pos[0], PLAYER.pos[1], PLAYER.size, PLAYER.size);
+    }
+    if (PLAYER.isAlive == false) {
+        PLAYER.color = red;
+        setTimeout(() => {
+            PLAYER.color = green;
+            PLAYER.pos[0] = 10;
+            PLAYER.pos[1] = 10;
+            PLAYER.isAlive = true
+          }, 1000);
     }
     
-    ctx.fillStyle = PLAYER.color;
-    ctx.fillRect(PLAYER.pos[0], PLAYER.pos[1], PLAYER.size, PLAYER.size);
+    
 }
 
 function drawPoint() {
     if (POINT.active) {
         if (POINT.type === 1) {
-            angle += 1 * Math.PI / 180;
+            POINT.angle += 1 * Math.PI / 180;
             ctx.save();
             ctx.translate(POINT.pos[0] + POINT.width / 2, POINT.pos[1] + POINT.height / 2);
-            ctx.rotate(angle);
+            ctx.rotate(POINT.angle);
             ctx.fillStyle = POINT.color;
             ctx.fillRect(-POINT.width/2, -POINT.height/2, POINT.width, POINT.height);
             ctx.restore();
@@ -92,7 +101,7 @@ function drawFrame() {
 }
 
 let lastTime;
-let timeExist = 3000;
+let timeExist = 30000;
 let pointActiveTime = null;
 let pointActiveExist = false; 
 
@@ -149,6 +158,7 @@ function handleInput(dt) {
 function checkCollisions(dt) {
     checkPlayerBounds();
     checkEntitiesBounds();
+    checkLaserBounds();
 }
 
 function checkPlayerBounds() {
@@ -181,7 +191,33 @@ function checkEntitiesBounds() {
         POINT.pos[1] + POINT.height > PLAYER.pos[1] &&
         POINT.pos[1] < PLAYER.pos[1] + PLAYER.size) 
     {
-        console.log('Collision');
+        // console.log('Collision');
+    }
+}
+
+
+function checkLaserBounds() {
+    const sin = Math.sin(POINT.angle);
+    const cos = Math.cos(POINT.angle);
+
+    const playerCorners = [
+      {x: PLAYER.pos[0], y: PLAYER.pos[1]},
+      {x: PLAYER.pos[0] + PLAYER.size, y: PLAYER.pos[1]},
+      {x: PLAYER.pos[0], y: PLAYER.pos[1] + PLAYER.size},
+      {x: PLAYER.pos[0] + PLAYER.size, y: PLAYER.pos[1] + PLAYER.size}
+    ];
+
+    for (const corner of playerCorners) {
+      const dx = corner.x - POINT.pos[0] - POINT.width / 2;
+      const dy = corner.y - POINT.pos[1] - POINT.height / 2;
+
+      const rotatedX = cos * dx + sin * dy;
+      const rotatedY = -sin * dx + cos * dy;
+
+      if (rotatedX > -POINT.width / 2 && rotatedX < POINT.width / 2 &&
+              rotatedY > -POINT.height / 2 && rotatedY < POINT.height / 2) {
+        PLAYER.isAlive = false;
+      }
     }
 }
 
