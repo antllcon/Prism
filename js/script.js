@@ -10,9 +10,13 @@ const lineSize = 300;
 let canvas = document.getElementById("canvas");
 let gameTime = 0;
 let lastTime;
-let timeExist = 30000;
+let timeExist = 15000;
 let pointActiveTime = null;
 let pointActiveExist = false;
+const botStartX = canvasWidth - 50;
+const botStartY = canvasHeight/2;
+const playerStartX = 50;
+const playerStartY = canvasHeight/2;
 
 let GAME = {
     width: canvasWidth,
@@ -21,24 +25,35 @@ let GAME = {
 };
 
 let PLAYER = {
-    x: 20,
-    y: 20,
+    x: 0,
+    y: 0,
     size: 10,
-    color: black,
+    color: 'blue',
     speed: 200,
-    team: 1,
+    team: 'blue',
     isAlive: true
 };
+
+let BOT = {
+    x: 0,
+    y: 0,
+    size: 10,
+    color: 'red',
+    speed: 100,
+    team: 'red', 
+    isAlive: true,
+    side: 'enemy'
+}
 
 let POINT= {
     x: 200,
     y: 200,
     width: 10,
     height: 10,
-    laserWidth: 300,
+    laserWidth: 150,
     type: 0,
     active: false,
-    team: 0,
+    team: '',
     color: gray,
     angle: 0
 };
@@ -53,25 +68,37 @@ function drawBackground() {
     ctx.fillRect(0, 0, GAME.width, GAME.height);
 }
 
+function drawBot() {
+    if (BOT.isAlive === true) {
+        ctx.fillStyle = BOT.color;
+        ctx.fillRect(BOT.x, BOT.y, BOT.size, BOT.size);
+    }
+    if (BOT.isAlive === false) {
+        setTimeout(() => {
+            BOT.color = 'red';
+            BOT.x = botStartX;
+            BOT.y = botStartY;
+            BOT.isAlive = true;
+        }, 1000)
+    }
+}
+
 function drawPlayer() {
-    if (PLAYER.isAlive === true) {
-        if (PLAYER.team === 1) {
-            PLAYER.color = green;
-        }
-        if (PLAYER.team === 2) {
-            PLAYER.color = red;
-        }    
+    if (PLAYER.isAlive === true) {   
         ctx.fillStyle = PLAYER.color;
         ctx.fillRect(PLAYER.x, PLAYER.y, PLAYER.size, PLAYER.size);
     }
-    if (PLAYER.isAlive === false) {
+    if (PLAYER.isAlive == false) {
+        PLAYER.color = 'black';
         setTimeout(() => {
-            PLAYER.color = green;
-            PLAYER.x = 10;
-            PLAYER.y = 10;
+            PLAYER.color = 'blue';
+            PLAYER.x = playerStartX;
+            PLAYER.y = playerStartY;
             PLAYER.isAlive = true
           }, 1000);
     }
+    
+    
 }
 
 function drawPoint() {
@@ -96,13 +123,23 @@ function drawPoint() {
 
 // Инициализация
 function init() {
+    coordInit();
+    console.log(BOT.x);
+    console.log(BOT.size);
     drawBackground();
     drawPoint();
+    drawBot();
     drawPlayer(); 
     lastTime = Date.now();
     main();
 }
 
+function coordInit() {
+    PLAYER.x = playerStartX;
+    PLAYER.y = playerStartY;
+    BOT.x = botStartX;
+    BOT.y = botStartY;
+}
 // Основной цикл
 function main() {
     let now = Date.now();
@@ -115,9 +152,31 @@ function main() {
 
 function update(dt) {
     gameTime += dt;
+    botMovement(dt);
     handleInput(dt);
     checkCollisions();
     updateEntities();
+}
+
+function botMovement(dt) {
+    const dx = POINT.x - BOT.x;
+    const dy = POINT.y - BOT.y;
+    const hyp = Math.sqrt(dx**2 + dy**2);
+    let stepX = BOT.speed * dx/hyp;
+    let stepY = BOT.speed * dy/hyp;
+    const inRangeOfLaser = (hyp - BOT.size*Math.sqrt(2) < POINT.laserWidth)
+    if (POINT.active === false) {
+        BOT.x += stepX*dt;
+        BOT.x += stepY*dt;
+    }
+    if ((POINT.active === true) && (!inRangeOfLaser)) {
+        BOT.x += stepX*dt;
+        BOT.y += stepY*dt;
+    }
+    if ((POINT.active === true) && (inRangeOfLaser)) {
+        BOT.x -= stepX*dt;
+        BOT.y -= stepY*dt;
+    }
 }
 
 // Обработка нажатой клавиши
@@ -207,7 +266,7 @@ function updateEntities() {
             //установить вариативность типов
             POINT.type = 1;
             POINT.team = PLAYER.team;
-            POINT.width = lineSize;
+            POINT.width = POINT.laserWidth;
             POINT.x = POINT.x - POINT.width / 2;
             //время жизни
             pointActiveTime = Date.now(); //переименовать 
@@ -242,6 +301,7 @@ function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
     drawBackground();
     drawPoint();
+    drawBot();
     drawPlayer();
 }
 
