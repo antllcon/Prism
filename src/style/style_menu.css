@@ -21,9 +21,10 @@
 }
 
 .name-game {
+    display: flex;
     position: relative;
     background-image: url("../img/border_name.png");
-    width: 433px;
+    background-repeat: no-repeat;
     height: 154px;
     margin-left: 60px;
     margin-top: 56px;
@@ -33,6 +34,12 @@
     position: absolute;
     margin-left: 13px;
     margin-top: 12px;
+    color: white;
+    font: 700 120px/146px Montserrat;
+}
+
+.name-game__count-players {
+    margin-left: 650px;
     color: white;
     font: 700 120px/146px Montserrat;
 }
@@ -55,9 +62,9 @@
     flex-direction: column;
     text-align: center;
     align-items: center;
-    width: 600px;
     height: 370px;
     margin-top: 200px;
+    margin-left: 60px;
 }
 
 .central-part__player {
@@ -131,7 +138,7 @@
     height: 88px;
     color: black;
     font: 700 55px/67px Montserrat;
-    margin-left: 60px;
+    margin-left: 30px;
     margin-top: 21px;
     box-shadow: 0 0 10px white;
     text-align: center;
@@ -146,16 +153,25 @@
     transform: scale(0.96);
 }
 
+.connect {
+    margin-bottom: 40px;
+}
+
 .player {
     margin-top: 50px;
 }
 
 .player__input {
     outline: none;
+    border: none;
     width: 335px;
     height: 63px;
     background-color: white;
-    margin: 37px auto;
+    margin-left: 19px;
+    color: rgb(94, 94, 94);
+    font: 700 35px/23px Montserrat;
+    text-align: center;
+    box-shadow: 0 0 10px white;
 }
 
 .container-name {
@@ -197,6 +213,16 @@
     position: relative;
     background-image: url("../img/border_with-player.png");
     width: 907px;
+    height: 155px;
+    margin-right: 70px;
+    margin-bottom: 57px;
+    margin-top: 99px;
+}
+
+.container-name__name-chapter-lobby {
+    position: relative;
+    background-image: url("../img/border_lobby.png");
+    width: 462px;
     height: 155px;
     margin-right: 70px;
     margin-bottom: 57px;
