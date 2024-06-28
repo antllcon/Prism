@@ -157,34 +157,41 @@ function update(dt) {
 }
 
 function botMovement(dt) {
+    
     const dx = POINT.x - BOT.x;
     const dy = POINT.y - BOT.y;
     const hyp = Math.sqrt(dx**2 + dy**2);
     const inRangeOfLaser = (hyp - BOT.size * Math.sqrt(2) < POINT.laserWidth);
-
-    if (POINT.active === false) {
+    
+    if (!POINT.active) {
         // Бот движется к точке, когда лазер не активен
+        moveBotToLaser();
+    }
+    if (POINT.active && inRangeOfLaser) {
+        // Бот движется по спирали от центра, когда лазер активен и бот в зоне поражения
+        moveBotOutOfLaserSpiral();
+    } 
+    if (POINT.active && !inRangeOfLaser) {
+        // Бот движется к точке, когда лазер активен, но бот не в зоне поражения
+        moveBotToLaser();
+    }
+    function moveBotToLaser() {
         BOT.x += BOT.speed * dx / hyp * dt;
         BOT.y += BOT.speed * dy / hyp * dt;
-    } else if (inRangeOfLaser) {
-        // Бот движется по спирали от центра, когда лазер активен и бот в зоне поражения
-
+    }
+    function moveBotOutOfLaserSpiral() {
         // Определяем угол между ботом и точкой
         const angle = Math.atan2(dy, dx);
-        
+                
         // Радиальная скорость (от центра прочь)
         const radialSpeed = BOT.speed * dt;
-        
+
         // Угловая скорость (по окружности)
         const angularSpeed = BOT.speed * dt / hyp;
 
         // Обновляем координаты бота
         BOT.x -= radialSpeed * Math.cos(angle) - angularSpeed * Math.sin(angle) * hyp;
         BOT.y -= radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hyp;
-    } else {
-        // Бот движется к точке, когда лазер активен, но бот не в зоне поражения
-        BOT.x += BOT.speed * dx / hyp * dt;
-        BOT.y += BOT.speed * dy / hyp * dt;
     }
 }
 
