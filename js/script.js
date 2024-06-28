@@ -248,7 +248,7 @@ function checkPointBounds() {
 }
 
 function checkLaserBounds() {
-    if ((PLAYER.team != POINT.team) || POINT.team != '') {
+    if (PLAYER.team != POINT.team) {
         const sin = Math.sin(POINT.angle);
         const cos = Math.cos(POINT.angle);
     
@@ -274,19 +274,6 @@ function checkLaserBounds() {
     }
     
 }
-// const maxRadius = 300;
-// let radius = 30;const radiusIncrement = 30;
-// function moveBot() {
-//     const angle = (Date.now() / 1000) * 2 * Math.PI / 10;
-//     const spiralRadius = radius * 1.1;    
-//     BOT.x = POINT.x + spiralRadius * Math.cos(angle);
-//     BOT.y = POINT.y + spiralRadius * Math.sin(angle);
-//     console.log(radius);    radius += radiusIncrement;
-//     if (radius <= maxRadius) {        
-//         requestAnimationFrame(moveBot);
-//     }
-// }
-// moveBot();
 
 function updateEntities() {
     if (POINT.active) {
@@ -302,7 +289,7 @@ function updateEntities() {
         }
     } else {  // изменяем состояния POINT в исходные 
         POINT.width = 10;
-        POINT.team = 0;
+        POINT.team = '';
         POINT.color = gray;
     }     
 }    
