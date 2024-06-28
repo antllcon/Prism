@@ -341,7 +341,7 @@ function updateEntities() {
             }
             if (point.team === 1) {
                 if (point.type === 1) {
-                    point. = laserSize;
+                    point.width = laserSize;
                 }
             }
             if (!(Date.now() - point.activationTime < point.existTime)) {
