@@ -1,10 +1,66 @@
-const canvasWidth = 400;
-const canvasHeight = 400;
-const red = "red";
+const canvasWidth = 960;
+const canvasHeight = 540;
+const red = "#FC0000";
 const green = "#00A86B";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
+const lineSize = 300;
+const laserWidth = 300;
+const DEFAULT_POINTS = [
+    {
+        x: 200,
+        y: 200,
+        width: 10,
+        height: 10,
+        laserWidth: laserWidth,
+        type: 1,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 0,
+        existTime: 10000
+    },
+    {
+        x: 350,
+        y: 400,
+        width: 10,
+        height: 10,
+        laserWidth: laserWidth,
+        type: 1,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 45,
+        existTime: 10000
+    },
+    {
+        x: 650,
+        y: 400,
+        width: 10,
+        height: 10,
+        laserWidth: laserWidth,
+        type: 1,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 30,
+        existTime: 10000
+    },
+    {
+        x: 500,
+        y: 200,
+        width: 10,
+        height: 10,
+        laserWidth: laserWidth,
+        type: 1,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 90,
+        existTime: 10000
+    }
+];
 
 let canvas = document.getElementById("canvas");
 let gameTime = 0;
@@ -100,32 +156,31 @@ function drawPlayer() {
     
 }
 
-function drawPoint() {
-    if (POINT.active) {
-        if (POINT.type === 1) {
-            console.log('попал в type');
-            POINT.angle += 2 * Math.PI / 180;
+function drawPoints() {
+    POINTS.forEach(point => {
+        if (point.type === 1) {
+            point.angle += 2 * Math.PI / 180;
             ctx.save();
-            ctx.translate(POINT.x + POINT.width / 2, POINT.y + POINT.height / 2);
-            ctx.rotate(POINT.angle);
-            ctx.fillStyle = POINT.color;
-            ctx.fillRect(-POINT.laserWidth/2, -POINT.height/2, POINT.laserWidth, POINT.height);
+            ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
+            ctx.rotate(point.angle);
+            ctx.fillStyle = point.color;
+            ctx.fillRect(-point.width / 2, -point.height / 2, point.width, point.height);
             ctx.restore();
         }
-        if (POINT.type === 2) {
-        //дописать типы
-        }
-    } else {
-        ctx.fillStyle = POINT.color;
-        ctx.fillRect(POINT.x, POINT.y, POINT.width, POINT.height);
-    }
+    })
 }
+    function render() {
+        ctx.clearRect(0, 0, GAME.width, GAME.height);
+        drawBackground();
+        drawPoints();
+        drawPlayer();
+    }
 
 // Инициализация
 function init() {
     coordInit();
     drawBackground();
-    drawPoint();
+    drawPoints();
     drawBot();
     drawPlayer(); 
     lastTime = Date.now();
@@ -139,14 +194,14 @@ function coordInit() {
     BOT.y = botStartY;
 }
 // Основной цикл
-function main() {
-    let now = Date.now();
-    let dt = (now - lastTime) / 1000.0;
-    update(dt);
-    render();
-    lastTime = now;
-    requestAnimFrame(main);
-}
+    function main() {
+        let now = Date.now();
+        let dt = (now - lastTime) / 1000.0;
+        update(dt);
+        render();
+        lastTime = now;
+        requestAnimFrame(main);
+    }
 
 function update(dt) {
     gameTime += dt;
@@ -310,8 +365,8 @@ function render() {
 }
 
 // Определение requestAnimFrame
-window.requestAnimFrame = window.requestAnimationFrame || function(callback) {
-    window.setTimeout(callback, 1000 / 60);
-};
+    window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
 
-init();
+    init();
