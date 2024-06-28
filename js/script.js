@@ -50,7 +50,7 @@ let POINT= {
     width: 10,
     height: 10,
     laserWidth: 150,
-    type: 0,
+    type: 1,
     active: false,
     team: '',
     color: gray,
@@ -87,13 +87,13 @@ function drawPlayer() {
         ctx.fillStyle = PLAYER.color;
         ctx.fillRect(PLAYER.x, PLAYER.y, PLAYER.size, PLAYER.size);
     }
-    if (PLAYER.isAlive == false) {
+    if (PLAYER.isAlive === false) {
         PLAYER.color = 'black';
         setTimeout(() => {
             PLAYER.color = 'blue';
             PLAYER.x = playerStartX;
             PLAYER.y = playerStartY;
-            PLAYER.isAlive = true
+            PLAYER.isAlive = true;
           }, 1000);
     }
     
@@ -103,12 +103,13 @@ function drawPlayer() {
 function drawPoint() {
     if (POINT.active) {
         if (POINT.type === 1) {
+            console.log('попал в type');
             POINT.angle += 2 * Math.PI / 180;
             ctx.save();
             ctx.translate(POINT.x + POINT.width / 2, POINT.y + POINT.height / 2);
             ctx.rotate(POINT.angle);
             ctx.fillStyle = POINT.color;
-            ctx.fillRect(-POINT.width/2, -POINT.height/2, POINT.width, POINT.height);
+            ctx.fillRect(-POINT.laserWidth/2, -POINT.height/2, POINT.laserWidth, POINT.height);
             ctx.restore();
         }
         if (POINT.type === 2) {
@@ -123,8 +124,6 @@ function drawPoint() {
 // Инициализация
 function init() {
     coordInit();
-    console.log(BOT.x);
-    console.log(BOT.size);
     drawBackground();
     drawPoint();
     drawBot();
@@ -161,21 +160,31 @@ function botMovement(dt) {
     const dx = POINT.x - BOT.x;
     const dy = POINT.y - BOT.y;
     const hyp = Math.sqrt(dx**2 + dy**2);
-    let stepX = BOT.speed * dx/hyp;
-    let stepY = BOT.speed * dy/hyp;
-    const inRangeOfLaser = (hyp - BOT.size*Math.sqrt(2) < POINT.laserWidth)
+    const inRangeOfLaser = (hyp - BOT.size * Math.sqrt(2) < POINT.laserWidth);
+
     if (POINT.active === false) {
-        BOT.x += stepX*dt;
-        BOT.x += stepY*dt;
-    }
-    if ((POINT.active === true) && (!inRangeOfLaser)) {
-        BOT.x += stepX*dt;
-        BOT.y += stepY*dt;
-    }
-    if ((POINT.active === true) && (inRangeOfLaser)) {
+        // Бот движется к точке, когда лазер не активен
+        BOT.x += BOT.speed * dx / hyp * dt;
+        BOT.y += BOT.speed * dy / hyp * dt;
+    } else if (inRangeOfLaser) {
+        // Бот движется по спирали от центра, когда лазер активен и бот в зоне поражения
+
+        // Определяем угол между ботом и точкой
         const angle = Math.atan2(dy, dx);
-        BOT.x += Math.cos(angle) * BOT.speed * dt;
-        BOT.y += Math.sin(angle) * BOT.speed * dt;
+        
+        // Радиальная скорость (от центра прочь)
+        const radialSpeed = BOT.speed * dt;
+        
+        // Угловая скорость (по окружности)
+        const angularSpeed = BOT.speed * dt / hyp;
+
+        // Обновляем координаты бота
+        BOT.x -= radialSpeed * Math.cos(angle) - angularSpeed * Math.sin(angle) * hyp;
+        BOT.y -= radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hyp;
+    } else {
+        // Бот движется к точке, когда лазер активен, но бот не в зоне поражения
+        BOT.x += BOT.speed * dx / hyp * dt;
+        BOT.y += BOT.speed * dy / hyp * dt;
     }
 }
 
@@ -225,65 +234,74 @@ function checkPointBounds() {
     {
         POINT.active = true;
     }
+    // Столкновение с ботом
+    //
+    // if (POINT.active === false &&
+    //     POINT.x + POINT.width > BOT.x &&
+    //     POINT.x < BOT.x + BOT.size &&
+    //     POINT.y + POINT.height > BOT.y &&
+    //     POINT.y < BOT.y + BOT.size)
+    // {
+    //     POINT.active = true;
+    //     POINT.team = BOT.team;
+    // }
 }
 
 function checkLaserBounds() {
-    const sin = Math.sin(POINT.angle);
-    const cos = Math.cos(POINT.angle);
-
-    const playerCorners = [
-      {x: PLAYER.x, y: PLAYER.y},
-      {x: PLAYER.x + PLAYER.size, y: PLAYER.y},
-      {x: PLAYER.x, y: PLAYER.y + PLAYER.size},
-      {x: PLAYER.x + PLAYER.size, y: PLAYER.y + PLAYER.size}
-    ];
-
-    for (const corner of playerCorners) {
-      const dx = corner.x - POINT.x - POINT.width / 2;
-      const dy = corner.y - POINT.y - POINT.height / 2;
-
-      const rotatedX = cos * dx + sin * dy;
-      const rotatedY = -sin * dx + cos * dy;
-
-      if (rotatedX > -POINT.width / 2 && rotatedX < POINT.width / 2 &&
-              rotatedY > -POINT.height / 2 && rotatedY < POINT.height / 2) {
-        PLAYER.isAlive = false;
-      }
+    if ((PLAYER.team != POINT.team) || POINT.team != '') {
+        const sin = Math.sin(POINT.angle);
+        const cos = Math.cos(POINT.angle);
+    
+        const playerCorners = [
+          {x: PLAYER.x, y: PLAYER.y},
+          {x: PLAYER.x + PLAYER.size, y: PLAYER.y},
+          {x: PLAYER.x, y: PLAYER.y + PLAYER.size},
+          {x: PLAYER.x + PLAYER.size, y: PLAYER.y + PLAYER.size}
+        ];
+    
+        for (const corner of playerCorners) {
+          const dx = corner.x - POINT.x - POINT.width / 2;
+          const dy = corner.y - POINT.y - POINT.height / 2;
+    
+          const rotatedX = cos * dx + sin * dy;
+          const rotatedY = -sin * dx + cos * dy;
+    
+          if (rotatedX > -POINT.width / 2 && rotatedX < POINT.width / 2 &&
+                  rotatedY > -POINT.height / 2 && rotatedY < POINT.height / 2) {
+            PLAYER.isAlive = false;
+          }
+        }
     }
+    
 }
+// const maxRadius = 300;
+// let radius = 30;const radiusIncrement = 30;
+// function moveBot() {
+//     const angle = (Date.now() / 1000) * 2 * Math.PI / 10;
+//     const spiralRadius = radius * 1.1;    
+//     BOT.x = POINT.x + spiralRadius * Math.cos(angle);
+//     BOT.y = POINT.y + spiralRadius * Math.sin(angle);
+//     console.log(radius);    radius += radiusIncrement;
+//     if (radius <= maxRadius) {        
+//         requestAnimationFrame(moveBot);
+//     }
+// }
+// moveBot();
 
 function updateEntities() {
     if (POINT.active) {
-        if (POINT.team === 0) {
-            //установить вариативность типов
-            POINT.type = 1;
+        if (POINT.team === '') {
             POINT.team = PLAYER.team;
-            POINT.width = POINT.laserWidth;
-            POINT.x = POINT.x - POINT.width / 2;
-            //время жизни
+            POINT.color = PLAYER.color;
             pointActiveTime = Date.now(); //переименовать 
         }
-        if (POINT.team === PLAYER.team) {
-            POINT.color = PLAYER.color;
-        } else {
-            PLAYER.isAlive = 0;
-            PLAYER.color = black;
-            // в константы
-            PLAYER.x = 20;
-            PLAYER.y = 20;
-            POINT.color = gray;
-        }
-        // можно использовать конструкцию !() {}
-        if (Date.now() - pointActiveTime < timeExist) {
-            pointActiveExist = true;
-        } else {
+
+        if (Date.now() - pointActiveTime > timeExist) {
             POINT.active = false;
+            POINT.team = '';
         }
     } else {  // изменяем состояния POINT в исходные 
-        POINT.x = 200;
-        POINT.y = 200;
         POINT.width = 10;
-        POINT.type = 0;
         POINT.team = 0;
         POINT.color = gray;
     }     
