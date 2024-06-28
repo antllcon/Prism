@@ -5,15 +5,12 @@ const green = "#00A86B";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
-const lineSize = 300;
-const laserWidth = 300;
 const DEFAULT_POINTS = [
     {
-        x: 200,
-        y: 200,
+        x: 192,
+        y: 150,
         width: 10,
         height: 10,
-        laserWidth: laserWidth,
         type: 1,
         active: false,
         team: 0,
@@ -22,42 +19,87 @@ const DEFAULT_POINTS = [
         existTime: 10000
     },
     {
-        x: 350,
-        y: 400,
+        x: 384,
+        y: 150,
         width: 10,
         height: 10,
-        laserWidth: laserWidth,
-        type: 1,
+        type: 2,
         active: false,
         team: 0,
         color: gray,
-        angle: 45,
+        angle: 0,
         existTime: 10000
     },
     {
-        x: 650,
-        y: 400,
+        x: 576,
+        y: 150,
         width: 10,
         height: 10,
-        laserWidth: laserWidth,
-        type: 1,
+        type: 2,
         active: false,
         team: 0,
         color: gray,
-        angle: 30,
+        angle: 0,
         existTime: 10000
     },
     {
-        x: 500,
-        y: 200,
+        x: 768,
+        y: 150,
         width: 10,
         height: 10,
-        laserWidth: laserWidth,
-        type: 1,
+        type: 2,
         active: false,
         team: 0,
         color: gray,
-        angle: 90,
+        angle: 0,
+        existTime: 10000
+    },
+    {
+        x: 192,
+        y: 380,
+        width: 10,
+        height: 10,
+        type: 2,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 0,
+        existTime: 10000
+    },
+    {
+        x: 384,
+        y: 380,
+        width: 10,
+        height: 10,
+        type: 2,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 0,
+        existTime: 10000
+    },
+    {
+        x: 576,
+        y: 380,
+        width: 10,
+        height: 10,
+        type: 2,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 0,
+        existTime: 10000
+    },
+    {
+        x: 768,
+        y: 380,
+        width: 10,
+        height: 10,
+        type: 2,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 0,
         existTime: 10000
     }
 ];
@@ -90,7 +132,6 @@ function createPoint(point) {
         y: point.y,
         width: point.width,
         height: point.height,
-        laserWidth: point.laserWidth,
         type: point.type,
         active: point.active,
         team: point.team,
@@ -108,7 +149,6 @@ function resetPoint(point, index) {
     point.y = defaultPoint.y;
     point.width = defaultPoint.width;
     point.height = defaultPoint.height;
-    point.laserWidth = defaultPoint.laserWidth;
     point.type = defaultPoint.type;
     point.active = defaultPoint.active;
     point.team = defaultPoint.team;
@@ -151,8 +191,23 @@ function drawPlayer() {
 }
 
 function drawPoints() {
+
     POINTS.forEach(point => {
-        if (point.type === 1) {
+        if (point.active) {
+            if (point.type === 1) {
+                ctx.fillStyle = point.color;
+                ctx.fillRect(point.x, point.y, point.width, point.height);
+            }
+            if (point.type === 2) {
+                point.angle += 2 * Math.PI / 180;
+                ctx.save();
+                ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
+                ctx.rotate(point.angle);
+                ctx.fillStyle = point.color;
+                ctx.fillRect(-point.width / 2, -point.height / 2, point.width, point.height);
+                ctx.restore();
+            }
+        } else {
             point.angle += 2 * Math.PI / 180;
             ctx.save();
             ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
@@ -163,6 +218,7 @@ function drawPoints() {
         }
     })
 }
+
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
     drawBackground();
@@ -258,25 +314,35 @@ function checkLaserBounds() {
     });
 }
 
+
+//
+// if (point.team === 0) {
+//     point.team = PLAYER.team;
+//     point.width = lizerSize;
+//     point.x = point.x - point.width / 2;
+// }
+// if (point.team === PLAYER.team) {
+//     point.color = PLAYER.color;
+// } else {
+//     PLAYER.isAlive = 0;
+//     PLAYER.color = black;
+//     // в константы
+//     PLAYER.x = 20;
+//     PLAYER.y = 20;
+//     point.color = gray;
+// }
+
+
 function updateEntities() {
     POINTS.forEach(point => {
         if (point.active) {
             if (point.team === 0) {
-                // установить вариативность типов
-                point.type = 1;
                 point.team = PLAYER.team;
-                point.width = lineSize;
-                point.x = point.x - point.width / 2;
             }
-            if (point.team === PLAYER.team) {
-                point.color = PLAYER.color;
-            } else {
-                PLAYER.isAlive = 0;
-                PLAYER.color = black;
-                // в константы
-                PLAYER.x = 20;
-                PLAYER.y = 20;
-                point.color = gray;
+            if (point.team === 1) {
+                if (point.type === 1) {
+                    point. = laserSize;
+                }
             }
             if (!(Date.now() - point.activationTime < point.existTime)) {
                 point.active = false;
