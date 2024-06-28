@@ -5,12 +5,11 @@ const green = "#00A86B";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
-const lineSize = 300;
 
 let canvas = document.getElementById("canvas");
 let gameTime = 0;
 let lastTime;
-let timeExist = 15000;
+let timeExist = 5000;
 let pointActiveTime = null;
 let pointActiveExist = false;
 const botStartX = canvasWidth - 50;
@@ -174,8 +173,9 @@ function botMovement(dt) {
         BOT.y += stepY*dt;
     }
     if ((POINT.active === true) && (inRangeOfLaser)) {
-        BOT.x -= stepX*dt;
-        BOT.y -= stepY*dt;
+        const angle = Math.atan2(dy, dx);
+        BOT.x += Math.cos(angle) * BOT.speed * dt;
+        BOT.y += Math.sin(angle) * BOT.speed * dt;
     }
 }
 
@@ -224,14 +224,6 @@ function checkPointBounds() {
         POINT.y < PLAYER.y + PLAYER.size)
     {
         POINT.active = true;
-    }
-    if (POINT.active === true &&
-        POINT.x + POINT.width > PLAYER.x &&
-        POINT.x < PLAYER.x + PLAYER.size &&
-        POINT.y + POINT.height > PLAYER.y &&
-        POINT.y < PLAYER.y + PLAYER.size)
-    {
-        // console.log('Collision');
     }
 }
 
