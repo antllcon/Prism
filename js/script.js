@@ -89,6 +89,43 @@ let PLAYER = {
     isAlive: true
 };
 
+let POINTS = DEFAULT_POINTS.map(createPoint);
+
+function createPoint(point) {
+    return {
+        x: point.x,
+        y: point.y,
+        width: point.width,
+        height: point.height,
+        laserWidth: point.laserWidth,
+        type: point.type,
+        active: point.active,
+        team: point.team,
+        color: point.color,
+        angle: point.angle,
+        wasActive: false, // новый флаг
+        activationTime: null, // время активации
+        existTime: point.existTime // время существования для каждого POINT
+    };
+}
+
+function resetPoint(point, index) {
+    const defaultPoint = DEFAULT_POINTS[index];
+    point.x = defaultPoint.x;
+    point.y = defaultPoint.y;
+    point.width = defaultPoint.width;
+    point.height = defaultPoint.height;
+    point.laserWidth = defaultPoint.laserWidth;
+    point.type = defaultPoint.type;
+    point.active = defaultPoint.active;
+    point.team = defaultPoint.team;
+    point.color = defaultPoint.color;
+    point.angle = defaultPoint.angle;
+    point.wasActive = false;
+    point.activeSince = null;
+    point.existTime = defaultPoint.existTime;
+}
+
 let BOT = {
     x: 0,
     y: 0,
@@ -194,14 +231,14 @@ function coordInit() {
     BOT.y = botStartY;
 }
 // Основной цикл
-    function main() {
-        let now = Date.now();
-        let dt = (now - lastTime) / 1000.0;
-        update(dt);
-        render();
-        lastTime = now;
-        requestAnimFrame(main);
-    }
+function main() {
+    let now = Date.now();
+    let dt = (now - lastTime) / 1000.0;
+    update(dt);
+    render();
+    lastTime = now;
+    requestAnimFrame(main);
+}
 
 function update(dt) {
     gameTime += dt;
@@ -355,14 +392,6 @@ function updateEntities() {
         POINT.color = gray;
     }     
 }    
-
-function render() {
-    ctx.clearRect(0, 0, GAME.width, GAME.height);
-    drawBackground();
-    drawPoint();
-    drawBot();
-    drawPlayer();
-}
 
 // Определение requestAnimFrame
     window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
