@@ -5,103 +5,17 @@ const green = "#00A86B";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
+const lineSize = 300;
+const laserWidth = 300;
 const DEFAULT_POINTS = [
-    {
-        x: 192,
-        y: 150,
-        width: 10,
-        height: 10,
-        type: 1,
-        active: false,
-        team: 0,
-        color: gray,
-        angle: 0,
-        existTime: 10000
-    },
-    {
-        x: 384,
-        y: 150,
-        width: 10,
-        height: 10,
-        type: 2,
-        active: false,
-        team: 0,
-        color: gray,
-        angle: 0,
-        existTime: 10000
-    },
-    {
-        x: 576,
-        y: 150,
-        width: 10,
-        height: 10,
-        type: 2,
-        active: false,
-        team: 0,
-        color: gray,
-        angle: 0,
-        existTime: 10000
-    },
-    {
-        x: 768,
-        y: 150,
-        width: 10,
-        height: 10,
-        type: 2,
-        active: false,
-        team: 0,
-        color: gray,
-        angle: 0,
-        existTime: 10000
-    },
-    {
-        x: 192,
-        y: 380,
-        width: 10,
-        height: 10,
-        type: 2,
-        active: false,
-        team: 0,
-        color: gray,
-        angle: 0,
-        existTime: 10000
-    },
-    {
-        x: 384,
-        y: 380,
-        width: 10,
-        height: 10,
-        type: 2,
-        active: false,
-        team: 0,
-        color: gray,
-        angle: 0,
-        existTime: 10000
-    },
-    {
-        x: 576,
-        y: 380,
-        width: 10,
-        height: 10,
-        type: 2,
-        active: false,
-        team: 0,
-        color: gray,
-        angle: 0,
-        existTime: 10000
-    },
-    {
-        x: 768,
-        y: 380,
-        width: 10,
-        height: 10,
-        type: 2,
-        active: false,
-        team: 0,
-        color: gray,
-        angle: 0,
-        existTime: 10000
-    }
+    {x: canvasWidth * (1 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
+    {x: canvasWidth * (2 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
+    {x: canvasWidth * (3 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
+    {x: canvasWidth * (4 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
+    {x: canvasWidth * (1 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
+    {x: canvasWidth * (2 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
+    {x: canvasWidth * (3 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
+    {x: canvasWidth * (4 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
 ];
 
 let canvas = document.getElementById("canvas");
@@ -113,7 +27,6 @@ let GAME = {
     height: canvasHeight,
     background: dark
 };
-
 let PLAYER = {
     x: 20,
     y: 20,
@@ -123,7 +36,6 @@ let PLAYER = {
     team: 1,
     isAlive: true
 };
-
 let POINTS = DEFAULT_POINTS.map(createPoint);
 
 function createPoint(point) {
@@ -137,12 +49,10 @@ function createPoint(point) {
         team: point.team,
         color: point.color,
         angle: point.angle,
-        wasActive: false, // новый флаг
-        activationTime: null, // время активации
-        existTime: point.existTime // время существования для каждого POINT
+        existTime: point.existTime,
+        activationTime: null
     };
 }
-
 function resetPoint(point, index) {
     const defaultPoint = DEFAULT_POINTS[index];
     point.x = defaultPoint.x;
@@ -154,9 +64,8 @@ function resetPoint(point, index) {
     point.team = defaultPoint.team;
     point.color = defaultPoint.color;
     point.angle = defaultPoint.angle;
-    point.wasActive = false;
-    point.activeSince = null;
     point.existTime = defaultPoint.existTime;
+    point.activationTime = null;
 }
 
 let ctx = canvas.getContext("2d");
@@ -191,23 +100,8 @@ function drawPlayer() {
 }
 
 function drawPoints() {
-
     POINTS.forEach(point => {
-        if (point.active) {
-            if (point.type === 1) {
-                ctx.fillStyle = point.color;
-                ctx.fillRect(point.x, point.y, point.width, point.height);
-            }
-            if (point.type === 2) {
-                point.angle += 2 * Math.PI / 180;
-                ctx.save();
-                ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
-                ctx.rotate(point.angle);
-                ctx.fillStyle = point.color;
-                ctx.fillRect(-point.width / 2, -point.height / 2, point.width, point.height);
-                ctx.restore();
-            }
-        } else {
+        if (point.type === 1) {
             point.angle += 2 * Math.PI / 180;
             ctx.save();
             ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
@@ -217,7 +111,7 @@ function drawPoints() {
             ctx.restore();
         }
     })
-}
+} // переписать рисование под типы
 
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
@@ -254,37 +148,12 @@ function update(dt) {
 
 function checkCollisions() {
     checkBorderGameBounds();
-    checkPointBounds();
     checkLaserBounds();
 }
 
 function checkBorderGameBounds() {
-    // Проверка границ
-    if (PLAYER.x < 0) {
-        PLAYER.x = GAME.width;
-    } else if (PLAYER.x > GAME.width) {
-        PLAYER.x = 0;
-    }
-
-    if (PLAYER.y < 0) {
-        PLAYER.y = GAME.height;
-    } else if (PLAYER.y > GAME.height) {
-        PLAYER.y = 0;
-    }
-}
-
-function checkPointBounds() {
-    POINTS.forEach(point => {
-        if (!point.active &&
-            point.x + point.width > PLAYER.x &&
-            point.x < PLAYER.x + PLAYER.size &&
-            point.y + point.height > PLAYER.y &&
-            point.y < PLAYER.y + PLAYER.size) {
-            point.active = true;
-            point.wasActive = true; // обновляем флаг
-            point.activationTime = Date.now(); // обновляем время активации
-        }
-    });
+    (PLAYER.x < 0) ? (PLAYER.x = GAME.width - PLAYER.size) : ((PLAYER.x + PLAYER.size) > GAME.width ? (PLAYER.x = 0) : (0));
+    (PLAYER.y < 0) ? (PLAYER.y = GAME.height - PLAYER.size) : ((PLAYER.y + PLAYER.size) > GAME.height ? (PLAYER.y = 0) : (0));
 }
 
 function checkLaserBounds() {
@@ -306,49 +175,49 @@ function checkLaserBounds() {
             const rotatedX = cos * dx + sin * dy;
             const rotatedY = -sin * dx + cos * dy;
 
-            if (rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
+            if (!point.active &&
+                rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
+                rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
+                point.active = true;
+                point.team = PLAYER.team;
+                point.activationTime = Date.now();
+            }
+
+            if (point.active &&
+                point.team !== PLAYER.team &&
+                rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
                 PLAYER.isAlive = false;
             }
         }
     });
-}
-
-
-//
-// if (point.team === 0) {
-//     point.team = PLAYER.team;
-//     point.width = lizerSize;
-//     point.x = point.x - point.width / 2;
-// }
-// if (point.team === PLAYER.team) {
-//     point.color = PLAYER.color;
-// } else {
-//     PLAYER.isAlive = 0;
-//     PLAYER.color = black;
-//     // в константы
-//     PLAYER.x = 20;
-//     PLAYER.y = 20;
-//     point.color = gray;
-// }
-
+} // подумать
 
 function updateEntities() {
     POINTS.forEach(point => {
         if (point.active) {
             if (point.team === 0) {
+                // установить вариативность типов
+                point.type = 1;
                 point.team = PLAYER.team;
+                point.width = lineSize;
+                point.x = point.x - point.width / 2;
             }
-            if (point.team === 1) {
-                if (point.type === 1) {
-                    point.width = laserSize;
-                }
+            if (point.team === PLAYER.team) {
+                point.color = PLAYER.color;
+            } else {
+                PLAYER.isAlive = 0;
+                PLAYER.color = black;
+                // в константы
+                PLAYER.x = 20;
+                PLAYER.y = 20;
+                point.color = gray;
             }
             if (!(Date.now() - point.activationTime < point.existTime)) {
                 point.active = false;
             }
-        } else if (point.wasActive && Date.now() - point.activationTime >= point.existTime) {
-            resetPoint(point, POINTS.indexOf(point)); // сброс объекта POINT в исходные значения
+        } else if (point.active && Date.now() - point.activationTime >= point.existTime) {
+            resetPoint(point, POINTS.indexOf(point));
         }
     });
 }
