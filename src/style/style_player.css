@@ -1,0 +1,28 @@
+.central-part__player {
+    display: flex;
+    flex-direction: column;
+    margin-top: 180px;
+    padding-left: 80px;
+    padding-bottom: 40px;
+}
+
+.chapter-player {
+    background-image: url("../img/border_with-player.png");
+    width: 907px;
+    height: 155px;
+}
+
+.input-for-code {
+    display: block;
+    outline: none;
+    border: none;
+    margin-top: 40px;
+    margin-left: 80px;
+    width: 335px;
+    height: 63px;
+    background-color: white;
+    color: rgb(94, 94, 94);
+    font: 700 35px/23px Montserrat;
+    text-align: center;
+    box-shadow: 0 0 10px white;
+}

@@ -1,0 +1,7 @@
+.central-part__bot {
+    display: flex;
+    flex-direction: column;
+    margin-top: 450px;
+    padding-left: 80px;
+    padding-bottom: 30px;
+}

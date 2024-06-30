@@ -1,0 +1,39 @@
+.central-part__player {
+    display: flex;
+    flex-direction: column;
+    margin-top: 180px;
+    padding-left: 80px;
+    padding-bottom: 40px;
+}
+
+
+.chapter-lobby {
+    background-image: url("../img/border_lobby.png");
+    background-repeat: no-repeat;
+}
+
+.chapter__code {
+    bottom: 0;
+    color: white;
+    font: 700 120px/146px Montserrat;
+    display: inline-block;
+    left: 80px;
+}
+
+.chapter__title {
+    display: inline-block;
+    right: 15px;
+}
+
+.chapter {
+    width: calc(100vw - 50px - 80px);
+}
+
+/*.chapter-lobby {*/
+/*    position: relative;*/
+/*    background-image: url("../img/border_lobby.png");*/
+/*    width: 462px;*/
+/*    height: 155px;*/
+/*    margin-right: 70px;*/
+/*    margin-bottom: 57px;*/
+/*}*/
