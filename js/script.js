@@ -255,6 +255,8 @@ function update(dt) {
 }
 
 function botMovement(dt) {
+    let loopIndexInactive = 0; 
+    let loopIndexActive = 0; 
     let idInactive;
     let dxMinInactive;
     let dyMinInactive;
@@ -265,13 +267,12 @@ function botMovement(dt) {
     let hypMinActive;
     let inRangeOfLaser;
     findNearestPoint(POINTS);
-    moveBotToLaser();
-    console.log(inRangeOfLaser);
+    console.log(inRangeOfLaser);    
     if (inRangeOfLaser) {
         moveBotOutOfLaserSpiral();
     }
-    // goToNearestPoint();
-    
+    moveBotToLaser();
+
     
     function findNearestPoint(POINTS) {
         POINTS.forEach(point => {
@@ -281,7 +282,7 @@ function botMovement(dt) {
     }
     function findInactivePointAndCompare(point) {
         if (!point.active) {
-            if (point.id == 0) {
+            if (loopIndexInactive === 0) {
                 idInactive = 0;
                 dxMinInactive = point.x - BOT.x;
                 dyMinInactive = point.y - BOT.y;
@@ -290,32 +291,35 @@ function botMovement(dt) {
             let dx = point.x - BOT.x;
             let dy = point.y - BOT.y;
             let hyp = Math.sqrt(dx**2 + dy**2);
-            if (hyp < hypMinInactive && !point.active) {
+            if (hyp < hypMinInactive) {
                 idInactive = point.id;
                 dxMinInactive = dx;
                 dyMinInactive = dy;
                 hypMinInactive = hyp;
             }
+            loopIndexInactive++;
         }
     }
     function findActivePointInArea(point) {
+        
         if (point.active) {
-            if (point.id === 0) {
-                idActive = 0;
-                dxMinActive = point.x - BOT.x;
-                dyMinActive = point.y - BOT.y;
-                hypMinActive = Math.sqrt(dxMinActive**2 + dyMinActive**2);
+            if (loopIndexActive === 0) {
+                idInactive = 0;
+                    dxMinActive = point.x - BOT.x;
+                    dyMinActive = point.y - BOT.y;
+                    hypMinActive = Math.sqrt(dxMinActive**2 + dyMinActive**2);
             }
             let dx = point.x - BOT.x;
             let dy = point.y - BOT.y;
             let hyp = Math.sqrt(dx**2 + dy**2);
-            if (hyp < hypMinActive && !point.active) {
+            if (hyp < hypMinActive) {
                 idActive = point.id;
                 dxMinActive = dx;
                 dyMinActive = dy;
                 hypMinActive = hyp;
             }
             inRangeOfLaser = (hypMinActive - BOT.size * Math.sqrt(2) < point.laserWidth/2);
+            loopIndexActive++;
         }
     }
     function goToNearestPoint() {
