@@ -1,46 +1,128 @@
-let canvas = document.getElementById("canvas");
-
-const canvasWidth = 400;
-const canvasHeight = 400;
-const red = "red";
+const canvasWidth = 960;
+const canvasHeight = 540;
+const red = "#FC0000";
 const green = "#00A86B";
 const gray = "#666";
+const dark = "#333";
 const black = "#111";
 const lineSize = 300;
-const startPos = [20, 20];
+const laserWidth = 300;
+const DEFAULT_POINTS = [
+    {
+        x: 200,
+        y: 200,
+        width: 10,
+        height: 10,
+        laserWidth: laserWidth,
+        type: 1,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 0,
+        existTime: 10000
+    },
+    {
+        x: 350,
+        y: 400,
+        width: 10,
+        height: 10,
+        laserWidth: laserWidth,
+        type: 1,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 45,
+        existTime: 10000
+    },
+    {
+        x: 650,
+        y: 400,
+        width: 10,
+        height: 10,
+        laserWidth: laserWidth,
+        type: 1,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 30,
+        existTime: 10000
+    },
+    {
+        x: 500,
+        y: 200,
+        width: 10,
+        height: 10,
+        laserWidth: laserWidth,
+        type: 1,
+        active: false,
+        team: 0,
+        color: gray,
+        angle: 90,
+        existTime: 10000
+    }
+];
+
+let canvas = document.getElementById("canvas");
+let gameTime = 0;
+let lastTime;
 
 let GAME = {
     width: canvasWidth,
     height: canvasHeight,
-    background: '#333'
+    background: dark
 };
 
 let PLAYER = {
-    pos: [20, 20],
+    x: 20,
+    y: 20,
     size: 10,
     color: black,
     speed: 200,
-    //enum red/blue
-    team: 1, 
-    // true
-    live: 1
+    team: 1,
+    isAlive: true
 };
 
-let POINT = {
-    pos: [200, 200],
-    width: 10,
-    height: 10,
-    type: 0,
-    active: false,
-    team: 0,
-    color: gray
-};
+let POINTS = DEFAULT_POINTS.map(createPoint);
+
+function createPoint(point) {
+    return {
+        x: point.x,
+        y: point.y,
+        width: point.width,
+        height: point.height,
+        laserWidth: point.laserWidth,
+        type: point.type,
+        active: point.active,
+        team: point.team,
+        color: point.color,
+        angle: point.angle,
+        wasActive: false, // новый флаг
+        activationTime: null, // время активации
+        existTime: point.existTime // время существования для каждого POINT
+    };
+}
+
+function resetPoint(point, index) {
+    const defaultPoint = DEFAULT_POINTS[index];
+    point.x = defaultPoint.x;
+    point.y = defaultPoint.y;
+    point.width = defaultPoint.width;
+    point.height = defaultPoint.height;
+    point.laserWidth = defaultPoint.laserWidth;
+    point.type = defaultPoint.type;
+    point.active = defaultPoint.active;
+    point.team = defaultPoint.team;
+    point.color = defaultPoint.color;
+    point.angle = defaultPoint.angle;
+    point.wasActive = false;
+    point.activeSince = null;
+    point.existTime = defaultPoint.existTime;
+}
+
+let ctx = canvas.getContext("2d");
 
 canvas.width = GAME.width;
 canvas.height = GAME.height;
-
-// Инструменты рисования
-let ctx = canvas.getContext("2d");
 
 function drawBackground() {
     ctx.fillStyle = GAME.background;
@@ -48,185 +130,182 @@ function drawBackground() {
 }
 
 function drawPlayer() {
-    if (PLAYER.live === 1) {
+    if (PLAYER.isAlive === true) {
         if (PLAYER.team === 1) {
             PLAYER.color = green;
         }
         if (PLAYER.team === 2) {
             PLAYER.color = red;
-        }    
-    } else {
-        PLAYER.color = black
+        }
+        ctx.fillStyle = PLAYER.color;
+        ctx.fillRect(PLAYER.x, PLAYER.y, PLAYER.size, PLAYER.size);
     }
-    
-    ctx.fillStyle = PLAYER.color;
-    ctx.fillRect(PLAYER.pos[0], PLAYER.pos[1], PLAYER.size, PLAYER.size);
-}
-
-function drawPoint() {
-    if (POINT.active) {
-        if (POINT.type === 1) {
-            ctx.fillStyle = POINT.color;
-            ctx.fillRect(POINT.pos[0], POINT.pos[1], POINT.width, POINT.height);
-        }
-        if (POINT.type === 2) {
-        //дописать типы
-        }
-    } else {
-        ctx.fillStyle = POINT.color;
-        ctx.fillRect(POINT.pos[0], POINT.pos[1], POINT.width, POINT.height);
+    if (PLAYER.isAlive === false) {
+        setTimeout(() => {
+            PLAYER.color = green;
+            PLAYER.x = 10;
+            PLAYER.y = 10;
+            PLAYER.isAlive = true
+        }, 1);
     }
 }
 
-function drawFrame() {
-    ctx.clearRect(0, 0, GAME.width, GAME.height);
-    drawBackground();
-    drawPoint();
-    drawPlayer();
+function drawPoints() {
+    POINTS.forEach(point => {
+        if (point.type === 1) {
+            point.angle += 2 * Math.PI / 180;
+            ctx.save();
+            ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
+            ctx.rotate(point.angle);
+            ctx.fillStyle = point.color;
+            ctx.fillRect(-point.width / 2, -point.height / 2, point.width, point.height);
+            ctx.restore();
+        }
+    })
 }
-
-let lastTime;
-let timeExist = 3000;
-let pointActiveTime = null;
-let pointActiveExist = false; 
+    function render() {
+        ctx.clearRect(0, 0, GAME.width, GAME.height);
+        drawBackground();
+        drawPoints();
+        drawPlayer();
+    }
 
 // Инициализация
-function init() {
-    drawBackground();
-    drawPoint();
-    drawPlayer(); 
-    lastTime = Date.now();
-    main();
-}
+    function init() {
+        drawBackground();
+        drawPoints();
+        drawPlayer();
+        main();
+        lastTime = Date.now();
+    }
 
 // Основной цикл
-function main() {
-    let now = Date.now();
-    let dt = (now - lastTime) / 1000.0;
+    function main() {
+        let now = Date.now();
+        let dt = (now - lastTime) / 1000.0;
+        update(dt);
+        render();
+        lastTime = now;
+        requestAnimFrame(main);
+    }
 
-    update(dt);
-    render();
+    function update(dt) {
+        gameTime += dt;
+        handleInput(dt);
+        checkCollisions();
+        updateEntities();
+    }
 
-    lastTime = now;
-    requestAnimFrame(main);
-}
+    function checkCollisions() {
+        checkBorderGameBounds();
+        checkPointBounds();
+        checkLaserBounds();
+    }
 
-let gameTime = 0;
+    function checkBorderGameBounds() {
+        // Проверка границ
+        if (PLAYER.x < 0) {
+            PLAYER.x = GAME.width;
+        } else if (PLAYER.x > GAME.width) {
+            PLAYER.x = 0;
+        }
 
-function update(dt) {
-    gameTime += dt;
-    handleInput(dt);
-    checkCollisions();
-    updateEntities();
-}
+        if (PLAYER.y < 0) {
+            PLAYER.y = GAME.height;
+        } else if (PLAYER.y > GAME.height) {
+            PLAYER.y = 0;
+        }
+    }
+
+    function checkPointBounds() {
+        POINTS.forEach(point => {
+            if (!point.active &&
+                point.x + point.width > PLAYER.x &&
+                point.x < PLAYER.x + PLAYER.size &&
+                point.y + point.height > PLAYER.y &&
+                point.y < PLAYER.y + PLAYER.size) {
+                point.active = true;
+                point.wasActive = true; // обновляем флаг
+                point.activationTime = Date.now(); // обновляем время активации
+            }
+        });
+    }
+
+    function checkLaserBounds() {
+        POINTS.forEach(point => {
+            const sin = Math.sin(point.angle);
+            const cos = Math.cos(point.angle);
+
+            const playerCorners = [
+                {x: PLAYER.x, y: PLAYER.y},
+                {x: PLAYER.x + PLAYER.size, y: PLAYER.y},
+                {x: PLAYER.x, y: PLAYER.y + PLAYER.size},
+                {x: PLAYER.x + PLAYER.size, y: PLAYER.y + PLAYER.size}
+            ];
+
+            for (const corner of playerCorners) {
+                const dx = corner.x - point.x - point.width / 2;
+                const dy = corner.y - point.y - point.height / 2;
+
+                const rotatedX = cos * dx + sin * dy;
+                const rotatedY = -sin * dx + cos * dy;
+
+                if (rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
+                    rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
+                    PLAYER.isAlive = false;
+                }
+            }
+        });
+    }
+
+    function updateEntities() {
+        POINTS.forEach(point => {
+            if (point.active) {
+                if (point.team === 0) {
+                    // установить вариативность типов
+                    point.type = 1;
+                    point.team = PLAYER.team;
+                    point.width = lineSize;
+                    point.x = point.x - point.width / 2;
+                }
+                if (point.team === PLAYER.team) {
+                    point.color = PLAYER.color;
+                } else {
+                    PLAYER.isAlive = 0;
+                    PLAYER.color = black;
+                    // в константы
+                    PLAYER.x = 20;
+                    PLAYER.y = 20;
+                    point.color = gray;
+                }
+                if (!(Date.now() - point.activationTime < point.existTime)) {
+                    point.active = false;
+                }
+            } else if (point.wasActive && Date.now() - point.activationTime >= point.existTime) {
+                resetPoint(point, POINTS.indexOf(point)); // сброс объекта POINT в исходные значения
+            }
+        });
+    }
 
 // Обработка нажатой клавиши
 function handleInput(dt) {
-    if(input.isDown('DOWN') || input.isDown('s')) {
-        PLAYER.pos[1] += PLAYER.speed * dt;
+    if (input.isDown('LEFT') || input.isDown('a')) {
+        PLAYER.x -= PLAYER.speed * dt;
     }
-
-    if(input.isDown('UP') || input.isDown('w')) {
-        PLAYER.pos[1] -= PLAYER.speed * dt;
+    if (input.isDown('RIGHT') || input.isDown('d')) {
+        PLAYER.x += PLAYER.speed * dt;
     }
-
-    if(input.isDown('LEFT') || input.isDown('a')) {
-        PLAYER.pos[0] -= PLAYER.speed * dt;
+    if (input.isDown('DOWN') || input.isDown('s')) {
+        PLAYER.y += PLAYER.speed * dt;
     }
-
-    if(input.isDown('RIGHT') || input.isDown('d')) {
-        PLAYER.pos[0] += PLAYER.speed * dt;
+    if (input.isDown('UP') || input.isDown('w')) {
+        PLAYER.y -= PLAYER.speed * dt;
     }
-}
-
-//проблема с тем, что если оставить так, то непонятно, для кого конрктено мы обрабатываем коллизию. Точнее, мы обрабатвыаем ее не для всех. Непонятно, кто главный, кто второстепенный.
-function checkCollisions(dt) {
-    checkPlayerBounds();
-    checkEntitiyBounds();
-}
-
-function checkPlayerBounds() {
-    // Проверка границ
-    if(PLAYER.pos[0] < 0) {
-        PLAYER.pos[0] = GAME.width;
-    } else if(PLAYER.pos[0] > GAME.width) {
-        PLAYER.pos[0] = 0;
-    }
-//баг - герой может быть невидимым +30px (ширина)
-    if(PLAYER.pos[1] < 0) {
-        PLAYER.pos[1] = GAME.height;
-    } else if(PLAYER.pos[1] > GAME.height) {
-        PLAYER.pos[1] = 0;
-    }
-}
-
-function checkEntitiyBounds() {
-    if (POINT.pos[0] + POINT.width > PLAYER.pos[0] &&
-        POINT.pos[0] < PLAYER.pos[0] + PLAYER.size &&
-        POINT.pos[1] + POINT.height > PLAYER.pos[1] &&
-        POINT.pos[1] < PLAYER.pos[1] + PLAYER.size) {
-        
-        POINT.active = true;
-        //здесь запоминать каакой игрок активировал точку
-    } 
-}
-
-function updateEntities() {
-    if (POINT.active) {
-        if (POINT.team === 0) {
-            //установить вариативность типов
-            POINT.type = 1;
-            POINT.team = PLAYER.team;
-            POINT.width = lineSize;
-            POINT.pos[0] = POINT.pos[0] - POINT.width / 2;
-            //время жизни
-            pointActiveTime = Date.now(); //переименовать 
-        }
-        if (POINT.team === PLAYER.team) {
-            POINT.color = PLAYER.color;
-        } else {
-            PLAYER.live = 0;
-            PLAYER.color = black;
-            PLAYER.pos = startPos;
-            //маркер столкновения
-            POINT.color = red;
-        }
-
-        // можно использовать конструкцию !() {}
-        if (Date.now() - pointActiveTime < timeExist) {
-            pointActiveExist = true;
-        } else {
-            POINT.active = false;
-        }
-    } else {  // изменяем состояния POINT в исходные 
-        POINT.pos = [200, 200];
-        POINT.width = 10;
-        POINT.type = 0;
-        POINT.team = 0;
-        POINT.color = gray;
-    }     
-}    
-
-
-//надо подумать что делать с описанием состояний жизни
-
-function render() {
-    ctx.clearRect(0, 0, GAME.width, GAME.height);
-    drawBackground();
-    drawPoint();
-    drawPlayer();
 }
 
 // Определение requestAnimFrame
-window.requestAnimFrame = (function() {
-    return window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        function(callback) {
-            window.setTimeout(callback, 1000 / 60);
-        };
-})();
+    window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
 
-init();
+    init();
