@@ -9,19 +9,83 @@
     <link rel="stylesheet" href="src/style/fonts.css">
 </head>
 <body>
-    <div class="name-game-lobby">
-        <h1 class="name-game__title">PRISM</h1>
-        <h2 class="name-game__count-players">PLAYERS 3/4</h2>
+    <div class="lobby">
+        <h2 class="lobby-title">PRISM</h2>
+        <h2 class="lobby-count-players">PLAYERS 3/4</h2>
     </div>
 
     <div class="central-part__player">
-        <button class="button" id="button-play">PLAY</button>
-        <button class="button" id="button-menu">MENU</button>
+        <div class="menu">
+            <button class="button" id="button-play">PLAY</button>
+            <button class="button" id="button-menu">MENU</button>
+        </div>
+        <div class="players">
+            <div class="player" style="background-color: #6000C1;">
+                <div class="player-card-top">
+                    <button class="button-left">
+                        <i class="arrow-left"></i>
+                    </button>
+                    <div class="player-img-container">
+                        <img class="player-img" alt="" src="src/img/kandinsky-download-1719222086261%201.svg">
+                    </div>
+                    <button class="button-right">
+                        <i class="arrow-right"></i>
+                    </button>
+                </div>
+                <span class="player-count">Player 1</span>
+                <span class="player-name" >name character</span>
+            </div>
+            <div class="player" style="background-color: #B22DF1;">
+                <div class="player-card-top">
+                    <button class="button-left">
+                        <i class="arrow-left"></i>
+                    </button>
+                    <div class="player-img-container">
+                        <img class="player-img" alt="" src="src/img/kandinsky-download-1719222086261%201.svg">
+                    </div>
+                    <button class="button-right">
+                        <i class="arrow-right"></i>
+                    </button>
+                </div>
+                <span class="player-count">Bot 1</span>
+                <span class="player-name" >name character</span>
+            </div>
+            <div class="player" style="background-color: #FBFF35;">
+                <div class="player-card-top">
+                    <button class="button-left">
+                        <i class="arrow-left" style="border-right: 12px solid #818314;"></i>
+                    </button>
+                    <div class="player-img-container">
+                        <img class="player-img" alt="" src="src/img/kandinsky-download-1719222086261%201.svg">
+                    </div>
+                    <button class="button-right">
+                        <i class="arrow-right" style="border-left: 12px solid #818314;"></i>
+                    </button>
+                </div>
+                <span class="player-count" style="color: #818414;">Player 2</span>
+                <span class="player-name" style="color: #818414;">name character</span>
+            </div>
+            <div class="player" style="background-color: #FFC635;">
+                <div class="player-card-top">
+                    <button class="button-left">
+                        <i class="arrow-left" style="border-right: 12px solid #818314;"></i>
+                    </button>
+                    <div class="player-img-container">
+                        <img class="player-img" alt="" src="src/img/kandinsky-download-1719222086261%201.svg">
+                    </div>
+                    <button class="button-right">
+                        <i class="arrow-right" style="border-left: 12px solid #818314;"></i>
+                    </button>
+                </div>
+                <span class="player-count" style="color: #AE8418;">Waiting Player</span>
+                <span class="player-name" style="color: #CFA333;">name character</span>
+            </div>
+        </div>
     </div>
 
-    <div class="chapter chapter-lobby">
-        <h1 class="chapter__code">432678</h1>
-        <h1 class="chapter__title">LOBBY</h1>
+    <div class="chapter-lobby">
+        <h2 class="chapter__code">432678</h2>
+        <h2 class="chapter__title">LOBBY</h2>
     </div>
 
 </body>
