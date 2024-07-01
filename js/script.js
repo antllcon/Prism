@@ -9,6 +9,7 @@ const lineSize = 300;
 const laserWidth = 300;
 const DEFAULT_POINTS = [
     {
+        id: 0,
         x: 200,
         y: 200,
         width: 10,
@@ -22,6 +23,7 @@ const DEFAULT_POINTS = [
         existTime: 10000
     },
     {
+        id: 1,
         x: 350,
         y: 400,
         width: 10,
@@ -35,6 +37,7 @@ const DEFAULT_POINTS = [
         existTime: 10000
     },
     {
+        id: 2,
         x: 650,
         y: 400,
         width: 10,
@@ -48,6 +51,7 @@ const DEFAULT_POINTS = [
         existTime: 10000
     },
     {
+        id: 3,
         x: 500,
         y: 200,
         width: 10,
@@ -93,6 +97,7 @@ let POINTS = DEFAULT_POINTS.map(createPoint);
 
 function createPoint(point) {
     return {
+        id: point.id,
         x: point.x,
         y: point.y,
         width: point.width,
@@ -243,48 +248,104 @@ function main() {
 
 function update(dt) {
     gameTime += dt;
-    // botMovement(dt);
+    botMovement(dt);
     handleInput(dt);
     checkCollisions();
     updateEntities();
 }
 
 function botMovement(dt) {
-    
-    const dx = POINT.x - BOT.x;
-    const dy = POINT.y - BOT.y;
-    const hyp = Math.sqrt(dx**2 + dy**2);
-    const inRangeOfLaser = (hyp - BOT.size * Math.sqrt(2) < POINT.laserWidth);
-    
-    if (!POINT.active) {
-        // Бот движется к точке, когда лазер не активен
-        moveBotToLaser();
-    }
-    if (POINT.active && inRangeOfLaser) {
-        // Бот движется по спирали от центра, когда лазер активен и бот в зоне поражения
+    let idInactive;
+    let dxMinInactive;
+    let dyMinInactive;
+    let hypMinInactive;
+    let idActive;
+    let dxMinActive;
+    let dyMinActive;
+    let hypMinActive;
+    let inRangeOfLaser;
+    findNearestPoint(POINTS);
+    moveBotToLaser();
+    console.log(inRangeOfLaser);
+    if (inRangeOfLaser) {
         moveBotOutOfLaserSpiral();
-    } 
-    if (POINT.active && !inRangeOfLaser) {
-        // Бот движется к точке, когда лазер активен, но бот не в зоне поражения
+    }
+    // goToNearestPoint();
+    
+    
+    function findNearestPoint(POINTS) {
+        POINTS.forEach(point => {
+            findInactivePointAndCompare(point);
+            findActivePointInArea(point);
+        });
+    }
+    function findInactivePointAndCompare(point) {
+        if (!point.active) {
+            if (point.id == 0) {
+                idInactive = 0;
+                dxMinInactive = point.x - BOT.x;
+                dyMinInactive = point.y - BOT.y;
+                hypMinInactive = Math.sqrt(dxMinInactive**2 + dyMinInactive**2);
+            }
+            let dx = point.x - BOT.x;
+            let dy = point.y - BOT.y;
+            let hyp = Math.sqrt(dx**2 + dy**2);
+            if (hyp < hypMinInactive && !point.active) {
+                idInactive = point.id;
+                dxMinInactive = dx;
+                dyMinInactive = dy;
+                hypMinInactive = hyp;
+            }
+        }
+    }
+    function findActivePointInArea(point) {
+        if (point.active) {
+            if (point.id === 0) {
+                idActive = 0;
+                dxMinActive = point.x - BOT.x;
+                dyMinActive = point.y - BOT.y;
+                hypMinActive = Math.sqrt(dxMinActive**2 + dyMinActive**2);
+            }
+            let dx = point.x - BOT.x;
+            let dy = point.y - BOT.y;
+            let hyp = Math.sqrt(dx**2 + dy**2);
+            if (hyp < hypMinActive && !point.active) {
+                idActive = point.id;
+                dxMinActive = dx;
+                dyMinActive = dy;
+                hypMinActive = hyp;
+            }
+            inRangeOfLaser = (hypMinActive - BOT.size * Math.sqrt(2) < point.laserWidth/2);
+        }
+    }
+    function goToNearestPoint() {
         moveBotToLaser();
+        if (POINTS[idInactive].active && inRangeOfLaser) {
+            // Бот движется по спирали от центра, когда лазер активен и бот в зоне поражения
+            moveBotOutOfLaserSpiral();
+        } 
+        if (POINTS[id].active && !inRangeOfLaser) {
+            // Бот движется к точке, когда лазер активен, но бот не в зоне поражения
+            moveBotToLaser();
+        }
     }
     function moveBotToLaser() {
-        BOT.x += BOT.speed * dx / hyp * dt;
-        BOT.y += BOT.speed * dy / hyp * dt;
+        BOT.x += BOT.speed * dxMinInactive / hypMinInactive * dt;
+        BOT.y += BOT.speed * dyMinInactive / hypMinInactive * dt;
     }
     function moveBotOutOfLaserSpiral() {
         // Определяем угол между ботом и точкой
-        const angle = Math.atan2(dy, dx);
+        const angle = Math.atan2(dyMinActive, dxMinActive);
                 
         // Радиальная скорость (от центра прочь)
         const radialSpeed = BOT.speed * dt;
 
         // Угловая скорость (по окружности)
-        const angularSpeed = BOT.speed * dt / hyp;
+        const angularSpeed = BOT.speed * dt / hypMinActive;
 
         // Обновляем координаты бота
-        BOT.x -= radialSpeed * Math.cos(angle) - angularSpeed * Math.sin(angle) * hyp;
-        BOT.y -= radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hyp;
+        BOT.x -= radialSpeed * Math.cos(angle) - angularSpeed * Math.sin(angle) * hypMinActive;
+        BOT.y -= radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive;
     }
 }
 
