@@ -70,16 +70,16 @@ body {
     font: 700 120px/146px Montserrat;
 }
 
-button:hover {
+.button:hover {
     box-shadow: 0 0 30px white;
 }
 
-button:active {
+.button:active {
     box-shadow: 0 0 30px white;
     transform: scale(0.96);
 }
 
-button::selection {
+.button::selection {
     background-color: black;
 }
 
