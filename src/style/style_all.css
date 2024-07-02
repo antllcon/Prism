@@ -21,7 +21,6 @@ body {
     top: 0;
     width: 62vw;
     height: 72vh;
-    /*background-image: url("../img/prism.png");*/
 }
 
 .logo svg {
@@ -39,8 +38,8 @@ body {
 
 .title {
     position: absolute;
-    margin-left: 60px;
-    margin-top: 60px;
+    left: 60px;
+    top: 60px;
     color: white;
     font: 700 120px/100px Montserrat;
     padding: 20px 10px 10px 20px;

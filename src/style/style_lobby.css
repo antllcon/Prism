@@ -1,13 +1,13 @@
 .central-part__player {
     display: flex;
     flex-direction: row;
-    margin-top: 110px;
+    margin-top: 130px;
+    padding-left: 80px;
     height: 380px;
 }
 
 
 .chapter-lobby {
-    /*background-image: url("../img/border_lobby.png");*/
     background-repeat: no-repeat;
     color: white;
     font: 700 120px/100px Montserrat;
@@ -27,6 +27,19 @@
 
 .chapter__title {
     display: inline-block;
+    font: 700 120px/146px Montserrat;
+    border-bottom: 10px solid white;
+    border-right: 10px solid white;
+    padding-right: 30px;
+}
+
+.lobby {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    background-repeat: no-repeat;
+    height: 154px;
+    margin: 66px 333px 0 60px;
     font: 700 120px/146px Montserrat;
     border-bottom: 10px solid white;
     border-right: 10px solid white;
@@ -128,6 +141,12 @@
     height: 50px;
 }
 
+.lobby-title {
+    border-top: 10px solid white;
+    border-left: 10px solid white;
+    color: white;
+    font: 700 120px/146px Montserrat;
+}
 
 .player-name{
     color: white;
@@ -136,6 +155,123 @@
     margin-left: 14px;
 }
 
+.lobby-title::selection {
+    background-color: black;
+}
+
+.lobby-count-players {
+    margin: 10px;
+    color: white;
+    font: 700 120px/146px Montserrat;
+}
+
+.players {
+    display: flex;
+    flex-direction: row;
+    margin-left: 250px;
+    /*gap: 54px;*/
+    flex-wrap: nowrap;
+    width: 1300px;
+    height: 450px;
+}
+
+.player-card-top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: inherit;
+    justify-content: space-between;
+}
+
+
+.player{
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 244px;
+    margin-right: 54px;
+}
+
+.menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player-img-container{
+    margin-top: 21px;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    width: 168px;
+    height: 219px;
+}
+
+.player-img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: flex;
+}
+
+.player-count{
+    color: white;
+    font: 700 38px Montserrat;
+    background-color: inherit;
+    margin-top: 6px;
+    margin-left: 14px;
+    transition: font-size 0.3s ease;
+    white-space: normal;
+}
+
+.player-name{
+    color: white;
+    font: 700 20px Montserrat;
+    background-color: inherit;
+    margin-left: 14px;
+}
+
+.button-left,
+.button-right {
+    border-radius: 90%;
+    display: flex;
+    width: 40px;
+    height: 40px;
+    border: none;
+    position: relative;
+    background-color: inherit;
+    box-shadow: none;
+
+}
+
+.button-left:not(:hover),
+.button-right:not(:hover) {
+    box-shadow: none; /* Сбрасываем box-shadow при отсутствии наведения */
+}
+
+.arrow-left,
+.arrow-right {
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: inherit;
+    cursor: pointer;
+}
+
+.arrow-left {
+    border-right: 12px solid #fff;
+    left: 12px;
+}
+
+.arrow-right {
+    border-left: 12px solid #fff;
+    right: 12px;
+}
 .player-get-bot{
     font: 700 20px Montserrat;
     color: #CFA333;
