@@ -136,7 +136,7 @@ let BOT = {
     y: 0,
     size: 10,
     color: 'red',
-    speed: 100,
+    speed: 200,
     team: 'red', 
     isAlive: true,
     side: 'enemy'
@@ -266,12 +266,18 @@ function botMovement(dt) {
     let dyMinActive;
     let hypMinActive;
     let inRangeOfLaser;
+
+    let dxInactive;
+    let dxActive;
+    let dyInactive;
+    let dyActive;
     findNearestPoint(POINTS);
-    console.log(inRangeOfLaser);    
+
     if (inRangeOfLaser) {
         moveBotOutOfLaserSpiral();
     }
     moveBotToLaser();
+    getRightDirection();
 
     
     function findNearestPoint(POINTS) {
@@ -334,8 +340,8 @@ function botMovement(dt) {
         }
     }
     function moveBotToLaser() {
-        BOT.x += BOT.speed * dxMinInactive / hypMinInactive * dt;
-        BOT.y += BOT.speed * dyMinInactive / hypMinInactive * dt;
+        dxInactive = BOT.speed * dxMinInactive / hypMinInactive * dt;
+        dyInactive = BOT.speed * dyMinInactive / hypMinInactive * dt;
     }
     function moveBotOutOfLaserSpiral() {
         // Определяем угол между ботом и точкой
@@ -346,10 +352,64 @@ function botMovement(dt) {
 
         // Угловая скорость (по окружности)
         const angularSpeed = BOT.speed * dt / hypMinActive;
-
         // Обновляем координаты бота
-        BOT.x -= radialSpeed * Math.cos(angle) - angularSpeed * Math.sin(angle) * hypMinActive;
-        BOT.y -= radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive;
+        dxActive =  angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
+        dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
+    }
+    function getRightDirection() {
+        if (inRangeOfLaser) {
+            if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
+                if (Math.sqrt((dxActive + dxInactive)**2 + (dyActive + dyInactive)**2) < BOT.speed * dt) {
+                    BOT.x += dxActive + dxInactive;
+                    BOT.y += dyActive + dyInactive;
+                    // console.log(Math.sqrt((dxActive + dxInactive)**2 + (dyActive + dyInactive)**2));
+                } else {
+                    console.log('here');
+                    const angle = Math.atan2(dyActive + dyInactive, dxActive + dxInactive);
+                    BOT.x += BOT.speed * dt * Math.cos(angle);
+                    BOT.y += BOT.speed * dt * Math.sin(angle);
+                }
+            }
+            if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
+                if (Math.sqrt((dxActive + dxInactive)**2 + (dyActive)**2) < BOT.speed * dt) {
+                    BOT.x += dxActive + dxInactive;
+                    BOT.y += dyActive;
+                    // console.log(Math.sqrt((dxActive + dxInactive)**2 + (dyActive)**2));
+                } else {
+                    console.log('here');
+                    const angle = Math.atan2(dyActive, dxActive + dxInactive);
+                    BOT.x += BOT.speed * dt * Math.cos(angle);
+                    BOT.y += BOT.speed * dt * Math.sin(angle);
+                }
+            }
+            if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
+                if (Math.sqrt((dxActive)**2 + (dyActive + dyInactive)**2) < BOT.speed * dt) {
+                    BOT.x += dxActive;
+                    BOT.y += dyActive + dyInactive;
+                    // console.log(Math.sqrt((dxActive)**2 + (dyActive + dyInactive)**2));
+                } else {
+                    console.log('here');
+                    const angle = Math.atan2(dyActive + dyInactive, dxActive);
+                    BOT.x += BOT.speed * dt * Math.cos(angle);
+                    BOT.y += BOT.speed * dt * Math.sin(angle);
+                }
+            }; 
+            if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
+                if (Math.sqrt((dxActive)**2 + (dyActive)**2) < BOT.speed * dt) {
+                    BOT.x += dxActive;
+                    BOT.y += dyActive;
+                    // console.log(Math.sqrt((dxActive)**2 + (dyActive)**2));
+                } else {
+                    console.log('here');
+                    const angle = Math.atan2(dyActive, dxActive);
+                    BOT.x += BOT.speed * dt * Math.cos(angle);
+                    BOT.y += BOT.speed * dt * Math.sin(angle);
+                }
+            }
+        } else {
+            BOT.x += dxInactive;
+            BOT.y += dyInactive;
+        }
     }
 }
 
