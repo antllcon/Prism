@@ -9,14 +9,10 @@
         this.url = url;
         this.dir = dir || 'horizontal';
         this.once = once;
-    };
+    }
 
     Sprite.prototype = {
-        update: function(dt) {
-            this._index += this.speed*dt;
-        },
-
-        render: function(canvasContext) {
+        render: function(canvasContext, resources) {
             let frame;
 
             if(this.speed > 0) {
@@ -25,7 +21,6 @@
                 frame = this.frames[idx % max];
 
                 if(this.once && idx >= max) {
-                    this.done = true;
                     return;
                 }
             }
@@ -37,7 +32,7 @@
             let x = this.pos[0];
             let y = this.pos[1];
 
-            if(this.dir == 'vertical') {
+            if(this.dir === 'vertical') {
                 y += frame * this.size[1];
             }
             else {

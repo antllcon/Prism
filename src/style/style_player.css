@@ -1,7 +1,7 @@
-.central-part__player {
+.central-part-player {
     display: flex;
     flex-direction: column;
-    margin-top: 180px;
+    margin-top: 420px;
     padding-left: 80px;
     padding-bottom: 40px;
 }
