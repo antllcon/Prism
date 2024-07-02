@@ -119,7 +119,8 @@
     color: white;
     font: 700 38px Montserrat;
     background-color: inherit;
-    margin-left: 14px;
+    padding-left: 14px;
+    padding-right: 14px;
     transition: font-size 0.3s ease;
     overflow: hidden;
     text-overflow: ellipsis;
