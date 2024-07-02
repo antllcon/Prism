@@ -261,6 +261,7 @@ function botMovement(dt) {
     let dxMinInactive;
     let dyMinInactive;
     let hypMinInactive;
+    
     let idActive;
     let dxMinActive;
     let dyMinActive;
@@ -274,10 +275,10 @@ function botMovement(dt) {
     findNearestPoint(POINTS);
 
     if (inRangeOfLaser) {
-        moveBotOutOfLaserSpiral();
+        moveBotOutOfLaserSpiral(); // заночит в dxActive и dyActive приращение для убегания по спирали
     }
-    moveBotToLaser();
-    getRightDirection();
+    moveBotToLaser(); // заночит в dxInactive и dyInactive приращение для движения к цели
+    getRightDirection(); // дает приоритет убеганию, контролирует предельную скорость
 
     
     function findNearestPoint(POINTS) {
@@ -362,9 +363,7 @@ function botMovement(dt) {
                 if (Math.sqrt((dxActive + dxInactive)**2 + (dyActive + dyInactive)**2) < BOT.speed * dt) {
                     BOT.x += dxActive + dxInactive;
                     BOT.y += dyActive + dyInactive;
-                    // console.log(Math.sqrt((dxActive + dxInactive)**2 + (dyActive + dyInactive)**2));
                 } else {
-                    console.log('here');
                     const angle = Math.atan2(dyActive + dyInactive, dxActive + dxInactive);
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
@@ -374,9 +373,7 @@ function botMovement(dt) {
                 if (Math.sqrt((dxActive + dxInactive)**2 + (dyActive)**2) < BOT.speed * dt) {
                     BOT.x += dxActive + dxInactive;
                     BOT.y += dyActive;
-                    // console.log(Math.sqrt((dxActive + dxInactive)**2 + (dyActive)**2));
                 } else {
-                    console.log('here');
                     const angle = Math.atan2(dyActive, dxActive + dxInactive);
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
@@ -386,9 +383,7 @@ function botMovement(dt) {
                 if (Math.sqrt((dxActive)**2 + (dyActive + dyInactive)**2) < BOT.speed * dt) {
                     BOT.x += dxActive;
                     BOT.y += dyActive + dyInactive;
-                    // console.log(Math.sqrt((dxActive)**2 + (dyActive + dyInactive)**2));
                 } else {
-                    console.log('here');
                     const angle = Math.atan2(dyActive + dyInactive, dxActive);
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
@@ -398,9 +393,7 @@ function botMovement(dt) {
                 if (Math.sqrt((dxActive)**2 + (dyActive)**2) < BOT.speed * dt) {
                     BOT.x += dxActive;
                     BOT.y += dyActive;
-                    // console.log(Math.sqrt((dxActive)**2 + (dyActive)**2));
                 } else {
-                    console.log('here');
                     const angle = Math.atan2(dyActive, dxActive);
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
