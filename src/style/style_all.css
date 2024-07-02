@@ -24,11 +24,13 @@ body {
 }
 
 .logo svg {
+    cursor: initial;
     width: 62vw;
     height: 72vh;
 }
 
 .logo #prisma-front-side {
+    cursor: pointer;
     fill: #494949;
 }
 
