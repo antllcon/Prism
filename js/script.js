@@ -5,36 +5,56 @@ const green = "#00A86B";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
-const lineSize = 300;
-const laserWidth = 300;
+const laserWidth = 200;
+const GAME_STATES = {
+    START: "start",
+    PLAY: "play",
+    VICTORY: "victory",
+    PAUSE: "pause"
+}
+const PLAYER_STATES = {
+    ACTIVE: 'active',
+    STUNNED: 'stunned',
+    DEAD: 'dead'
+}
+const POINT_STATES = {
+    ACTIVE: 'active',
+    CONNECT: 'connect',
+    INACTIVE: 'inactive'
+};
 const DEFAULT_POINTS = [
-    {x: canvasWidth * (1 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
-    {x: canvasWidth * (2 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
-    {x: canvasWidth * (3 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
-    {x: canvasWidth * (4 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
-    {x: canvasWidth * (1 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
-    {x: canvasWidth * (2 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
-    {x: canvasWidth * (3 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
-    {x: canvasWidth * (4 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, type: 1, active: false, team: 0, color: gray, angle: 0, existTime: 10000},
+    {x: canvasWidth / 2, y: 10, width: 10, height: 10, size: 1000, type: 3, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth / 2, y: canvasHeight - 10, width: 10, height: 10, size: 1000, type: 3, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth / 4, y: canvasHeight / 2, width: 10, height: 10, size: 200, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth / 4 * 3, y: canvasHeight / 2, width: 10, height: 10, size: 200, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth / 2, y: canvasHeight / 2, width: 10, height: 10, size: 1000, type: 1, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth * (1 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth * (2 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth * (3 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth * (4 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth * (1 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth * (2 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth * (3 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {x: canvasWidth * (4 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
 ];
 
 let canvas = document.getElementById("canvas");
 let gameTime = 0;
 let lastTime;
-
 let GAME = {
     width: canvasWidth,
     height: canvasHeight,
-    background: dark
+    background: dark,
+    state: GAME_STATES.PLAY
 };
 let PLAYER = {
-    x: 20,
-    y: 20,
+    x: 30,
+    y: 30,
     size: 10,
-    color: black,
     speed: 200,
     team: 1,
-    isAlive: true
+    color: black,
+    state: PLAYER_STATES.ACTIVE
 };
 let POINTS = DEFAULT_POINTS.map(createPoint);
 
@@ -44,28 +64,30 @@ function createPoint(point) {
         y: point.y,
         width: point.width,
         height: point.height,
+        size: point.size,
         type: point.type,
-        active: point.active,
         team: point.team,
         color: point.color,
         angle: point.angle,
         existTime: point.existTime,
-        activationTime: null
+        activationTime: null,
+        state: point.state,
     };
 }
+
 function resetPoint(point, index) {
     const defaultPoint = DEFAULT_POINTS[index];
     point.x = defaultPoint.x;
     point.y = defaultPoint.y;
     point.width = defaultPoint.width;
     point.height = defaultPoint.height;
+    point.size = defaultPoint.size;
     point.type = defaultPoint.type;
-    point.active = defaultPoint.active;
     point.team = defaultPoint.team;
     point.color = defaultPoint.color;
-    point.angle = defaultPoint.angle;
     point.existTime = defaultPoint.existTime;
     point.activationTime = null;
+    point.state = POINT_STATES.INACTIVE;
 }
 
 let ctx = canvas.getContext("2d");
@@ -79,7 +101,7 @@ function drawBackground() {
 }
 
 function drawPlayer() {
-    if (PLAYER.isAlive === true) {
+    if (PLAYER.state === PLAYER_STATES.ACTIVE) {
         if (PLAYER.team === 1) {
             PLAYER.color = green;
         }
@@ -89,20 +111,76 @@ function drawPlayer() {
         ctx.fillStyle = PLAYER.color;
         ctx.fillRect(PLAYER.x, PLAYER.y, PLAYER.size, PLAYER.size);
     }
-    if (PLAYER.isAlive === false) {
+    if (PLAYER.state === PLAYER_STATES.DEAD) {
         setTimeout(() => {
             PLAYER.color = green;
             PLAYER.x = 10;
             PLAYER.y = 10;
-            PLAYER.isAlive = true
-        }, 1);
+            PLAYER.state = PLAYER_STATES.ACTIVE;
+        }, 1000); // Changed delay to 1000ms
     }
 }
 
 function drawPoints() {
     POINTS.forEach(point => {
-        if (point.type === 1) {
-            point.angle += 2 * Math.PI / 180;
+        if (point.state === POINT_STATES.ACTIVE) {
+            if (point.type === 1) {
+                point.angle += Math.PI / 180;
+                ctx.save();
+
+                ctx.translate(point.x, point.y);
+                ctx.rotate(point.angle);
+                ctx.strokeStyle = point.color;
+                ctx.lineWidth = 5;
+
+                ctx.beginPath();
+                ctx.moveTo(-point.size / 2, 0);
+                ctx.lineTo(point.size / 2, 0);
+
+                ctx.moveTo(0, -point.size / 2);
+                ctx.lineTo(0, point.size / 2);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+            if (point.type === 2){
+                point.angle += Math.PI / 180;
+                ctx.save();
+
+                ctx.translate(point.x, point.y);
+                ctx.rotate(point.angle);
+                ctx.strokeStyle = point.color;
+                ctx.lineWidth = 5;
+
+                ctx.beginPath();
+                ctx.moveTo(-point.size / 2, 0);
+                ctx.lineTo(0, 0);
+
+                ctx.moveTo(0, 0);
+                ctx.lineTo(point.size / 2 * Math.cos(Math.PI / 3), point.size / 2 * Math.sin(Math.PI / 3));
+
+                ctx.moveTo(0, 0);
+                ctx.lineTo(point.size / 2 * Math.cos(-Math.PI / 3), point.size / 2 * Math.sin(-Math.PI / 3));
+                ctx.stroke();
+
+                ctx.restore();
+            }
+            if (point.type === 3){
+                ctx.save();
+
+                ctx.translate(point.x, point.y);
+                ctx.strokeStyle = point.color;
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(point.size, 0);
+                ctx.lineTo(-point.size, 0);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+        } else {
+            point.angle += Math.PI / 180;
             ctx.save();
             ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
             ctx.rotate(point.angle);
@@ -110,8 +188,8 @@ function drawPoints() {
             ctx.fillRect(-point.width / 2, -point.height / 2, point.width, point.height);
             ctx.restore();
         }
-    })
-} // переписать рисование под типы
+    });
+}
 
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
@@ -120,7 +198,6 @@ function render() {
     drawPlayer();
 }
 
-// Инициализация
 function init() {
     drawBackground();
     drawPoints();
@@ -129,7 +206,6 @@ function init() {
     lastTime = Date.now();
 }
 
-// Основной цикл
 function main() {
     let now = Date.now();
     let dt = (now - lastTime) / 1000.0;
@@ -175,66 +251,69 @@ function checkLaserBounds() {
             const rotatedX = cos * dx + sin * dy;
             const rotatedY = -sin * dx + cos * dy;
 
-            if (!point.active &&
+            if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
-                rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                point.active = true;
+                rotatedY > -point.height / 2 && rotatedY < point.height / 2
+            ) {
+                point.state = POINT_STATES.ACTIVE;
                 point.team = PLAYER.team;
                 point.activationTime = Date.now();
             }
 
-            if (point.active &&
-                point.team !== PLAYER.team &&
-                rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
-                rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                PLAYER.isAlive = false;
-            }
+            // if (!point.active &&
+            //     rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
+            //     rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
+            //     point.active = true;
+            //     point.team = PLAYER.team;
+            //     point.activationTime = Date.now();
+            // }
+            //
+            // if (point.active &&
+            //     point.team !== PLAYER.team &&
+            //     rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
+            //     rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
+            //     PLAYER.isAlive = false;
+            // }
         }
     });
 } // подумать
 
 function updateEntities() {
     POINTS.forEach(point => {
-        if (point.active) {
-            if (point.team === 0) {
-                // установить вариативность типов
-                point.type = 1;
-                point.team = PLAYER.team;
-                point.width = lineSize;
-                point.x = point.x - point.width / 2;
-            }
+        if (point.state === POINT_STATES.ACTIVE && Date.now() - point.activationTime < point.existTime) {
             if (point.team === PLAYER.team) {
                 point.color = PLAYER.color;
-            } else {
-                PLAYER.isAlive = 0;
-                PLAYER.color = black;
-                // в константы
-                PLAYER.x = 20;
-                PLAYER.y = 20;
-                point.color = gray;
+                point.height = 5;
             }
-            if (!(Date.now() - point.activationTime < point.existTime)) {
-                point.active = false;
-            }
-        } else if (point.active && Date.now() - point.activationTime >= point.existTime) {
+        } else {
+            point.state = POINT_STATES.INACTIVE;
             resetPoint(point, POINTS.indexOf(point));
+        }
+        if (PLAYER.state === POINT_STATES.DEAD) {
+            PLAYER.color = black;
+        }
+        if (PLAYER.state === PLAYER_STATES.STUNNED) {
+            PLAYER.x = 30;
+            PLAYER.y = 30;
         }
     });
 }
 
 // Обработка нажатой клавиши
 function handleInput(dt) {
-    if (input.isDown('LEFT') || input.isDown('a')) {
-        PLAYER.x -= PLAYER.speed * dt;
-    }
-    if (input.isDown('RIGHT') || input.isDown('d')) {
-        PLAYER.x += PLAYER.speed * dt;
-    }
-    if (input.isDown('DOWN') || input.isDown('s')) {
-        PLAYER.y += PLAYER.speed * dt;
-    }
-    if (input.isDown('UP') || input.isDown('w')) {
-        PLAYER.y -= PLAYER.speed * dt;
+    if (PLAYER.state === PLAYER_STATES.ACTIVE) {
+        if (input.isDown('LEFT') || input.isDown('a')) {
+            PLAYER.x -= PLAYER.speed * dt;
+        }
+        if (input.isDown('RIGHT') || input.isDown('d')) {
+            PLAYER.x += PLAYER.speed * dt;
+        }
+        if (input.isDown('DOWN') || input.isDown('s')) {
+            PLAYER.y += PLAYER.speed * dt;
+        }
+        if (input.isDown('UP') || input.isDown('w')) {
+            PLAYER.y -= PLAYER.speed * dt;
+        }
     }
 }
 
@@ -244,3 +323,4 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
 };
 
 init();
+
