@@ -1,0 +1,16 @@
+.central-part__menu {
+    display: flex;
+    flex-direction: column;
+    padding-left: 80px;
+    margin-top: 350px;
+    padding-bottom: 40px;
+}
+
+.menu__title {
+    color: white;
+    font: 700 184px/184px Montserrat;
+}
+
+.menu__title::selection {
+    background-color: black;
+}

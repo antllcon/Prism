@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    overflow: hidden;
+}
+
+body {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+}
+
+.non-visible {
+    display: none;
+}
+
+.logo {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 62vw;
+    height: 72vh;
+}
+
+.logo svg {
+    width: 62vw;
+    height: 72vh;
+}
+
+.logo #prisma-front-side {
+    fill: #494949;
+}
+
+.logo #prisma-front-side:hover {
+    fill: #171616;
+}
+
+.title {
+    position: absolute;
+    left: 60px;
+    top: 60px;
+    color: white;
+    font: 700 120px/100px Montserrat;
+    padding: 20px 10px 10px 20px;
+    border-top: 10px solid white;
+    border-left: 10px solid white;
+}
+
+.name-game-lobby {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    background-image: url("../img/border_name.png");
+    background-repeat: no-repeat;
+    height: 154px;
+    margin-left: 60px;
+    margin-top: 56px;
+}
+
+.name-game__title::selection {
+    background-color: black;
+}
+
+.name-game__count-players {
+    margin-left: 990px;
+    margin-top: 10px;
+    color: white;
+    font: 700 120px/146px Montserrat;
+}
+
+button:hover {
+    box-shadow: 0 0 30px white;
+}
+
+button:active {
+    box-shadow: 0 0 30px white;
+    transform: scale(0.96);
+}
+
+button::selection {
+    background-color: black;
+}
+
+.button {
+    border: none;
+    cursor: pointer;
+    background-color: white;
+    width: 504px;
+    height: 88px;
+    color: black;
+    font: 700 55px/67px Montserrat;
+    margin-top: 50px;
+    box-shadow: 0 0 10px white;
+    text-align: center;
+}
+
+.chapter {
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+    color: white;
+    font: 700 120px/100px Montserrat;
+    border-bottom: 10px solid white;
+    border-right: 10px solid white;
+    padding: 10px 20px 20px 10px;
+}
+
+.chapter__title::selection {
+    background-color: black;
+}
+
