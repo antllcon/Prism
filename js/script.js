@@ -196,8 +196,8 @@ const DEFAULT_POINTS = [
 let canvas = document.getElementById("canvas");
 let gameTime = 0;
 let lastTime;
-const botStartX = 300;
-const botStartY = 300;
+const botStartX = canvasWidth - 50;
+const botStartY = canvasHeight / 2;
 const playerStartX = 50;
 const playerStartY = canvasHeight / 2;
 
@@ -218,8 +218,8 @@ let PLAYER = {
 };
 
 let BOT = {
-    x: 200,
-    y: 200,
+    x: 0,
+    y: 0,
     size: 10,
     color: 'red',
     speed: 200,
