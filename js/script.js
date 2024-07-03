@@ -259,8 +259,11 @@ function botMovement(dt) {
     let loopIndexActive = 0; 
     let idInactive;
     let dxMinInactive;
+    let dxMinInactiveReversed;
     let dyMinInactive;
+    let dyMinInactiveReversed;
     let hypMinInactive;
+    let hypMinInactiveReversed;
     
     let idActive;
     let dxMinActive;
@@ -297,6 +300,8 @@ function botMovement(dt) {
             }
             let dx = point.x - BOT.x;
             let dy = point.y - BOT.y;
+            let dxReversed = point.x - BOT.x;
+            let dyReversed = point.y - BOT.y;
             let hyp = Math.sqrt(dx**2 + dy**2);
             if (hyp < hypMinInactive) {
                 idInactive = point.id;
@@ -440,6 +445,18 @@ function checkBorderGameBounds() {
         PLAYER.y = GAME.height;
     } else if (PLAYER.y > GAME.height) {
         PLAYER.y = 0;
+    }
+    // КОЛЛИЗИЯ СТЕНОК И БОТА
+    if (BOT.x < 0) {
+        BOT.x = GAME.width;
+    } else if (BOT.x  > GAME.width) {
+        BOT.x = 0;
+    }
+
+   if (BOT.y < 0) {
+        BOT.y = GAME.height;
+    } else if (BOT.y > GAME.height) {
+        BOT.y = 0;
     }
 }
 
