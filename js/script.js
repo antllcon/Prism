@@ -451,7 +451,6 @@ function checkLaserBounds() {
                     if (corner.y >= point.y - point.width / 2 && corner.y <= point.y + point.width / 2 &&
                         corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
                         PLAYER.state = PLAYER_STATES.DEAD;
-                        console.log("Collision")
                     }
                 }
             }
