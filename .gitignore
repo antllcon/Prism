@@ -1,3 +1,7 @@
 /vendor/
 /node_modules/
 /package-lock.json
+/dist/control.js.map
+/dist/script.js.map
+/dist/menu.js.map
+/dist/sprite.js.map
