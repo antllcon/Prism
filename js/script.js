@@ -403,7 +403,7 @@ function cordInit() {
     PLAYER.y = playerStartY;
     BOT.x = botStartX;
     BOT.y = botStartY;
-    console.log(BOT.color);
+    console.log(BOT.x, BOT.y);
 }
 
 // Основной цикл
@@ -428,27 +428,23 @@ function botMovement(dt) {
     let loopIndexInactive = 0;
     let loopIndexActive = 0;
     let idInactive;
-    let dxMinInactive;
-    let dyMinInactive;
-    let hypMinInactive;
+    let dxMinInactive = Infinity;
+    let dyMinInactive = Infinity;
+    let hypMinInactive = Infinity;
 
     let idActive;
-    let dxMinActive;
-    let dyMinActive;
-    let hypMinActive;
-    let inRangeOfLaser;
+    let dxMinActive = Infinity;
+    let dyMinActive = Infinity;
+    let hypMinActive = Infinity;
+    let inRangeOfLaser = false;
 
-    let dxInactive;
-    let dxActive;
-    let dyInactive;
-    let dyActive;
     findNearestPoint(POINTS);
     if (inRangeOfLaser) {
-        moveBotOutOfLaserSpiral(); // заночит в dxActive и dyActive приращение для убегания по спирали
+        moveBotOutOfLaserSpiral();
+    } else {
+        moveBotToLaser();
     }
-    moveBotToLaser(); // заночит в dxInactive и dyInactive приращение для движения к цели
-    getRightDirection(); // дает приоритет убеганию, контролирует предельную скорость
-
+    getRightDirection();
 
     function findNearestPoint(POINTS) {
         POINTS.forEach(point => {
@@ -459,15 +455,10 @@ function botMovement(dt) {
 
     function findInactivePointAndCompare(point) {
         if (point.state === POINT_STATES.INACTIVE) {
-            if (loopIndexInactive === 0) {
-                idInactive = 0;
-                dxMinInactive = point.x - BOT.x;
-                dyMinInactive = point.y - BOT.y;
-                hypMinInactive = Math.sqrt(dxMinInactive ** 2 + dyMinInactive ** 2);
-            }
             let dx = point.x - BOT.x;
             let dy = point.y - BOT.y;
             let hyp = Math.sqrt(dx ** 2 + dy ** 2);
+
             if (hyp < hypMinInactive) {
                 idInactive = point.id;
                 dxMinInactive = dx;
@@ -479,17 +470,11 @@ function botMovement(dt) {
     }
 
     function findActivePointInArea(point) {
-
         if (point.state === POINT_STATES.ACTIVE) {
-            if (loopIndexActive === 0) {
-                idInactive = 0;
-                dxMinActive = point.x - BOT.x;
-                dyMinActive = point.y - BOT.y;
-                hypMinActive = Math.sqrt(dxMinActive ** 2 + dyMinActive ** 2);
-            }
             let dx = point.x - BOT.x;
             let dy = point.y - BOT.y;
             let hyp = Math.sqrt(dx ** 2 + dy ** 2);
+
             if (hyp < hypMinActive) {
                 idActive = point.id;
                 dxMinActive = dx;
@@ -502,22 +487,27 @@ function botMovement(dt) {
     }
 
     function moveBotToLaser() {
-        dxInactive = BOT.speed * dxMinInactive / hypMinInactive * dt;
-        dyInactive = BOT.speed * dyMinInactive / hypMinInactive * dt;
+        if (!isNaN(hypMinInactive) && hypMinInactive !== 0) {
+            dxInactive = BOT.speed * dxMinInactive / hypMinInactive * dt;
+            dyInactive = BOT.speed * dyMinInactive / hypMinInactive * dt;
+        } else {
+            dxInactive = 0;
+            dyInactive = 0;
+        }
     }
 
     function moveBotOutOfLaserSpiral() {
-        // Определяем угол между ботом и точкой
-        const angle = Math.atan2(dyMinActive, dxMinActive);
+        if (!isNaN(hypMinActive) && hypMinActive !== 0) {
+            const angle = Math.atan2(dyMinActive, dxMinActive);
+            const radialSpeed = BOT.speed * dt;
+            const angularSpeed = BOT.speed * dt / hypMinActive;
 
-        // Радиальная скорость (от центра прочь)
-        const radialSpeed = BOT.speed * dt;
-
-        // Угловая скорость (по окружности)
-        const angularSpeed = BOT.speed * dt / hypMinActive;
-        // Обновляем координаты бота
-        dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
-        dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
+            dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
+            dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
+        } else {
+            dxActive = 0;
+            dyActive = 0;
+        }
     }
 
     function getRightDirection() {
@@ -531,9 +521,8 @@ function botMovement(dt) {
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
                 }
-            }
-            if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
-                if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
+            } else if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
+                if (Math.sqrt((dxActive + dxInactive) ** 2 + dyActive ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive + dxInactive;
                     BOT.y += dyActive;
                 } else {
@@ -541,9 +530,8 @@ function botMovement(dt) {
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
                 }
-            }
-            if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
-                if (Math.sqrt((dxActive) ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
+            } else if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
+                if (Math.sqrt(dxActive ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive;
                     BOT.y += dyActive + dyInactive;
                 } else {
@@ -551,9 +539,8 @@ function botMovement(dt) {
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
                 }
-            }
-            if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
-                if (Math.sqrt((dxActive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
+            } else if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
+                if (Math.sqrt(dxActive ** 2 + dyActive ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive;
                     BOT.y += dyActive;
                 } else {
@@ -566,8 +553,12 @@ function botMovement(dt) {
             BOT.x += dxInactive;
             BOT.y += dyInactive;
         }
+        if (isNaN(BOT.x) || isNaN(BOT.y)) {
+            console.error('BOT coordinates became NaN:', {dxInactive, dyInactive, dxActive, dyActive, hypMinInactive, hypMinActive});
+        }
     }
 }
+
 
 // Обработка нажатой клавиши
 function handleInput(dt) {
