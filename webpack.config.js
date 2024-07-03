@@ -5,7 +5,8 @@ module.exports = {
     entry: {
         script: './js/script.js',
         sprite: './js/sprite.js',
-        control: './js/control.js'
+        control: './js/control.js',
+        menu: './js/menu.js'
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -19,5 +20,13 @@ module.exports = {
         static: {
             directory: path.join(__dirname, 'dist')
         }
+    },
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            }
+        ]
     }
 }

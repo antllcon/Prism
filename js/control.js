@@ -1,44 +1,21 @@
+import { KEY_CODES } from './additional/key-codes'
+
 (function() {
-    let pressedKeys = {};
-
-    function setKey(event, status) {
-        let code = event.keyCode;
-        let key;
-
-        switch(code) {
-            case 32:
-                key = 'SPACE'; break;
-            case 37:
-                key = 'LEFT'; break;
-            case 38:
-                key = 'UP'; break;
-            case 39:
-                key = 'RIGHT'; break;
-            case 40:
-                key = 'DOWN'; break;
-            default:
-                // Convert ASCII codes to letters
-                key = String.fromCharCode(code);
-        }
-
-        pressedKeys[key] = status;
+    document.addEventListener('keydown', (e) => setKey(e, true)) 
+    document.addEventListener('keyup', (e) => setKey(e, false)) 
+    window.addEventListener('blur', () => clearPressedKeys()) 
+    function setKey({ keyCode }, status) {
+        let key = KEY_CODES[keyCode] || String.fromCharCode(keyCode)
+        setPressedKey(key, status) 
     }
-
-    document.addEventListener('keydown', function(e) {
-        setKey(e, true);
-    });
-
-    document.addEventListener('keyup', function(e) {
-        setKey(e, false);
-    });
-
-    window.addEventListener('blur', function() {
-        pressedKeys = {};
-    });
-
+    function setPressedKey(key, status) {
+        pressedKeys.set(key.toUpperCase(), status) 
+    }
+    function clearPressedKeys() {
+        pressedKeys.clear() 
+    }
+    let pressedKeys = new Map() 
     window.input = {
-        isDown: function(key) {
-            return pressedKeys[key.toUpperCase()];
-        }
-    };
-})();
+        isDown: (key) => pressedKeys.has(key.toUpperCase()) && pressedKeys.get(key.toUpperCase()),
+    }
+})()
