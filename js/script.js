@@ -385,6 +385,7 @@ function render() {
     drawBackground();
     drawPoints();
     drawPlayer();
+    drawBot();
 }
 
 function init() {
@@ -393,8 +394,8 @@ function init() {
     drawPoints();
     drawPlayer();
     drawBot();
-    main();
     lastTime = Date.now();
+    main();
 }
 
 function coordInit() {
@@ -440,7 +441,6 @@ function botMovement(dt) {
     let dyInactive;
     let dyActive;
     findNearestPoint(POINTS);
-
     if (inRangeOfLaser) {
         moveBotOutOfLaserSpiral(); // заночит в dxActive и dyActive приращение для убегания по спирали
     }
@@ -455,7 +455,7 @@ function botMovement(dt) {
         });
     }
     function findInactivePointAndCompare(point) {
-        if (!point.active) {
+        if (point.state === POINT_STATES.INACTIVE) {
             if (loopIndexInactive === 0) {
                 idInactive = 0;
                 dxMinInactive = point.x - BOT.x;
@@ -476,7 +476,7 @@ function botMovement(dt) {
     }
     function findActivePointInArea(point) {
 
-        if (point.active) {
+        if (point.state === POINT_STATES.ACTIVE) {
             if (loopIndexActive === 0) {
                 idInactive = 0;
                     dxMinActive = point.x - BOT.x;
