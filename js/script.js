@@ -469,6 +469,7 @@ function botMovement(dt) {
         }
     }
 
+
     function findActivePointInArea(point) {
         if (point.state === POINT_STATES.ACTIVE) {
             let dx = point.x - BOT.x;
@@ -625,7 +626,7 @@ function checkLaserBounds() {
 
         // проверяем каждую угловую точку игрока
         for (const corner of playerCorners) {
-            // расчитваем удаленность угловой точки игрока от центра лазера
+            // насчитаем удаленность угловой точки игрока от центра лазера
             const dx = corner.x - point.x;
             const dy = corner.y - point.y;
 
