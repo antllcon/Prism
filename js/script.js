@@ -19,23 +19,178 @@ const PLAYER_STATES = {
 }
 const POINT_STATES = {
     ACTIVE: 'active',
-    CONNECT: 'connect',
     INACTIVE: 'inactive'
 };
 const DEFAULT_POINTS = [
-    {x: canvasWidth / 2, y: 10, width: 10, height: 10, size: 1000, type: 3, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth / 2, y: canvasHeight - 10, width: 10, height: 10, size: 1000, type: 3, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth / 4, y: canvasHeight / 2, width: 10, height: 10, size: 200, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth / 4 * 3, y: canvasHeight / 2, width: 10, height: 10, size: 200, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth / 2, y: canvasHeight / 2, width: 10, height: 10, size: 1000, type: 1, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth * (1 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth * (2 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth * (3 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth * (4 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth * (1 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth * (2 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth * (3 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
-    {x: canvasWidth * (4 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: 2, team: 0, color: gray, angle: 1, existTime: 10000, state: POINT_STATES.INACTIVE},
+    {
+        x: canvasWidth / 2,
+        y: 10,
+        width: 10,
+        height: 10,
+        size: 1000,
+        type: 3,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth / 2,
+        y: canvasHeight - 10,
+        width: 10,
+        height: 10,
+        size: 1000,
+        type: 3,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth / 4,
+        y: canvasHeight / 2,
+        width: 10,
+        height: 10,
+        size: 200,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth / 4 * 3,
+        y: canvasHeight / 2,
+        width: 10,
+        height: 10,
+        size: 200,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth / 2,
+        y: canvasHeight / 2,
+        width: 10,
+        height: 10,
+        size: 1000,
+        type: 1,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth * (1 / 5),
+        y: canvasHeight - laserWidth / 2 - 20,
+        width: 10,
+        height: 10,
+        size: 300,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth * (2 / 5),
+        y: canvasHeight - laserWidth / 2 - 20,
+        width: 10,
+        height: 10,
+        size: 300,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth * (3 / 5),
+        y: canvasHeight - laserWidth / 2 - 20,
+        width: 10,
+        height: 10,
+        size: 300,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth * (4 / 5),
+        y: canvasHeight - laserWidth / 2 - 20,
+        width: 10,
+        height: 10,
+        size: 300,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth * (1 / 5),
+        y: laserWidth / 2 + 20,
+        width: 10,
+        height: 10,
+        size: 300,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth * (2 / 5),
+        y: laserWidth / 2 + 20,
+        width: 10,
+        height: 10,
+        size: 300,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth * (3 / 5),
+        y: laserWidth / 2 + 20,
+        width: 10,
+        height: 10,
+        size: 300,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
+    {
+        x: canvasWidth * (4 / 5),
+        y: laserWidth / 2 + 20,
+        width: 10,
+        height: 10,
+        size: 300,
+        type: 2,
+        team: 0,
+        color: gray,
+        angle: 1,
+        existTime: 10000,
+        state: POINT_STATES.INACTIVE
+    },
 ];
 
 let canvas = document.getElementById("canvas");
@@ -143,7 +298,7 @@ function drawPoints() {
 
                 ctx.restore();
             }
-            if (point.type === 2){
+            if (point.type === 2) {
                 point.angle += Math.PI / 180;
                 ctx.save();
 
@@ -153,19 +308,19 @@ function drawPoints() {
                 ctx.lineWidth = 5;
 
                 ctx.beginPath();
-                ctx.moveTo(-point.size / 2, 0);
+                ctx.moveTo(point.size / 2, 0);
                 ctx.lineTo(0, 0);
 
                 ctx.moveTo(0, 0);
-                ctx.lineTo(point.size / 2 * Math.cos(Math.PI / 3), point.size / 2 * Math.sin(Math.PI / 3));
+                ctx.lineTo(-point.size / 2 * Math.cos(Math.PI / 3), -point.size / 2 * Math.sin(Math.PI / 3));
 
                 ctx.moveTo(0, 0);
-                ctx.lineTo(point.size / 2 * Math.cos(-Math.PI / 3), point.size / 2 * Math.sin(-Math.PI / 3));
+                ctx.lineTo(-point.size / 2 * Math.cos(-Math.PI / 3), -point.size / 2 * Math.sin(-Math.PI / 3));
                 ctx.stroke();
 
                 ctx.restore();
             }
-            if (point.type === 3){
+            if (point.type === 3) {
                 ctx.save();
 
                 ctx.translate(point.x, point.y);
@@ -233,10 +388,13 @@ function checkBorderGameBounds() {
 }
 
 function checkLaserBounds() {
+    // Перебор всех лазеров
     POINTS.forEach(point => {
+        // считаем sin и cos для каждого угла лазера
         const sin = Math.sin(point.angle);
         const cos = Math.cos(point.angle);
 
+        // массив углов игрока
         const playerCorners = [
             {x: PLAYER.x, y: PLAYER.y},
             {x: PLAYER.x + PLAYER.size, y: PLAYER.y},
@@ -244,39 +402,62 @@ function checkLaserBounds() {
             {x: PLAYER.x + PLAYER.size, y: PLAYER.y + PLAYER.size}
         ];
 
+        // проверяем каждую угловую точку игрока
         for (const corner of playerCorners) {
-            const dx = corner.x - point.x - point.width / 2;
-            const dy = corner.y - point.y - point.height / 2;
+            // расчитваем удаленность угловой точки игрока от центра лазера
+            const dx = corner.x - point.x;
+            const dy = corner.y - point.y;
 
+            // переводим удаленность в систему координат вращения лазера
             const rotatedX = cos * dx + sin * dy;
             const rotatedY = -sin * dx + cos * dy;
 
+            // смотрим на положение, делаем выводы относительно каждого состояния лазера
+            // и так ищем коллизию игрока с лазером
+
+            // Если точка принимает неактивное состояние
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
-                rotatedY > -point.height / 2 && rotatedY < point.height / 2
-            ) {
+                rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
                 point.state = POINT_STATES.ACTIVE;
                 point.team = PLAYER.team;
                 point.activationTime = Date.now();
             }
 
-            // if (!point.active &&
-            //     rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
-            //     rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-            //     point.active = true;
-            //     point.team = PLAYER.team;
-            //     point.activationTime = Date.now();
-            // }
-            //
-            // if (point.active &&
-            //     point.team !== PLAYER.team &&
-            //     rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
-            //     rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-            //     PLAYER.isAlive = false;
-            // }
+            // Проверка коллизий с лазерами
+            if (point.state === POINT_STATES.ACTIVE) {
+                if (point.type === 1 && point.team === PLAYER.team) { // Крест
+                    if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.width / 2) ||
+                        (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.width / 2)) {
+                        PLAYER.state = PLAYER_STATES.DEAD;
+                    }
+                }
+                if (point.type === 2 && point.team === PLAYER.team) { // Три-радиус
+                    const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
+
+                    angles.forEach(angle => {
+                        const angleSin = Math.sin(angle);
+                        const angleCos = Math.cos(angle);
+
+                        const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
+                        const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
+
+                        if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.height / 2) {
+                            PLAYER.state = PLAYER_STATES.DEAD;
+                        }
+                    });
+                }
+                if (point.type === 3 && point.team === PLAYER.team) { // Прямая линия (горизонтальная)
+                    if (corner.y >= point.y - point.width / 2 && corner.y <= point.y + point.width / 2 &&
+                        corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
+                        PLAYER.state = PLAYER_STATES.DEAD;
+                        console.log("Collision")
+                    }
+                }
+            }
         }
     });
-} // подумать
+}
 
 function updateEntities() {
     POINTS.forEach(point => {
