@@ -196,10 +196,10 @@ const DEFAULT_POINTS = [
 let canvas = document.getElementById("canvas");
 let gameTime = 0;
 let lastTime;
-const botStartX = canvasWidth - 50;
-const botStartY = canvasHeight/2;
+const botStartX = 300;
+const botStartY = 300;
 const playerStartX = 50;
-const playerStartY = canvasHeight/2;
+const playerStartY = canvasHeight / 2;
 
 let GAME = {
     width: canvasWidth,
@@ -218,8 +218,8 @@ let PLAYER = {
 };
 
 let BOT = {
-    x: 0,
-    y: 0,
+    x: 200,
+    y: 200,
     size: 10,
     color: 'red',
     speed: 200,
@@ -385,10 +385,11 @@ function render() {
     drawBackground();
     drawPoints();
     drawPlayer();
+    drawBot();
 }
 
 function init() {
-    coordInit();
+    cordInit();
     drawBackground();
     drawPoints();
     drawPlayer();
@@ -397,12 +398,14 @@ function init() {
     lastTime = Date.now();
 }
 
-function coordInit() {
+function cordInit() {
     PLAYER.x = playerStartX;
     PLAYER.y = playerStartY;
     BOT.x = botStartX;
     BOT.y = botStartY;
+    console.log(BOT.color);
 }
+
 // Основной цикл
 function main() {
     let now = Date.now();
@@ -454,17 +457,18 @@ function botMovement(dt) {
             findActivePointInArea(point);
         });
     }
+
     function findInactivePointAndCompare(point) {
-        if (!point.active) {
+        if (point.state === POINT_STATES.INACTIVE) {
             if (loopIndexInactive === 0) {
                 idInactive = 0;
                 dxMinInactive = point.x - BOT.x;
                 dyMinInactive = point.y - BOT.y;
-                hypMinInactive = Math.sqrt(dxMinInactive**2 + dyMinInactive**2);
+                hypMinInactive = Math.sqrt(dxMinInactive ** 2 + dyMinInactive ** 2);
             }
             let dx = point.x - BOT.x;
             let dy = point.y - BOT.y;
-            let hyp = Math.sqrt(dx**2 + dy**2);
+            let hyp = Math.sqrt(dx ** 2 + dy ** 2);
             if (hyp < hypMinInactive) {
                 idInactive = point.id;
                 dxMinInactive = dx;
@@ -474,25 +478,26 @@ function botMovement(dt) {
             loopIndexInactive++;
         }
     }
+
     function findActivePointInArea(point) {
 
-        if (point.active) {
+        if (point.state === POINT_STATES.ACTIVE) {
             if (loopIndexActive === 0) {
                 idInactive = 0;
-                    dxMinActive = point.x - BOT.x;
-                    dyMinActive = point.y - BOT.y;
-                    hypMinActive = Math.sqrt(dxMinActive**2 + dyMinActive**2);
+                dxMinActive = point.x - BOT.x;
+                dyMinActive = point.y - BOT.y;
+                hypMinActive = Math.sqrt(dxMinActive ** 2 + dyMinActive ** 2);
             }
             let dx = point.x - BOT.x;
             let dy = point.y - BOT.y;
-            let hyp = Math.sqrt(dx**2 + dy**2);
+            let hyp = Math.sqrt(dx ** 2 + dy ** 2);
             if (hyp < hypMinActive) {
                 idActive = point.id;
                 dxMinActive = dx;
                 dyMinActive = dy;
                 hypMinActive = hyp;
             }
-            inRangeOfLaser = (hypMinActive - BOT.size * Math.sqrt(2) < point.laserWidth/2);
+            inRangeOfLaser = (hypMinActive - BOT.size * Math.sqrt(2) < point.size / 2);
             loopIndexActive++;
         }
     }
@@ -501,6 +506,7 @@ function botMovement(dt) {
         dxInactive = BOT.speed * dxMinInactive / hypMinInactive * dt;
         dyInactive = BOT.speed * dyMinInactive / hypMinInactive * dt;
     }
+
     function moveBotOutOfLaserSpiral() {
         // Определяем угол между ботом и точкой
         const angle = Math.atan2(dyMinActive, dxMinActive);
@@ -511,13 +517,14 @@ function botMovement(dt) {
         // Угловая скорость (по окружности)
         const angularSpeed = BOT.speed * dt / hypMinActive;
         // Обновляем координаты бота
-        dxActive =  angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
+        dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
         dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
     }
+
     function getRightDirection() {
         if (inRangeOfLaser) {
             if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
-                if (Math.sqrt((dxActive + dxInactive)**2 + (dyActive + dyInactive)**2) < BOT.speed * dt) {
+                if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive + dxInactive;
                     BOT.y += dyActive + dyInactive;
                 } else {
@@ -527,7 +534,7 @@ function botMovement(dt) {
                 }
             }
             if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
-                if (Math.sqrt((dxActive + dxInactive)**2 + (dyActive)**2) < BOT.speed * dt) {
+                if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive + dxInactive;
                     BOT.y += dyActive;
                 } else {
@@ -537,7 +544,7 @@ function botMovement(dt) {
                 }
             }
             if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
-                if (Math.sqrt((dxActive)**2 + (dyActive + dyInactive)**2) < BOT.speed * dt) {
+                if (Math.sqrt((dxActive) ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive;
                     BOT.y += dyActive + dyInactive;
                 } else {
@@ -547,7 +554,7 @@ function botMovement(dt) {
                 }
             }
             if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
-                if (Math.sqrt((dxActive)**2 + (dyActive)**2) < BOT.speed * dt) {
+                if (Math.sqrt((dxActive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive;
                     BOT.y += dyActive;
                 } else {
@@ -683,9 +690,9 @@ function updateEntities() {
 
 
 // Определение requestAnimFrame
-    window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
+window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
+    window.setTimeout(callback, 1000 / 60);
+};
 
-    init();
+init();
 
