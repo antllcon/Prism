@@ -445,7 +445,7 @@ function botMovement(dt) {
     let dxMinInactive;
     let dyMinInactive;
     let hypMinInactive;
-
+    
     let idActive;
     let dxMinActive;
     let dyMinActive;
