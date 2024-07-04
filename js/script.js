@@ -409,8 +409,24 @@ function init() {
     drawPoints();
     drawPlayer();
     drawBot();
-    lastTime = Date.now();
-    main();
+    countdown();
+    
+}
+
+function countdown() {
+    let inputTime = Date.now();
+    let background = document.createElement("div");
+    let countdownGif = document.createElement("img");
+    document.body.appendChild(background);
+    background.classList.add('background-countdown');
+    background.appendChild(countdownGif);
+    countdownGif.src = "src/img/cat.gif";
+    setTimeout(() => {
+        background.remove();
+        countdownGif.remove();
+        lastTime = Date.now();
+        main();
+    }, 5000)
 }
 
 function cordInit() {
