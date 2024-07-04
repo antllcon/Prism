@@ -196,8 +196,8 @@ const DEFAULT_POINTS = [
 let canvas = document.getElementById("canvas");
 let gameTime = 0;
 let lastTime;
-const botStartX = 300;
-const botStartY = 300;
+const botStartX = canvasWidth - 50;
+const botStartY = canvasHeight / 2;
 const playerStartX = 50;
 const playerStartY = canvasHeight / 2;
 
@@ -465,8 +465,18 @@ function botMovement(dt) {
                 dyMinInactive = point.y - BOT.y;
                 hypMinInactive = Math.sqrt(dxMinInactive ** 2 + dyMinInactive ** 2);
             }
+            let dy;
             let dx = point.x - BOT.x;
-            let dy = point.y - BOT.y;
+            if (Math.abs(point.y - (GAME.height - BOT.y)) < Math.abs(point.y - BOT.y)) {
+                dy = point.y - (GAME.height - BOT.y);
+            } else {
+                dy = point.y - BOT.y;
+            }
+            if (Math.abs(point.x - (GAME.width - BOT.x)) < Math.abs(point.x - BOT.x)) {
+                dx = point.x - (GAME.width - BOT.x);
+            } else {
+                dx = point.x - BOT.x;
+            }
             let hyp = Math.sqrt(dx ** 2 + dy ** 2);
             if (hyp < hypMinInactive) {
                 idInactive = point.id;
@@ -591,8 +601,30 @@ function checkCollisions() {
 }
 
 function checkBorderGameBounds() {
-    (PLAYER.x < 0) ? (PLAYER.x = GAME.width - PLAYER.size) : ((PLAYER.x + PLAYER.size) > GAME.width ? (PLAYER.x = 0) : (0));
-    (PLAYER.y < 0) ? (PLAYER.y = GAME.height - PLAYER.size) : ((PLAYER.y + PLAYER.size) > GAME.height ? (PLAYER.y = 0) : (0));
+    // Проход через границы поля для ИГРОКА
+    if (PLAYER.x < 0) {
+        PLAYER.x = GAME.width;
+    } else if (PLAYER.x > GAME.width) {
+        PLAYER.x = 0;
+    }
+
+    if (PLAYER.y < 0) {
+        PLAYER.y = GAME.height;
+    } else if (PLAYER.y > GAME.height) {
+        PLAYER.y = 0;
+    }
+    // Проход через границы поля БОТА
+    if (BOT.x < 0) {
+        BOT.x = GAME.width;
+    } else if (BOT.x > GAME.width) {
+        BOT.x = 0;
+    }
+
+    if (BOT.y < 0) {
+        BOT.y = GAME.height;
+    } else if (BOT.y > GAME.height) {
+        BOT.y = 0;
+    }
 }
 
 function checkLaserBounds() {
