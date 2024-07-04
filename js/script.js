@@ -419,7 +419,8 @@ function render() {
 }
 
 function init() {
-    cordInit();
+
+    coordInit();
     drawBackground();
     drawPoints();
     drawPlayer();
@@ -428,7 +429,7 @@ function init() {
     main();
 }
 
-function cordInit() {
+function coordInit() {
     PLAYER.x = playerStartX;
     PLAYER.y = playerStartY;
     BOT.x = botStartX;
