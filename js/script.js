@@ -29,6 +29,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 1000,
+        lineWidth: 5,
         type: 3,
         team: 0,
         color: gray,
@@ -43,6 +44,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 1000,
+        lineWidth: 5,
         type: 3,
         team: 0,
         color: gray,
@@ -57,6 +59,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 200,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -71,6 +74,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 200,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -85,6 +89,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 1000,
+        lineWidth: 5,
         type: 1,
         team: 0,
         color: gray,
@@ -99,6 +104,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 300,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -113,6 +119,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 300,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -127,6 +134,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 300,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -141,6 +149,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 300,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -155,6 +164,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 300,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -169,6 +179,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 300,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -183,6 +194,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 300,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -197,6 +209,7 @@ const DEFAULT_POINTS = [
         width: 10,
         height: 10,
         size: 300,
+        lineWidth: 5,
         type: 2,
         team: 0,
         color: gray,
@@ -251,6 +264,7 @@ function createPoint(point) {
         width: point.width,
         height: point.height,
         size: point.size,
+        lineWidth: point.lineWidth,
         type: point.type,
         team: point.team,
         color: point.color,
@@ -269,6 +283,7 @@ function resetPoint(point, index) {
     point.width = defaultPoint.width;
     point.height = defaultPoint.height;
     point.size = defaultPoint.size;
+    point.lineWidth = defaultPoint.lineWidth;
     point.type = defaultPoint.type;
     point.team = defaultPoint.team;
     point.color = defaultPoint.color;
@@ -335,7 +350,7 @@ function drawPoints() {
                 ctx.translate(point.x, point.y);
                 ctx.rotate(point.angle);
                 ctx.strokeStyle = point.color;
-                ctx.lineWidth = 5;
+                ctx.lineWidth = point.lineWidth;
 
                 ctx.beginPath();
                 ctx.moveTo(-point.size / 2, 0);
@@ -354,7 +369,7 @@ function drawPoints() {
                 ctx.translate(point.x, point.y);
                 ctx.rotate(point.angle);
                 ctx.strokeStyle = point.color;
-                ctx.lineWidth = 5;
+                ctx.lineWidth = point.lineWidth;
 
                 ctx.beginPath();
                 ctx.moveTo(point.size / 2, 0);
@@ -374,7 +389,7 @@ function drawPoints() {
 
                 ctx.translate(point.x, point.y);
                 ctx.strokeStyle = point.color;
-                ctx.lineWidth = 5;
+                ctx.lineWidth = point.lineWidth;
                 ctx.beginPath();
                 ctx.moveTo(point.size, 0);
                 ctx.lineTo(-point.size, 0);
@@ -505,7 +520,7 @@ function botMovement(dt) {
 
     function findActivePointInArea(point) {
 
-        if (point.state === POINT_STATES.ACTIVE) {
+        if (point.state === POINT_STATES.ACTIVE && point.type !== 3) {
             if (loopIndexActive === 0) {
                 idInactive = 0;
                 dxMinActive = point.x - BOT.x;
@@ -523,6 +538,9 @@ function botMovement(dt) {
             }
             inRangeOfLaser = (hypMinActive - BOT.size * Math.sqrt(2) < point.size / 2);
             loopIndexActive++;
+        }
+        if (point.state === POINT_STATES.ACTIVE && point.type === 3) {
+
         }
     }
 
@@ -550,47 +568,76 @@ function botMovement(dt) {
             if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
                 if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive + dxInactive;
-                    BOT.y += dyActive + dyInactive;
+                    if (!doesBotBumpsIntoHorizontalActiveLaser(dyActive + dyInactive)) {
+                        BOT.y += dyActive + dyInactive;
+                    }
                 } else {
                     const angle = Math.atan2(dyActive + dyInactive, dxActive + dxInactive);
                     BOT.x += BOT.speed * dt * Math.cos(angle);
-                    BOT.y += BOT.speed * dt * Math.sin(angle);
+                    if (!doesBotBumpsIntoHorizontalActiveLaser(BOT.speed * dt * Math.sin(angle))) {
+                        BOT.y += BOT.speed * dt * Math.sin(angle);
+                    }
                 }
             }
             if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
                 if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive + dxInactive;
-                    BOT.y += dyActive;
+                    if (!doesBotBumpsIntoHorizontalActiveLaser(dyActive)) {
+                        BOT.y += dyActive;
+                    }
                 } else {
                     const angle = Math.atan2(dyActive, dxActive + dxInactive);
                     BOT.x += BOT.speed * dt * Math.cos(angle);
-                    BOT.y += BOT.speed * dt * Math.sin(angle);
+                    if (!doesBotBumpsIntoHorizontalActiveLaser(BOT.speed * dt * Math.sin(angle))) {
+                        BOT.y += BOT.speed * dt * Math.sin(angle);
+                    }
                 }
             }
             if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
                 if (Math.sqrt((dxActive) ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive;
-                    BOT.y += dyActive + dyInactive;
+                    if (!doesBotBumpsIntoHorizontalActiveLaser(dyActive + dyInactive)) {
+                        BOT.y += dyActive + dyInactive;
+                    }
                 } else {
                     const angle = Math.atan2(dyActive + dyInactive, dxActive);
                     BOT.x += BOT.speed * dt * Math.cos(angle);
-                    BOT.y += BOT.speed * dt * Math.sin(angle);
+                    if (!doesBotBumpsIntoHorizontalActiveLaser(BOT.speed * dt * Math.sin(angle))) {
+                        BOT.y += BOT.speed * dt * Math.sin(angle);
+                    }
                 }
             }
             if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
                 if (Math.sqrt((dxActive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive;
-                    BOT.y += dyActive;
+                    if (!doesBotBumpsIntoHorizontalActiveLaser(dyActive)) {
+                        BOT.y += dyActive;
+                    }
                 } else {
                     const angle = Math.atan2(dyActive, dxActive);
                     BOT.x += BOT.speed * dt * Math.cos(angle);
-                    BOT.y += BOT.speed * dt * Math.sin(angle);
+                    if (!doesBotBumpsIntoHorizontalActiveLaser(BOT.speed * dt * Math.sin(angle))) {
+                        BOT.y += BOT.speed * dt * Math.sin(angle);
+                    }
                 }
             }
         } else {
             BOT.x += dxInactive;
-            BOT.y += dyInactive;
+            if (!doesBotBumpsIntoHorizontalActiveLaser(dyInactive)) {
+                BOT.y += dyInactive;
+            }
         }
+    }
+    function doesBotBumpsIntoHorizontalActiveLaser(dy) {
+        POINTS.forEach(point => {
+            if (point.state === POINT_STATES.ACTIVE && point.type === 3) {
+                if (BOT.y + dy > point.y + point.lineWidth/2 &&  // верхняя граница бота выше нижней границы лазера
+                    BOT.y + BOT.size + dy < point.y - point.lineWidth/2) {   // нижняя граница бота ниже верхней границы лазера
+                    return true;
+                }
+            }
+        });
+        return false;
     }
 }
 
