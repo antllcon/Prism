@@ -437,6 +437,7 @@ function botMovement(dt) {
     let dyMinActive = Infinity;
     let hypMinActive = Infinity;
     let inRangeOfLaser = false;
+    let dxInactive, dyInactive, dxActive, dyActive;
 
     findNearestPoint(POINTS);
     if (inRangeOfLaser) {
@@ -487,6 +488,7 @@ function botMovement(dt) {
     }
 
     function moveBotToLaser() {
+
         if (!isNaN(hypMinInactive) && hypMinInactive !== 0) {
             dxInactive = BOT.speed * dxMinInactive / hypMinInactive * dt;
             dyInactive = BOT.speed * dyMinInactive / hypMinInactive * dt;
@@ -625,7 +627,7 @@ function checkLaserBounds() {
 
         // проверяем каждую угловую точку игрока
         for (const corner of playerCorners) {
-            // расчитваем удаленность угловой точки игрока от центра лазера
+            // насчитаем удаленность угловой точки игрока от центра лазера
             const dx = corner.x - point.x;
             const dy = corner.y - point.y;
 
@@ -707,4 +709,3 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
 };
 
 init();
-
