@@ -1,8 +1,8 @@
 {
   "name": "prism",
   "version": "1.0.0",
-  "description": "Team web game - summer practice",
-  "main": "menu.js",
+  "description": "",
+  "main": "script.js",
   "scripts": {
     "build": "tsc",
     "start": "http-server dist"
@@ -12,6 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "http-server": "^14.1.1",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.4"
   }
 }

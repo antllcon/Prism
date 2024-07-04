@@ -23,6 +23,7 @@ const POINT_STATES = {
 };
 const DEFAULT_POINTS = [
     {
+        id: 0,
         x: canvasWidth / 2,
         y: 10,
         width: 10,
@@ -36,6 +37,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 1,
         x: canvasWidth / 2,
         y: canvasHeight - 10,
         width: 10,
@@ -49,6 +51,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 2,
         x: canvasWidth / 4,
         y: canvasHeight / 2,
         width: 10,
@@ -62,6 +65,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 3,
         x: canvasWidth / 4 * 3,
         y: canvasHeight / 2,
         width: 10,
@@ -75,6 +79,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 4,
         x: canvasWidth / 2,
         y: canvasHeight / 2,
         width: 10,
@@ -88,6 +93,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 5,
         x: canvasWidth * (1 / 5),
         y: canvasHeight - laserWidth / 2 - 20,
         width: 10,
@@ -101,6 +107,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 6,
         x: canvasWidth * (2 / 5),
         y: canvasHeight - laserWidth / 2 - 20,
         width: 10,
@@ -114,6 +121,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 7,
         x: canvasWidth * (3 / 5),
         y: canvasHeight - laserWidth / 2 - 20,
         width: 10,
@@ -127,6 +135,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 8,
         x: canvasWidth * (4 / 5),
         y: canvasHeight - laserWidth / 2 - 20,
         width: 10,
@@ -140,6 +149,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 9,
         x: canvasWidth * (1 / 5),
         y: laserWidth / 2 + 20,
         width: 10,
@@ -153,6 +163,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 10,
         x: canvasWidth * (2 / 5),
         y: laserWidth / 2 + 20,
         width: 10,
@@ -166,6 +177,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 11,
         x: canvasWidth * (3 / 5),
         y: laserWidth / 2 + 20,
         width: 10,
@@ -179,6 +191,7 @@ const DEFAULT_POINTS = [
         state: POINT_STATES.INACTIVE
     },
     {
+        id: 12,
         x: canvasWidth * (4 / 5),
         y: laserWidth / 2 + 20,
         width: 10,
@@ -218,8 +231,8 @@ let PLAYER = {
 };
 
 let BOT = {
-    x: 0,
-    y: 0,
+    x: 200,
+    y: 200,
     size: 10,
     color: 'red',
     speed: 200,
@@ -232,6 +245,7 @@ let POINTS = DEFAULT_POINTS.map(createPoint);
 
 function createPoint(point) {
     return {
+        id: point.id,
         x: point.x,
         y: point.y,
         width: point.width,
@@ -249,6 +263,7 @@ function createPoint(point) {
 
 function resetPoint(point, index) {
     const defaultPoint = DEFAULT_POINTS[index];
+    point.id = defaultPoint.id;
     point.x = defaultPoint.x;
     point.y = defaultPoint.y;
     point.width = defaultPoint.width;
@@ -261,10 +276,10 @@ function resetPoint(point, index) {
     point.activationTime = null;
     point.state = POINT_STATES.INACTIVE;
 }
-
+//@ts-ignore
 let ctx = canvas.getContext("2d");
-
-canvas.width = GAME.width;
+//@ts-ignore
+canvas.width = GAME.width;//@ts-ignore
 canvas.height = GAME.height;
 
 function drawBackground() {
@@ -403,7 +418,6 @@ function cordInit() {
     PLAYER.y = playerStartY;
     BOT.x = botStartX;
     BOT.y = botStartY;
-    console.log(BOT.x, BOT.y);
 }
 
 // Основной цикл
@@ -412,7 +426,7 @@ function main() {
     let dt = (now - lastTime) / 1000.0;
     update(dt);
     render();
-    lastTime = now;
+    lastTime = now;//@ts-ignore
     requestAnimFrame(main);
 }
 
@@ -426,26 +440,29 @@ function update(dt) {
 
 function botMovement(dt) {
     let loopIndexInactive = 0;
-    let loopIndexActive = 0;
+    let loopIndexActive = 0;//@ts-ignore
     let idInactive;
-    let dxMinInactive = Infinity;
-    let dyMinInactive = Infinity;
-    let hypMinInactive = Infinity;
-
+    let dxMinInactive;
+    let dyMinInactive;
+    let hypMinInactive;
+//@ts-ignore
     let idActive;
-    let dxMinActive = Infinity;
-    let dyMinActive = Infinity;
-    let hypMinActive = Infinity;
-    let inRangeOfLaser = false;
-    let dxInactive, dyInactive, dxActive, dyActive;
+    let dxMinActive;
+    let dyMinActive;
+    let hypMinActive;
+    let inRangeOfLaser;
 
+    let dxInactive;
+    let dxActive;
+    let dyInactive;
+    let dyActive;
     findNearestPoint(POINTS);
     if (inRangeOfLaser) {
-        moveBotOutOfLaserSpiral();
-    } else {
-        moveBotToLaser();
+        moveBotOutOfLaserSpiral(); // заночит в dxActive и dyActive приращение для убегания по спирали
     }
-    getRightDirection();
+    moveBotToLaser(); // заночит в dxInactive и dyInactive приращение для движения к цели
+    getRightDirection(); // дает приоритет убеганию, контролирует предельную скорость
+
 
     function findNearestPoint(POINTS) {
         POINTS.forEach(point => {
@@ -456,10 +473,26 @@ function botMovement(dt) {
 
     function findInactivePointAndCompare(point) {
         if (point.state === POINT_STATES.INACTIVE) {
-            let dx = point.x - BOT.x;
-            let dy = point.y - BOT.y;
-            let hyp = Math.sqrt(dx ** 2 + dy ** 2);
+            if (loopIndexInactive === 0) {
+                idInactive = 0;
+                dxMinInactive = point.x - BOT.x;
+                dyMinInactive = point.y - BOT.y;
+                hypMinInactive = Math.sqrt(dxMinInactive ** 2 + dyMinInactive ** 2);
+            }
+            let dy;
+            let dx;
 
+            if (Math.abs(point.y + (GAME.height - BOT.y)) < Math.abs(point.y - BOT.y)) {
+                dy = point.y + (GAME.height - BOT.y);
+            } else {
+                dy = point.y - BOT.y;
+            }
+            if (Math.abs(point.x + (GAME.width - BOT.x)) < Math.abs(point.x - BOT.x)) {
+                dx = point.x + (GAME.width - BOT.x);
+            } else {
+                dx = point.x - BOT.x;
+            }
+            let hyp = Math.sqrt(dx ** 2 + dy ** 2);
             if (hyp < hypMinInactive) {
                 idInactive = point.id;
                 dxMinInactive = dx;
@@ -471,11 +504,17 @@ function botMovement(dt) {
     }
 
     function findActivePointInArea(point) {
+
         if (point.state === POINT_STATES.ACTIVE) {
+            if (loopIndexActive === 0) {
+                idInactive = 0;
+                dxMinActive = point.x - BOT.x;
+                dyMinActive = point.y - BOT.y;
+                hypMinActive = Math.sqrt(dxMinActive ** 2 + dyMinActive ** 2);
+            }
             let dx = point.x - BOT.x;
             let dy = point.y - BOT.y;
             let hyp = Math.sqrt(dx ** 2 + dy ** 2);
-
             if (hyp < hypMinActive) {
                 idActive = point.id;
                 dxMinActive = dx;
@@ -488,28 +527,22 @@ function botMovement(dt) {
     }
 
     function moveBotToLaser() {
-
-        if (!isNaN(hypMinInactive) && hypMinInactive !== 0) {
-            dxInactive = BOT.speed * dxMinInactive / hypMinInactive * dt;
-            dyInactive = BOT.speed * dyMinInactive / hypMinInactive * dt;
-        } else {
-            dxInactive = 0;
-            dyInactive = 0;
-        }
+        dxInactive = BOT.speed * dxMinInactive / hypMinInactive * dt;
+        dyInactive = BOT.speed * dyMinInactive / hypMinInactive * dt;
     }
 
     function moveBotOutOfLaserSpiral() {
-        if (!isNaN(hypMinActive) && hypMinActive !== 0) {
-            const angle = Math.atan2(dyMinActive, dxMinActive);
-            const radialSpeed = BOT.speed * dt;
-            const angularSpeed = BOT.speed * dt / hypMinActive;
+        // Определяем угол между ботом и точкой
+        const angle = Math.atan2(dyMinActive, dxMinActive);
 
-            dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
-            dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
-        } else {
-            dxActive = 0;
-            dyActive = 0;
-        }
+        // Радиальная скорость (от центра прочь)
+        const radialSpeed = BOT.speed * dt;
+
+        // Угловая скорость (по окружности)
+        const angularSpeed = BOT.speed * dt / hypMinActive;
+        // Обновляем координаты бота
+        dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
+        dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
     }
 
     function getRightDirection() {
@@ -523,8 +556,9 @@ function botMovement(dt) {
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
                 }
-            } else if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
-                if (Math.sqrt((dxActive + dxInactive) ** 2 + dyActive ** 2) < BOT.speed * dt) {
+            }
+            if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
+                if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive + dxInactive;
                     BOT.y += dyActive;
                 } else {
@@ -532,8 +566,9 @@ function botMovement(dt) {
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
                 }
-            } else if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
-                if (Math.sqrt(dxActive ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
+            }
+            if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
+                if (Math.sqrt((dxActive) ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive;
                     BOT.y += dyActive + dyInactive;
                 } else {
@@ -541,8 +576,9 @@ function botMovement(dt) {
                     BOT.x += BOT.speed * dt * Math.cos(angle);
                     BOT.y += BOT.speed * dt * Math.sin(angle);
                 }
-            } else if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
-                if (Math.sqrt(dxActive ** 2 + dyActive ** 2) < BOT.speed * dt) {
+            }
+            if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
+                if (Math.sqrt((dxActive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
                     BOT.x += dxActive;
                     BOT.y += dyActive;
                 } else {
@@ -555,24 +591,20 @@ function botMovement(dt) {
             BOT.x += dxInactive;
             BOT.y += dyInactive;
         }
-        if (isNaN(BOT.x) || isNaN(BOT.y)) {
-            console.error('BOT coordinates became NaN:', {dxInactive, dyInactive, dxActive, dyActive, hypMinInactive, hypMinActive});
-        }
     }
 }
 
-
 // Обработка нажатой клавиши
-function handleInput(dt) {
+function handleInput(dt) {//@ts-ignore
     if (input.isDown('LEFT') || input.isDown('a')) {
         PLAYER.x -= PLAYER.speed * dt;
-    }
+    }//@ts-ignore
     if (input.isDown('RIGHT') || input.isDown('d')) {
         PLAYER.x += PLAYER.speed * dt;
-    }
+    }//@ts-ignore
     if (input.isDown('DOWN') || input.isDown('s')) {
         PLAYER.y += PLAYER.speed * dt;
-    }
+    }//@ts-ignore
     if (input.isDown('UP') || input.isDown('w')) {
         PLAYER.y -= PLAYER.speed * dt;
     }
@@ -586,26 +618,26 @@ function checkCollisions() {
 function checkBorderGameBounds() {
     // Проход через границы поля для ИГРОКА
     if (PLAYER.x < 0) {
-        PLAYER.x = GAME.width;
-    } else if (PLAYER.x > GAME.width) {
+        PLAYER.x = GAME.width - PLAYER.size;
+    } else if (PLAYER.x + PLAYER.size > GAME.width) {
         PLAYER.x = 0;
     }
 
     if (PLAYER.y < 0) {
-        PLAYER.y = GAME.height;
-    } else if (PLAYER.y > GAME.height) {
+        PLAYER.y = GAME.height - PLAYER.size;
+    } else if (PLAYER.y + PLAYER.size > GAME.height) {
         PLAYER.y = 0;
     }
     // Проход через границы поля БОТА
     if (BOT.x < 0) {
-        BOT.x = GAME.width;
-    } else if (BOT.x > GAME.width) {
+        BOT.x = GAME.width - BOT.size;
+    } else if (BOT.x + BOT.size > GAME.width) {
         BOT.x = 0;
     }
 
     if (BOT.y < 0) {
-        BOT.y = GAME.height;
-    } else if (BOT.y > GAME.height) {
+        BOT.y = GAME.height - BOT.size;
+    } else if (BOT.y + BOT.size > GAME.height) {
         BOT.y = 0;
     }
 }
@@ -627,7 +659,7 @@ function checkLaserBounds() {
 
         // проверяем каждую угловую точку игрока
         for (const corner of playerCorners) {
-            // насчитаем удаленность угловой точки игрока от центра лазера
+            // расчитваем удаленность угловой точки игрока от центра лазера
             const dx = corner.x - point.x;
             const dy = corner.y - point.y;
 
@@ -649,13 +681,13 @@ function checkLaserBounds() {
 
             // Проверка коллизий с лазерами
             if (point.state === POINT_STATES.ACTIVE) {
-                if (point.type === 1 && point.team === PLAYER.team) { // Крест
+                if (point.type === 1 && point.team !== PLAYER.team) { // Крест
                     if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.width / 2) ||
                         (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.width / 2)) {
                         PLAYER.state = PLAYER_STATES.DEAD;
                     }
                 }
-                if (point.type === 2 && point.team === PLAYER.team) { // Три-радиус
+                if (point.type === 2 && point.team !== PLAYER.team) { // Три-радиус
                     const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
 
                     angles.forEach(angle => {
@@ -670,7 +702,7 @@ function checkLaserBounds() {
                         }
                     });
                 }
-                if (point.type === 3 && point.team === PLAYER.team) { // Прямая линия (горизонтальная)
+                if (point.type === 3 && point.team !== PLAYER.team) { // Прямая линия (горизонтальная)
                     if (corner.y >= point.y - point.width / 2 && corner.y <= point.y + point.width / 2 &&
                         corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
                         PLAYER.state = PLAYER_STATES.DEAD;
@@ -691,7 +723,7 @@ function updateEntities() {
         } else {
             point.state = POINT_STATES.INACTIVE;
             resetPoint(point, POINTS.indexOf(point));
-        }
+        }//@ts-ignore
         if (PLAYER.state === POINT_STATES.DEAD) {
             PLAYER.color = black;
         }
@@ -703,7 +735,8 @@ function updateEntities() {
 }
 
 
-// Определение requestAnimFrame
+// Определение
+//@ts-ignore
 window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
 };

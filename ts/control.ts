@@ -1,3 +1,4 @@
+
 (function() {
     let pressedKeys = {};
 
@@ -35,7 +36,7 @@
     window.addEventListener('blur', function() {
         pressedKeys = {};
     });
-
+//@ts-ignore
     window.input = {
         isDown: function(key) {
             return pressedKeys[key.toUpperCase()];

@@ -1,2 +1,12 @@
 /vendor/
 /node_modules
+/package-lock.json
+/dist/control.js.map
+/dist/menu.js.map
+/dist/script.js.map
+/dist/sprite.js.map
+/dist/dist/ts/control.js
+/dist/dist/ts/sprite.js.map
+/dist/dist/ts/script.js.map
+/dist/dist/ts/menu.js.map
+/dist/dist/ts/control.js.map
