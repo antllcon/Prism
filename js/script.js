@@ -591,8 +591,18 @@ function checkCollisions() {
 }
 
 function checkBorderGameBounds() {
-    (PLAYER.x < 0) ? (PLAYER.x = GAME.width - PLAYER.size) : ((PLAYER.x + PLAYER.size) > GAME.width ? (PLAYER.x = 0) : (0));
-    (PLAYER.y < 0) ? (PLAYER.y = GAME.height - PLAYER.size) : ((PLAYER.y + PLAYER.size) > GAME.height ? (PLAYER.y = 0) : (0));
+    // Проход через границы поля для ИГРОКА
+    if (PLAYER.x < 0) {
+        PLAYER.x = GAME.width;
+    } else if (PLAYER.x > GAME.width) {
+        PLAYER.x = 0;
+    }
+
+    if (PLAYER.y < 0) {
+        PLAYER.y = GAME.height;
+    } else if (PLAYER.y > GAME.height) {
+        PLAYER.y = 0;
+    }
 }
 
 function checkLaserBounds() {
