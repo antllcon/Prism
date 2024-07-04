@@ -1,55 +1,24 @@
-let buttonBot;
-let buttonPlayer;
-let button1vs1;
-let button2vs2;
-let buttonLobby;
-let buttonConnect;
-let buttonPlay;
-let buttonMenu;
-
-function loadHTML(filename, callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", filename);
-    xhr.onload = () => {
-        callback(xhr.response);
-    }
-    xhr.send();
-}
-
-function callback(html) {
-    document.body.innerHTML = html;
-}
+import { loadHTML, callback, loadToMainPageLink } from './additional/html-loader.js';
 
 function transitionToPage(file) {
     loadHTML(file, (html) => {
         callback(html);
-        if (file === 'menu.html' || file === 'with_bot.html'
-            || file === 'with-player.html') {
+        if (file === 'menu.html' || file === 'with_bot.html' || file === 'with-player.html') {
             loadToMainPageLink();
         }
         initEventListeners();
     });
 }
 
-function loadToMainPageLink() {
-    let toMainPage = document.createElement("a");
-    toMainPage.classList.add("logo");
-    toMainPage.href = "menu_all.html"; // Меняем на переход на новую страницу
-    loadHTML("src/img/prism.svg", (html) => {
-        toMainPage.innerHTML = html;
-    });
-    document.body.appendChild(toMainPage);
-}
-
 function initEventListeners() {
-    buttonBot = document.getElementById('button-bot');
-    buttonPlayer = document.getElementById('button-player');
-    button1vs1 = document.getElementById('button-1vs1');
-    button2vs2 = document.getElementById('button-2vs2');
-    buttonLobby = document.getElementById('button-lobby');
-    buttonConnect = document.getElementById('button-connect');
-    buttonPlay = document.getElementById('button-play');
-    buttonMenu = document.getElementById('button-menu');
+    let buttonBot = document.getElementById('button-bot');
+    let buttonPlayer = document.getElementById('button-player');
+    let button1vs1 = document.getElementById('button-1vs1');
+    let button2vs2 = document.getElementById('button-2vs2');
+    let buttonLobby = document.getElementById('button-lobby');
+    let buttonConnect = document.getElementById('button-connect');
+    let buttonPlay = document.getElementById('button-play');
+    let buttonMenu = document.getElementById('button-menu');
 
     if (buttonBot) {
         buttonBot.addEventListener('click', () => { transitionToPage("with_bot.html"); });
@@ -87,7 +56,6 @@ function initEventListeners() {
     }
 }
 
-// Initial load of the menu page
 loadHTML('menu.html', (html) => {
     callback(html);
     loadToMainPageLink();
