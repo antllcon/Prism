@@ -457,10 +457,6 @@ function botMovement(dt) {
     let dyInactive;
     let dyActive;
     findNearestPoint(POINTS);
-    // console.log(idInactive);
-    // console.log('point: ', POINTS[idInactive].x, POINTS[idInactive].y);
-    // console.log('x: ', Math.abs(POINTS[idInactive].x - (GAME.width - BOT.x)), Math.abs(POINTS[idInactive].x - BOT.x));
-    // console.log('y: ', Math.abs(POINTS[idInactive].y - (GAME.height - BOT.y)), Math.abs(POINTS[idInactive].y - BOT.y));
     if (inRangeOfLaser) {
         moveBotOutOfLaserSpiral(); // заночит в dxActive и dyActive приращение для убегания по спирали
     }
