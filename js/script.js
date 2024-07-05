@@ -1,11 +1,42 @@
-const canvasWidth = 960;
-const canvasHeight = 540;
+const canvasWidth = 1820;
+const canvasHeight = 1024;
 const red = "#FC0000";
 const green = "#00A86B";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
-const laserWidth = 200;
+const topLinePointDistance = 20;
+const bottomLinePointDistance = 20;
+const topPointCrossDistance = 170;
+const bottomPointCrossDistance = 200;
+const xPointsCoordinate= [canvasWidth / 2,                    //1
+                              canvasWidth / 2,                          //2
+                              canvasWidth / 4,                          //3
+                              canvasWidth / 4 * 3,                      //4
+                              canvasWidth / 2,                          //5
+                              canvasWidth * (7 / 8),                    //6
+                              canvasWidth * (1 / 8),                    //7
+                              canvasWidth * (2 / 5),                    //8
+                              canvasWidth * (3 / 5),                    //9
+                              canvasWidth * (5 / 6),                    //10
+                              canvasWidth * (1 / 6),                    //11
+                              canvasWidth * (2 / 5),                    //12
+                              canvasWidth * (3 / 5)                     //13
+                             ];
+const yPointsCoordinate= [topLinePointDistance,                     //1
+                              canvasHeight - bottomLinePointDistance,   //2
+                              canvasHeight / 2,                         //3
+                              canvasHeight / 2,                         //4
+                              canvasHeight / 2,                         //5
+                              canvasHeight - bottomPointCrossDistance,  //6
+                              canvasHeight - bottomPointCrossDistance,  //7
+                              canvasHeight - bottomPointCrossDistance,  //8
+                              canvasHeight - bottomPointCrossDistance,  //9
+                              topPointCrossDistance,                    //10
+                              topPointCrossDistance,                    //11
+                              topPointCrossDistance,                    //12
+                              topPointCrossDistance                     //13
+                             ];
 const GAME_STATES = {
     START: "start",
     PLAY: "play",
@@ -24,22 +55,22 @@ const POINT_STATES = {
 const DEFAULT_POINTS = [
     {
         id: 0,
-        x: canvasWidth / 2,
-        y: 10,
+        x: xPointsCoordinate[0],
+        y: yPointsCoordinate[0],
         width: 10,
         height: 10,
         size: 1000,
         type: 3,
         team: 0,
-        color: gray,
+        color: red,
         angle: 1,
         existTime: 10000,
         state: POINT_STATES.INACTIVE
     },
     {
         id: 1,
-        x: canvasWidth / 2,
-        y: canvasHeight - 10,
+        x: xPointsCoordinate[1],
+        y: yPointsCoordinate[1],
         width: 10,
         height: 10,
         size: 1000,
@@ -52,8 +83,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 2,
-        x: canvasWidth / 4,
-        y: canvasHeight / 2,
+        x: xPointsCoordinate[2],
+        y: yPointsCoordinate[2],
         width: 10,
         height: 10,
         size: 200,
@@ -66,8 +97,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 3,
-        x: canvasWidth / 4 * 3,
-        y: canvasHeight / 2,
+        x: xPointsCoordinate[3],
+        y: yPointsCoordinate[3],
         width: 10,
         height: 10,
         size: 200,
@@ -80,8 +111,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 4,
-        x: canvasWidth / 2,
-        y: canvasHeight / 2,
+        x: xPointsCoordinate[4],
+        y: yPointsCoordinate[4],
         width: 10,
         height: 10,
         size: 1000,
@@ -94,8 +125,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 5,
-        x: canvasWidth * (1 / 5),
-        y: canvasHeight - laserWidth / 2 - 20,
+        x: xPointsCoordinate[5],
+        y: yPointsCoordinate[5],
         width: 10,
         height: 10,
         size: 300,
@@ -108,8 +139,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 6,
-        x: canvasWidth * (2 / 5),
-        y: canvasHeight - laserWidth / 2 - 20,
+        x: xPointsCoordinate[6],
+        y: yPointsCoordinate[6],
         width: 10,
         height: 10,
         size: 300,
@@ -122,8 +153,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 7,
-        x: canvasWidth * (3 / 5),
-        y: canvasHeight - laserWidth / 2 - 20,
+        x: xPointsCoordinate[7],
+        y: yPointsCoordinate[7],
         width: 10,
         height: 10,
         size: 300,
@@ -136,8 +167,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 8,
-        x: canvasWidth * (4 / 5),
-        y: canvasHeight - laserWidth / 2 - 20,
+        x: xPointsCoordinate[8],
+        y: yPointsCoordinate[8],
         width: 10,
         height: 10,
         size: 300,
@@ -150,8 +181,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 9,
-        x: canvasWidth * (1 / 5),
-        y: laserWidth / 2 + 20,
+        x: xPointsCoordinate[9],
+        y: yPointsCoordinate[9],
         width: 10,
         height: 10,
         size: 300,
@@ -164,8 +195,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 10,
-        x: canvasWidth * (2 / 5),
-        y: laserWidth / 2 + 20,
+        x: xPointsCoordinate[10],
+        y: yPointsCoordinate[10],
         width: 10,
         height: 10,
         size: 300,
@@ -178,8 +209,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 11,
-        x: canvasWidth * (3 / 5),
-        y: laserWidth / 2 + 20,
+        x: xPointsCoordinate[11],
+        y: yPointsCoordinate[11],
         width: 10,
         height: 10,
         size: 300,
@@ -192,8 +223,8 @@ const DEFAULT_POINTS = [
     },
     {
         id: 12,
-        x: canvasWidth * (4 / 5),
-        y: laserWidth / 2 + 20,
+        x: xPointsCoordinate[12],
+        y: yPointsCoordinate[12],
         width: 10,
         height: 10,
         size: 300,
