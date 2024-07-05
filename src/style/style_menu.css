@@ -1,14 +1,31 @@
+@keyframes animateCentralPartMenu {
+    from {
+        margin-left: -600px;
+    }
+}
+@keyframes animateOutCentralPartMenu {
+    to {
+        margin-left: -700px;
+    }
+}
+
 .central-part__menu {
     display: flex;
     flex-direction: column;
     padding-left: 80px;
     margin-top: 350px;
     padding-bottom: 40px;
+    animation: 2s alternate animateCentralPartMenu;
+}
+
+.central-part__menu-animate-out {
+    animation-name: animateOutCentralPartMenu;
 }
 
 .menu__title {
     color: white;
-    font: 700 184px/184px Montserrat;
+    font: 700 158px/158px Font_Over;
+    cursor: default;
 }
 
 .menu__title::selection {

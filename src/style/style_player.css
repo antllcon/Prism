@@ -1,9 +1,16 @@
+@keyframes animateCentralPartPlayer {
+    from {
+        margin-left: -600px;
+    }
+}
+
 .central-part-player {
     display: flex;
     flex-direction: column;
     margin-top: 420px;
     padding-left: 80px;
     padding-bottom: 40px;
+    animation: 2s alternate animateCentralPartPlayer;
 }
 
 .chapter-player {
@@ -22,7 +29,7 @@
     height: 63px;
     background-color: white;
     color: rgb(94, 94, 94);
-    font: 700 35px/23px Montserrat;
+    font: 700 30px/16px Font_Over;
     text-align: center;
     box-shadow: 0 0 10px white;
 }
