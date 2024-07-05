@@ -7,21 +7,21 @@ const dark = "#333";
 const black = "#111";
 const topLinePointDistance = 20;
 const bottomLinePointDistance = 20;
-const topPointCrossDistance = 170;
-const bottomPointCrossDistance = 200;
-const xPointsCoordinate= [canvasWidth / 2,                    //1
+const topPointCrossDistance = 210;
+const bottomPointCrossDistance = 220;
+const xPointsCoordinate= [canvasWidth / 2,                          //1
                               canvasWidth / 2,                          //2
                               canvasWidth / 4,                          //3
                               canvasWidth / 4 * 3,                      //4
                               canvasWidth / 2,                          //5
                               canvasWidth * (7 / 8),                    //6
                               canvasWidth * (1 / 8),                    //7
-                              canvasWidth * (2 / 5),                    //8
-                              canvasWidth * (3 / 5),                    //9
-                              canvasWidth * (5 / 6),                    //10
-                              canvasWidth * (1 / 6),                    //11
-                              canvasWidth * (2 / 5),                    //12
-                              canvasWidth * (3 / 5)                     //13
+                              canvasWidth * (3 / 8),                    //8
+                              canvasWidth * (5 / 8),                    //9
+                              canvasWidth * (7 / 8),                    //10
+                              canvasWidth * (1 / 8),                    //11
+                              canvasWidth * (3 / 8),                    //12
+                              canvasWidth * (5 / 8)                     //13
                              ];
 const yPointsCoordinate= [topLinePointDistance,                     //1
                               canvasHeight - bottomLinePointDistance,   //2
@@ -62,7 +62,7 @@ const DEFAULT_POINTS = [
         size: 1000,
         type: 3,
         team: 0,
-        color: red,
+        color: gray,
         angle: 1,
         existTime: 10000,
         state: POINT_STATES.INACTIVE
@@ -87,7 +87,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[2],
         width: 10,
         height: 10,
-        size: 200,
+        size: 350,
         type: 2,
         team: 0,
         color: gray,
@@ -101,7 +101,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[3],
         width: 10,
         height: 10,
-        size: 200,
+        size: 350,
         type: 2,
         team: 0,
         color: gray,
@@ -115,7 +115,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[4],
         width: 10,
         height: 10,
-        size: 1000,
+        size: 2100,
         type: 1,
         team: 0,
         color: gray,
@@ -129,7 +129,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[5],
         width: 10,
         height: 10,
-        size: 300,
+        size: 500,
         type: 2,
         team: 0,
         color: gray,
@@ -143,7 +143,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[6],
         width: 10,
         height: 10,
-        size: 300,
+        size: 500,
         type: 2,
         team: 0,
         color: gray,
@@ -157,7 +157,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[7],
         width: 10,
         height: 10,
-        size: 300,
+        size: 500,
         type: 2,
         team: 0,
         color: gray,
@@ -171,7 +171,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[8],
         width: 10,
         height: 10,
-        size: 300,
+        size: 500,
         type: 2,
         team: 0,
         color: gray,
@@ -185,7 +185,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[9],
         width: 10,
         height: 10,
-        size: 300,
+        size: 500,
         type: 2,
         team: 0,
         color: gray,
@@ -199,7 +199,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[10],
         width: 10,
         height: 10,
-        size: 300,
+        size: 500,
         type: 2,
         team: 0,
         color: gray,
@@ -213,7 +213,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[11],
         width: 10,
         height: 10,
-        size: 300,
+        size: 500,
         type: 2,
         team: 0,
         color: gray,
@@ -227,7 +227,7 @@ const DEFAULT_POINTS = [
         y: yPointsCoordinate[12],
         width: 10,
         height: 10,
-        size: 300,
+        size: 500,
         type: 2,
         team: 0,
         color: gray,
