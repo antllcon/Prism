@@ -50,8 +50,19 @@ const PLAYER_STATES = {
 }
 const POINT_STATES = {
     ACTIVE: 'active',
-    INACTIVE: 'inactive'
-};
+    INACTIVE: 'inactive',
+    INVISIBLE: 'invisible'
+}
+const POINT_TYPES = {
+    LINE: "line",
+    TRIGRAPH: "trigraph",
+    CROSS: "cross"
+}
+const TEAM_STATES = {
+    NONE: "none",
+    PURPLE: "purple",
+    YELLOW: "yellow"
+}
 const DEFAULT_POINTS = [
     {
         id: 0,
@@ -352,57 +363,45 @@ function drawPlayer() {
             PLAYER.state = PLAYER_STATES.ACTIVE;
         }, 1000); // Changed delay to 1000ms
     }
-
-
 }
 
 function drawPoints() {
     POINTS.forEach(point => {
         if (point.state === POINT_STATES.ACTIVE) {
-            if (point.type === 1) {
+            if (point.type === POINT_TYPES.CROSS) {
                 point.angle += Math.PI / 180;
                 ctx.save();
-
                 ctx.translate(point.x, point.y);
                 ctx.rotate(point.angle);
                 ctx.strokeStyle = point.color;
                 ctx.lineWidth = 5;
-
                 ctx.beginPath();
                 ctx.moveTo(-point.size / 2, 0);
                 ctx.lineTo(point.size / 2, 0);
-
                 ctx.moveTo(0, -point.size / 2);
                 ctx.lineTo(0, point.size / 2);
                 ctx.stroke();
-
                 ctx.restore();
             }
-            if (point.type === 2) {
+            if (point.type === POINT_TYPES.TRIGRAPH) {
                 point.angle += Math.PI / 180;
                 ctx.save();
-
                 ctx.translate(point.x, point.y);
                 ctx.rotate(point.angle);
                 ctx.strokeStyle = point.color;
                 ctx.lineWidth = 5;
-
                 ctx.beginPath();
                 ctx.moveTo(point.size / 2, 0);
                 ctx.lineTo(0, 0);
-
                 ctx.moveTo(0, 0);
                 ctx.lineTo(-point.size / 2 * Math.cos(Math.PI / 3), -point.size / 2 * Math.sin(Math.PI / 3));
-
                 ctx.moveTo(0, 0);
                 ctx.lineTo(-point.size / 2 * Math.cos(-Math.PI / 3), -point.size / 2 * Math.sin(-Math.PI / 3));
                 ctx.stroke();
-
                 ctx.restore();
             }
-            if (point.type === 3) {
+            if (point.type === POINT_TYPES.LINE) {
                 ctx.save();
-
                 ctx.translate(point.x, point.y);
                 ctx.strokeStyle = point.color;
                 ctx.lineWidth = 5;
@@ -410,7 +409,6 @@ function drawPoints() {
                 ctx.moveTo(point.size, 0);
                 ctx.lineTo(-point.size, 0);
                 ctx.stroke();
-
                 ctx.restore();
             }
 
@@ -712,13 +710,13 @@ function checkLaserBounds() {
 
             // Проверка коллизий с лазерами
             if (point.state === POINT_STATES.ACTIVE) {
-                if (point.type === 1 && point.team !== PLAYER.team) { // Крест
+                if (point.type === POINT_TYPES.CROSS && point.team !== PLAYER.team) { // Крест
                     if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.width / 2) ||
                         (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.width / 2)) {
                         PLAYER.state = PLAYER_STATES.DEAD;
                     }
                 }
-                if (point.type === 2 && point.team !== PLAYER.team) { // Три-радиус
+                if (point.type === POINT_TYPES.TRIGRAPH && point.team !== PLAYER.team) { // Три-радиус
                     const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
 
                     angles.forEach(angle => {
@@ -733,7 +731,7 @@ function checkLaserBounds() {
                         }
                     });
                 }
-                if (point.type === 3 && point.team !== PLAYER.team) { // Прямая линия (горизонтальная)
+                if (point.type === POINT_TYPES.LINE && point.team !== PLAYER.team) { // Прямая линия (горизонтальная)
                     if (corner.y >= point.y - point.width / 2 && corner.y <= point.y + point.width / 2 &&
                         corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
                         PLAYER.state = PLAYER_STATES.DEAD;
