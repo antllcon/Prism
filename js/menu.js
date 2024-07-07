@@ -46,7 +46,6 @@ function loadToMainPageLink() {
 }
 
 function initEventListeners() {
-    // audioThemeMenu.play();
     centralPartMenu = document.getElementById('central-part-menu');
     buttonBot = document.getElementById('button-bot');
     buttonPlayer = document.getElementById('button-player');
@@ -98,6 +97,7 @@ function initEventListeners() {
 
 // Initial load of the menu page
 loadHTML('menu.html', (html) => {
+    audioThemeMenu.play();
     callback(html);
     loadToMainPageLink();
     initEventListeners();

@@ -48,6 +48,11 @@ const PLAYER_STATES = {
     STUNNED: 'stunned',
     DEAD: 'dead'
 }
+const BOT_STATES = {
+    ACTIVE: 'active',
+    STUNNED: 'stunned',
+    DEAD: 'dead'
+}
 const POINT_STATES = {
     ACTIVE: 'active',
     INACTIVE: 'inactive'
@@ -240,6 +245,17 @@ const DEFAULT_POINTS = [
 let canvas = document.getElementById("canvas");
 let gameTime = 0;
 let lastTime;
+
+let countdownAudio = new Audio();
+countdownAudio.preload = 'auto';
+countdownAudio.src = '../src/sound/countdown.MP3';
+let gameThemeAudio = new Audio();
+gameThemeAudio.preload = 'auto';
+gameThemeAudio.src = '../src/sound/game_theme.MP3';
+let laserAppearanceAudio = new Audio();
+laserAppearanceAudio.preload = 'auto';
+laserAppearanceAudio.src = '../src/sound/laser_appearance.MP3';
+
 const botStartX = canvasWidth - 50;
 const botStartY = canvasHeight / 2;
 const playerStartX = 50;
@@ -268,7 +284,7 @@ let BOT = {
     color: 'red',
     speed: 200,
     team: 'red',
-    isAlive: true,
+    state: BOT_STATES.ACTIVE,
     side: 'enemy'
 }
 
@@ -319,16 +335,16 @@ function drawBackground() {
 }
 
 function drawBot() {
-    if (BOT.isAlive) {
+    if (BOT.state === BOT_STATES.ACTIVE) {
         ctx.fillStyle = BOT.color;
         ctx.fillRect(BOT.x, BOT.y, BOT.size, BOT.size);
     }
-    if (!BOT.isAlive) {
+    if (BOT.state === BOT_STATES.DEAD) {
         setTimeout(() => {
             BOT.color = 'red';
             BOT.x = botStartX;
             BOT.y = botStartY;
-            BOT.isAlive = true;
+            BOT.state = BOT_STATES.ACTIVE;
         }, 1000)
     }
 }
@@ -445,19 +461,21 @@ function init() {
 }
 
 function countdown() {
-    let inputTime = Date.now();
+    // let inputTime = Date.now();
     let background = document.createElement("div");
     let countdownGif = document.createElement("img");
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(countdownGif);
     countdownGif.src = "src/img/cat.gif";
+    countdownAudio.play();
     setTimeout(() => {
+        gameThemeAudio.play();
         background.remove();
         countdownGif.remove();
         lastTime = Date.now();
         main();
-    }, 5000)
+    }, 4200)
 }
 
 function cordInit() {
@@ -704,6 +722,13 @@ function checkLaserBounds() {
             {x: PLAYER.x + PLAYER.size, y: PLAYER.y + PLAYER.size}
         ];
 
+        const botCorners = [
+            {x: BOT.x, y: BOT.y},
+            {x: BOT.x + BOT.size, y: BOT.y},
+            {x: BOT.x, y: BOT.y + BOT.size},
+            {x: BOT.x + BOT.size, y: BOT.y + BOT.size}
+        ];
+
         // проверяем каждую угловую точку игрока
         for (const corner of playerCorners) {
             // расчитваем удаленность угловой точки игрока от центра лазера
@@ -721,6 +746,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
+                laserAppearanceAudio.play();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = PLAYER.team;
                 point.activationTime = Date.now();
@@ -757,6 +783,60 @@ function checkLaserBounds() {
                 }
             }
         }
+
+        for (const corner of botCorners) {
+            // расчитваем удаленность угловой точки игрока от центра лазера
+            const dx = corner.x - point.x;
+            const dy = corner.y - point.y;
+
+            // переводим удаленность в систему координат вращения лазера
+            const rotatedX = cos * dx + sin * dy;
+            const rotatedY = -sin * dx + cos * dy;
+
+            // смотрим на положение, делаем выводы относительно каждого состояния лазера
+            // и так ищем коллизию игрока с лазером
+
+            // Если точка принимает неактивное состояние
+            if (point.state === POINT_STATES.INACTIVE &&
+                rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
+                rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
+                laserAppearanceAudio.play();
+                point.state = POINT_STATES.ACTIVE;
+                point.team = BOT.team;
+                point.activationTime = Date.now();
+            }
+
+            // Проверка коллизий с лазерами
+            if (point.state === POINT_STATES.ACTIVE) {
+                if (point.type === 1 && point.team !== BOT.team) { // Крест
+                    if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.width / 2) ||
+                        (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.width / 2)) {
+                        BOT.state = BOT_STATES.DEAD;
+                    }
+                }
+                if (point.type === 2 && point.team !== BOT.team) { // Три-радиус
+                    const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
+
+                    angles.forEach(angle => {
+                        const angleSin = Math.sin(angle);
+                        const angleCos = Math.cos(angle);
+
+                        const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
+                        const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
+
+                        if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.height / 2) {
+                            BOT.state = BOT_STATES.DEAD;
+                        }
+                    });
+                }
+                if (point.type === 3 && point.team !== BOT.team) { // Прямая линия (горизонтальная)
+                    if (corner.y >= point.y - point.width / 2 && corner.y <= point.y + point.width / 2 &&
+                        corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
+                        BOT.state = BOT_STATES.DEAD;
+                    }
+                }
+            }
+        }
     });
 }
 
@@ -765,6 +845,10 @@ function updateEntities() {
         if (point.state === POINT_STATES.ACTIVE && Date.now() - point.activationTime < point.existTime) {
             if (point.team === PLAYER.team) {
                 point.color = PLAYER.color;
+                point.height = 5;
+            }
+            if (point.team === BOT.team) {
+                point.color = BOT.color;
                 point.height = 5;
             }
         } else {
