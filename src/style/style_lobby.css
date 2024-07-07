@@ -1,65 +1,44 @@
-.central-part__player {
-    display: flex;
-    flex-direction: row;
-    margin-top: 130px;
-    padding-left: 80px;
-    height: 380px;
+@keyframes animateTitleLobby {
+    from {
+        margin-right: -600px;
+        margin-left: -600px;
+    }
 }
 
-
-.chapter-lobby {
-    background-repeat: no-repeat;
-    color: white;
-    font: 700 120px/100px Montserrat;
-    margin: 140px 85px 55px 73px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+@keyframes animateCentralPartLobby {
+    from {
+        margin-left: -600px;
+    }
 }
 
-.chapter__code {
-    bottom: 0;
-    color: white;
-    font: 700 120px/146px Montserrat;
-    display: inline-block;
-    left: 80px;
+@keyframes animateCardsLobby {
+    from {
+        right: -1400px;
+    }
 }
 
-.chapter__title {
-    display: inline-block;
-    font: 700 120px/146px Montserrat;
-    border-bottom: 10px solid white;
-    border-right: 10px solid white;
-    padding-right: 30px;
+@keyframes animateChapterLobby {
+    from {
+        margin-left: -600px;
+        margin-right: -600px;
+    }
 }
 
 .lobby {
     display: flex;
     justify-content: space-between;
-    position: relative;
     background-repeat: no-repeat;
     height: 154px;
-    margin: 66px 333px 0 60px;
-    font: 700 120px/146px Montserrat;
-    border-bottom: 10px solid white;
-    border-right: 10px solid white;
-    padding-right: 30px;
-}
-
-.lobby {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    background-repeat: no-repeat;
-    height: 154px;
-    margin: 66px 333px 0 60px;
+    margin: 60px 50px 0 60px;
+    animation: 2s alternate animateTitleLobby;
 }
 
 .lobby-title {
+    padding: 20px 10px 10px 20px;
+    color: white;
+    font: 700 120px/100px Font_Over;
     border-top: 10px solid white;
     border-left: 10px solid white;
-    color: white;
-    font: 700 120px/146px Montserrat;
 }
 
 .lobby-title::selection {
@@ -67,39 +46,40 @@
 }
 
 .lobby-count-players {
-    margin: 10px;
     color: white;
-    font: 700 120px/146px Montserrat;
+    font: 700 120px/100px Font_Over;
+    padding-top: 30px;
 }
 
 .players {
+    position: absolute;
+    right: -20px;
+    top: 362px;
     display: flex;
-    flex-direction: row;
-    margin-left: 250px;
-    /*gap: 54px;*/
     flex-wrap: nowrap;
     width: 1300px;
     height: 450px;
+    animation: 2s alternate animateCardsLobby;
 }
 
-.player-card-top{
+.player-card-top {
     display: flex;
     flex-direction: row;
     align-items: center;
     background-color: inherit;
     justify-content: space-around;
+    margin-top: 10px;
 }
 
-
-.player{
+.player {
     display: flex;
     flex-direction: column;
-    height: 405px;
-    width: 293px;
+    height: 390px;
+    width: 290px;
     margin-right: 54px;
 }
 
-.menu{
+.menu {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -107,151 +87,58 @@
     padding-right: 80px;
 }
 
-
-
 .player-img-container{
     background-color: inherit;
-    margin-top: 21px;
+    margin-top: 15px;
     display: flex;
     justify-content: center;
     align-self: center;
-    width: 168px;
-    height: 219px;
+    width: 100%;
+    object-fit: contain;
 }
 
-.player-img{
-    width: 100%;
-    height: 100%;
+.player-img {
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    width: 93%;
+    height: 93%;
     object-fit: contain;
     display: flex;
     background-color: inherit;
+    opacity: 90%;
+    transform: scale(0.98);
 }
 
-.player-count {
-    margin-top: 6px;
-    color: white;
-    font: 700 38px Montserrat;
-    background-color: inherit;
-    padding-left: 14px;
-    padding-right: 14px;
-    transition: font-size 0.3s ease;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    height: 50px;
-}
-
-.lobby-title {
-    border-top: 10px solid white;
-    border-left: 10px solid white;
-    color: white;
-    font: 700 120px/146px Montserrat;
-}
-
-.player-name{
-    color: white;
-    font: 700 20px Montserrat;
-    background-color: inherit;
-    margin-left: 14px;
-}
-
-.lobby-title::selection {
-    background-color: black;
-}
-
-.lobby-count-players {
-    margin: 10px;
-    color: white;
-    font: 700 120px/146px Montserrat;
-}
-
-.players {
-    display: flex;
-    flex-direction: row;
-    margin-left: 250px;
-    /*gap: 54px;*/
-    flex-wrap: nowrap;
-    width: 1300px;
-    height: 450px;
-}
-
-.player-card-top{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: inherit;
-    justify-content: space-between;
-}
-
-
-.player{
-    display: flex;
-    flex-direction: column;
-    height: 600px;
-    width: 244px;
-    margin-right: 54px;
-}
-
-.menu{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.player-img-container{
-    margin-top: 21px;
-    display: flex;
-    justify-content: center;
-    align-self: center;
-    width: 168px;
-    height: 219px;
-}
-
-.player-img{
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: flex;
-}
-
-.player-count{
-    color: white;
-    font: 700 38px Montserrat;
-    background-color: inherit;
-    margin-top: 6px;
-    margin-left: 14px;
-    transition: font-size 0.3s ease;
-    white-space: normal;
-}
-
-.player-name{
-    color: white;
-    font: 700 20px Montserrat;
-    background-color: inherit;
-    margin-left: 14px;
+.player-img:hover {
+    opacity: 100%;
+    transform: scale(1);
 }
 
 .button-left,
 .button-right {
-    border-radius: 90%;
     display: flex;
     width: 40px;
     height: 40px;
     border: none;
     position: relative;
     background-color: inherit;
-    box-shadow: none;
-
+    transform: scale(1.4);
 }
 
-.button-left:not(:hover),
-.button-right:not(:hover) {
-    box-shadow: none; /* Сбрасываем box-shadow при отсутствии наведения */
+.button-right:hover,
+.button-left:hover {
+    opacity: 90%;
+}
+
+.button-right:active,
+.button-left:active {
+    opacity: 90%;
+    transform: scale(1.3);
 }
 
 .arrow-left,
 .arrow-right {
     display: block;
+    border-radius: 16%;
     width: 0;
     height: 0;
     border-top: 8px solid transparent;
@@ -272,8 +159,27 @@
     border-left: 12px solid #fff;
     right: 12px;
 }
-.player-get-bot{
-    font: 700 20px Montserrat;
+
+.player-count {
+    margin: 10px 0 10px 20px;
+    color: white;
+    font: 700 38px Font_Over;
+    background-color: inherit;
+    transition: font-size 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.player-name {
+    color: white;
+    font: 700 18px Font_Over;
+    background-color: inherit;
+    margin-left: 20px;
+}
+
+.player-get-bot {
+    font: 700 18px Font_Over;
     color: #CFA333;
     background-color: #FFDA7B;
     width: 200px;
@@ -281,49 +187,58 @@
     align-self: center;
     text-align: center;
     border: none;
-}
-
-
-.button-left,
-.button-right {
-    border-radius: 90%;
-    display: flex;
-    width: 40px;
-    height: 40px;
-    border: none;
-    position: relative;
-    background-color: inherit;
-    box-shadow: none;
-
-}
-
-.button-left:not(:hover),
-.button-right:not(:hover) {
-    box-shadow: none; /* Сбрасываем box-shadow при отсутствии наведения */
-}
-
-.arrow-left,
-.arrow-right {
-    display: block;
-    width: 0;
-    height: 0;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: inherit;
     cursor: pointer;
+    transition: background-color 0.5s ease-out, transform 0.5s ease-out;
 }
 
-.arrow-left {
-    border-right: 12px solid #fff;
-    left: 12px;
+.player-get-bot:hover {
+    background-color: rgb(253, 234, 182);
+    color: #bf9b39;
 }
 
-.arrow-right {
-    border-left: 12px solid #fff;
-    right: 12px;
+.player-get-bot:active {
+    background-color: rgb(253, 222, 144);
+    color: #bf9b39;
+    transform: scale(0.96);
+}
+
+.player-get-bot::selection {
+    background-color: #FFDA7B;
+}
+
+.central-part-lobby {
+    display: flex;
+    flex-direction: column;
+    margin-top: 195px;
+    height: 380px;
+    padding-left: 80px;
+    padding-bottom: 40px;
+    animation: 2s alternate animateTitleLobby;
+}
+
+.chapter-lobby {
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font: 700 120px/100px Font_Over;
+    animation: 2s alternate animateChapterLobby;
+    margin: 49px 50px 50px 73px;
+}
+
+.chapter__code {
+    display: inline-block;
+    padding-bottom: 20px;
+    color: white;
+    font: 700 120px/146px Font_Over;
+}
+
+.chapter__title {
+    display: inline-block;
+    color: white;
+    font: 700 120px/156px Font_Over;
+    border-bottom: 10px solid white;
+    border-right: 10px solid white;
+    /*padding: 10px 20px 0 10px;*/
 }
 
 

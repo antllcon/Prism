@@ -1,3 +1,4 @@
+let centralPartMenu;
 let buttonBot;
 let buttonPlayer;
 let button1vs1;
@@ -6,6 +7,9 @@ let buttonLobby;
 let buttonConnect;
 let buttonPlay;
 let buttonMenu;
+let audioThemeMenu = new Audio();
+audioThemeMenu.preload = 'auto';
+audioThemeMenu.src = '../src/sound/menu_theme.MP3';
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -34,7 +38,7 @@ function transitionToPage(file) {
 function loadToMainPageLink() {
     let toMainPage = document.createElement("a");
     toMainPage.classList.add("logo");
-    toMainPage.href = "menu_all.html"; // Меняем на переход на новую страницу
+    toMainPage.href = "";
     loadHTML("src/img/prism.svg", (html) => {
         toMainPage.innerHTML = html;
     });
@@ -42,6 +46,8 @@ function loadToMainPageLink() {
 }
 
 function initEventListeners() {
+    // audioThemeMenu.play();
+    centralPartMenu = document.getElementById('central-part-menu');
     buttonBot = document.getElementById('button-bot');
     buttonPlayer = document.getElementById('button-player');
     button1vs1 = document.getElementById('button-1vs1');
@@ -52,7 +58,10 @@ function initEventListeners() {
     buttonMenu = document.getElementById('button-menu');
 
     if (buttonBot) {
-        buttonBot.addEventListener('click', () => { transitionToPage("with_bot.html"); });
+        buttonBot.addEventListener('click', () => {
+            centralPartMenu.classList.add("central-part__menu-animate-out");
+            setTimeout(() => transitionToPage("with_bot.html"), 2000);
+        });
     }
 
     if (buttonPlayer) {
