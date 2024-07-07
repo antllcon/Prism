@@ -122,6 +122,13 @@ body {
     transition-timing-function: ease-out;
 }
 
+.button:focus {
+    border: none;
+    box-shadow: 0 0 30px white;
+    transition: 0.3s;
+    transition-timing-function: ease-out;
+}
+
 .button:active {
     box-shadow: 0 0 30px white;
     transform: scale(0.96);
