@@ -19,191 +19,33 @@ const PLAYER_STATES = {
 }
 const POINT_STATES = {
     ACTIVE: 'active',
-    INACTIVE: 'inactive'
+    INACTIVE: 'inactive',
+    INVISIBLE: 'invisible'
 };
+const POINT_TYPES = {
+    LINE: "line",
+    TRIGRAPH: "trigraph",
+    CROSS: "cross"
+};
+const TEAM_STATES = {
+    NONE: "none",
+    PURPLE: "purple",
+    YELLOW: "yellow"
+}
 const DEFAULT_POINTS = [
-    {
-        id: 0,
-        x: canvasWidth / 2,
-        y: 10,
-        width: 10,
-        height: 10,
-        size: 1000,
-        type: 3,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 1,
-        x: canvasWidth / 2,
-        y: canvasHeight - 10,
-        width: 10,
-        height: 10,
-        size: 1000,
-        type: 3,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 2,
-        x: canvasWidth / 4,
-        y: canvasHeight / 2,
-        width: 10,
-        height: 10,
-        size: 200,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 3,
-        x: canvasWidth / 4 * 3,
-        y: canvasHeight / 2,
-        width: 10,
-        height: 10,
-        size: 200,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 4,
-        x: canvasWidth / 2,
-        y: canvasHeight / 2,
-        width: 10,
-        height: 10,
-        size: 1000,
-        type: 1,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 5,
-        x: canvasWidth * (1 / 5),
-        y: canvasHeight - laserWidth / 2 - 20,
-        width: 10,
-        height: 10,
-        size: 300,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 6,
-        x: canvasWidth * (2 / 5),
-        y: canvasHeight - laserWidth / 2 - 20,
-        width: 10,
-        height: 10,
-        size: 300,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 7,
-        x: canvasWidth * (3 / 5),
-        y: canvasHeight - laserWidth / 2 - 20,
-        width: 10,
-        height: 10,
-        size: 300,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 8,
-        x: canvasWidth * (4 / 5),
-        y: canvasHeight - laserWidth / 2 - 20,
-        width: 10,
-        height: 10,
-        size: 300,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 9,
-        x: canvasWidth * (1 / 5),
-        y: laserWidth / 2 + 20,
-        width: 10,
-        height: 10,
-        size: 300,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 10,
-        x: canvasWidth * (2 / 5),
-        y: laserWidth / 2 + 20,
-        width: 10,
-        height: 10,
-        size: 300,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 11,
-        x: canvasWidth * (3 / 5),
-        y: laserWidth / 2 + 20,
-        width: 10,
-        height: 10,
-        size: 300,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
-    {
-        id: 12,
-        x: canvasWidth * (4 / 5),
-        y: laserWidth / 2 + 20,
-        width: 10,
-        height: 10,
-        size: 300,
-        type: 2,
-        team: 0,
-        color: gray,
-        angle: 1,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE
-    },
+    {id: 0, x: canvasWidth / 2, y: 10, width: 10, height: 10, size: 1000, type: POINT_TYPES.LINE, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 1, x: canvasWidth / 2, y: canvasHeight - 10, width: 10, height: 10, size: 1000, type: POINT_TYPES.LINE, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 2, x: canvasWidth / 4, y: canvasHeight / 2, width: 10, height: 10, size: 200, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 3, x: canvasWidth / 4 * 3, y: canvasHeight / 2, width: 10, height: 10, size: 200, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 4, x: canvasWidth / 2, y: canvasHeight / 2, width: 10, height: 10, size: 1000, type: POINT_TYPES.CROSS, team: TEAM_STATES.NONE, color: gray, angle: 0, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 5, x: canvasWidth * (1 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 6, x: canvasWidth * (2 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 7, x: canvasWidth * (3 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 8, x: canvasWidth * (4 / 5), y: canvasHeight - laserWidth / 2 - 20, width: 10, height: 10, size: 300, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 9, x: canvasWidth * (1 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 10, x: canvasWidth * (2 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 11, x: canvasWidth * (3 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
+    {id: 12, x: canvasWidth * (4 / 5), y: laserWidth / 2 + 20, width: 10, height: 10, size: 300, type: POINT_TYPES.TRIGRAPH, team: TEAM_STATES.NONE, color: gray, angle: 1, speed: 10, existTime: 10000, state: POINT_STATES.INVISIBLE},
 ];
 
 let canvas = document.getElementById("canvas");
@@ -229,7 +71,6 @@ let PLAYER = {
     color: black,
     state: PLAYER_STATES.ACTIVE
 };
-
 let BOT = {
     x: 200,
     y: 200,
@@ -255,6 +96,7 @@ function createPoint(point) {
         team: point.team,
         color: point.color,
         angle: point.angle,
+        speed: point.speed,
         existTime: point.existTime,
         activationTime: null,
         state: point.state,
@@ -272,6 +114,8 @@ function resetPoint(point, index) {
     point.type = defaultPoint.type;
     point.team = defaultPoint.team;
     point.color = defaultPoint.color;
+    point.angle = defaultPoint.angle;
+    point.speed = defaultPoint.speed;
     point.existTime = defaultPoint.existTime;
     point.activationTime = null;
     point.state = POINT_STATES.INACTIVE;
@@ -321,57 +165,13 @@ function drawPlayer() {
             PLAYER.state = PLAYER_STATES.ACTIVE;
         }, 1000); // Changed delay to 1000ms
     }
-
-
 }
 
-function drawPoints() {
+function drawPoints(dt) {
     POINTS.forEach(point => {
         if (point.state === POINT_STATES.ACTIVE) {
-            if (point.type === 1) {
-                point.angle += Math.PI / 180;
+            if (point.type === POINT_TYPES.LINE) {
                 ctx.save();
-
-                ctx.translate(point.x, point.y);
-                ctx.rotate(point.angle);
-                ctx.strokeStyle = point.color;
-                ctx.lineWidth = 5;
-
-                ctx.beginPath();
-                ctx.moveTo(-point.size / 2, 0);
-                ctx.lineTo(point.size / 2, 0);
-
-                ctx.moveTo(0, -point.size / 2);
-                ctx.lineTo(0, point.size / 2);
-                ctx.stroke();
-
-                ctx.restore();
-            }
-            if (point.type === 2) {
-                point.angle += Math.PI / 180;
-                ctx.save();
-
-                ctx.translate(point.x, point.y);
-                ctx.rotate(point.angle);
-                ctx.strokeStyle = point.color;
-                ctx.lineWidth = 5;
-
-                ctx.beginPath();
-                ctx.moveTo(point.size / 2, 0);
-                ctx.lineTo(0, 0);
-
-                ctx.moveTo(0, 0);
-                ctx.lineTo(-point.size / 2 * Math.cos(Math.PI / 3), -point.size / 2 * Math.sin(Math.PI / 3));
-
-                ctx.moveTo(0, 0);
-                ctx.lineTo(-point.size / 2 * Math.cos(-Math.PI / 3), -point.size / 2 * Math.sin(-Math.PI / 3));
-                ctx.stroke();
-
-                ctx.restore();
-            }
-            if (point.type === 3) {
-                ctx.save();
-
                 ctx.translate(point.x, point.y);
                 ctx.strokeStyle = point.color;
                 ctx.lineWidth = 5;
@@ -379,12 +179,44 @@ function drawPoints() {
                 ctx.moveTo(point.size, 0);
                 ctx.lineTo(-point.size, 0);
                 ctx.stroke();
-
+                ctx.restore();
+            }
+            if (point.type === POINT_TYPES.TRIGRAPH) {
+                point.angle += Math.PI / 180;
+                ctx.save();
+                ctx.translate(point.x, point.y);
+                ctx.rotate(point.angle);
+                ctx.strokeStyle = point.color;
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(point.size / 2, 0);
+                ctx.lineTo(0, 0);
+                ctx.moveTo(0, 0);
+                ctx.lineTo(-point.size / 2 * Math.cos(Math.PI / 3), -point.size / 2 * Math.sin(Math.PI / 3));
+                ctx.moveTo(0, 0);
+                ctx.lineTo(-point.size / 2 * Math.cos(-Math.PI / 3), -point.size / 2 * Math.sin(-Math.PI / 3));
+                ctx.stroke();
                 ctx.restore();
             }
 
-        } else {
-            point.angle += Math.PI / 180;
+            if (point.type === POINT_TYPES.CROSS) {
+                point.angle += point.speed * dt * Math.PI / 180;
+                ctx.save();
+                ctx.translate(point.x, point.y);
+                ctx.rotate(point.angle);
+                ctx.strokeStyle = point.color;
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(-point.size / 2, 0);
+                ctx.lineTo(point.size / 2, 0);
+                ctx.moveTo(0, -point.size / 2);
+                ctx.lineTo(0, point.size / 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+        if (point.state === POINT_STATES.INACTIVE) {
+            point.angle += point.speed * dt * Math.PI / 180;
             ctx.save();
             ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
             ctx.rotate(point.angle);
@@ -395,10 +227,10 @@ function drawPoints() {
     });
 }
 
-function render() {
+function render(dt) {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
     drawBackground();
-    drawPoints();
+    drawPoints(dt);
     drawPlayer();
     drawBot();
 }
@@ -420,12 +252,11 @@ function cordInit() {
     BOT.y = botStartY;
 }
 
-// Основной цикл
 function main() {
     let now = Date.now();
     let dt = (now - lastTime) / 1000.0;
     update(dt);
-    render();
+    render(dt);
     lastTime = now;
     requestAnimFrame(main);
 }
@@ -445,7 +276,7 @@ function botMovement(dt) {
     let dxMinInactive;
     let dyMinInactive;
     let hypMinInactive;
-    
+
     let idActive;
     let dxMinActive;
     let dyMinActive;
@@ -481,7 +312,7 @@ function botMovement(dt) {
             }
             let dy;
             let dx;
-            
+
             if (Math.abs(point.y + (GAME.height - BOT.y)) < Math.abs(point.y - BOT.y)) {
                 dy = point.y + (GAME.height - BOT.y);
             } else {
@@ -594,22 +425,6 @@ function botMovement(dt) {
     }
 }
 
-// Обработка нажатой клавиши
-function handleInput(dt) {
-    if (input.isDown('LEFT') || input.isDown('a')) {
-        PLAYER.x -= PLAYER.speed * dt;
-    }
-    if (input.isDown('RIGHT') || input.isDown('d')) {
-        PLAYER.x += PLAYER.speed * dt;
-    }
-    if (input.isDown('DOWN') || input.isDown('s')) {
-        PLAYER.y += PLAYER.speed * dt;
-    }
-    if (input.isDown('UP') || input.isDown('w')) {
-        PLAYER.y -= PLAYER.speed * dt;
-    }
-}
-
 function checkCollisions() {
     checkBorderGameBounds();
     checkLaserBounds();
@@ -714,31 +529,70 @@ function checkLaserBounds() {
 }
 
 function updateEntities() {
+    // обновляем время появления препятсвий
+    // если время прошло, изменяем состояния
+    // иначе идем дальше
+    // if gameTime >
+
     POINTS.forEach(point => {
-        if (point.state === POINT_STATES.ACTIVE && Date.now() - point.activationTime < point.existTime) {
-            if (point.team === PLAYER.team) {
-                point.color = PLAYER.color;
-                point.height = 5;
+        if (point.state !== POINT_STATES.INVISIBLE) {
+            if (point.state === POINT_STATES.ACTIVE && Date.now() - point.activationTime < point.existTime) {
+                if (point.team === PLAYER.team) {
+                    point.color = PLAYER.color;
+                    point.height = 5;
+                }
+            } else {
+                point.state = POINT_STATES.INACTIVE;
+                resetPoint(point, POINTS.indexOf(point));
             }
-        } else {
-            point.state = POINT_STATES.INACTIVE;
-            resetPoint(point, POINTS.indexOf(point));
+            if (PLAYER.state === POINT_STATES.ACTIVE) {
+            }
         }
-        if (PLAYER.state === POINT_STATES.DEAD) {
-            PLAYER.color = black;
-        }
+
         if (PLAYER.state === PLAYER_STATES.STUNNED) {
             PLAYER.x = 30;
             PLAYER.y = 30;
         }
+        updateVisibilityPoints(point)
     });
 }
 
+function updateVisibilityPoints(point) {
+    if (point.state === POINT_STATES.INVISIBLE) {
+        if (point.type === POINT_TYPES.TRIGRAPH) {
+            if (5 <= point.id && point.id <= 12 && gameTime > 3) {
+                point.state = POINT_STATES.INACTIVE;
+            }
+            if (2 <= point.id && point.id <= 3 && gameTime > 6) {
+                point.state = POINT_STATES.INACTIVE;
+            }
+        }
+        if (point.type === POINT_TYPES.LINE && gameTime > 9) {
+            point.state = POINT_STATES.INACTIVE;
+        }
+        if (point.type === POINT_TYPES.CROSS && gameTime > 12) {
+            point.state = POINT_STATES.INACTIVE;
+        }
+    }
+}
 
-// Определение requestAnimFrame
+function handleInput(dt) {
+    if (input.isDown('LEFT') || input.isDown('a')) {
+        PLAYER.x -= PLAYER.speed * dt;
+    }
+    if (input.isDown('RIGHT') || input.isDown('d')) {
+        PLAYER.x += PLAYER.speed * dt;
+    }
+    if (input.isDown('DOWN') || input.isDown('s')) {
+        PLAYER.y += PLAYER.speed * dt;
+    }
+    if (input.isDown('UP') || input.isDown('w')) {
+        PLAYER.y -= PLAYER.speed * dt;
+    }
+}
+
 window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
 };
 
 init();
-
