@@ -1,9 +1,9 @@
 .background-countdown {
-    position: fixed;
-    left: 72px;
-    top: 72px;
-    width: 960px;
-    height: 540px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
     background-color: #000000c2;
     z-index: 1000;
     display: flex;
