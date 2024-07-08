@@ -1,7 +1,7 @@
 const canvasWidth = 1820;
 const canvasHeight = 1024;
-const red = "#FC0000";
-const green = "#00A86B";
+const red = "#f8df5c";
+const green = "#8f23dc";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
@@ -264,9 +264,10 @@ countdownAudio.src = '../src/sound/countdown.MP3';
 let gameThemeAudio = new Audio();
 gameThemeAudio.preload = 'auto';
 gameThemeAudio.src = '../src/sound/game_theme.MP3';
-let laserAppearanceAudio = new Audio();
-laserAppearanceAudio.preload = 'auto';
-laserAppearanceAudio.src = '../src/sound/laser_appearance.MP3';
+function playLaserSound() {
+    const laserSound = new Audio('../src/sound/laser_appearance.MP3');
+    laserSound.play();
+}
 let scoreAlpha = 0.2;
 
 const botStartX = canvasWidth - 50;
@@ -294,7 +295,7 @@ let BOT = {
     x: 200,
     y: 200,
     size: 10,
-    color: 'red',
+    color: red,
     speed: 300,
     team: TEAM_STATES.YELLOW,
     state: BOT_STATES.ACTIVE,
@@ -339,11 +340,10 @@ function resetPoint(point, index) {
     point.speed = defaultPoint.speed;
 }
 
-function respawnPoint(point, index) {
+function respawnPoint(point) {
     if (point.id !== 0 && point.id !== 1) {
         point.state = POINT_STATES.INVISIBLE;
     }
-    else
     point.team = TEAM_STATES.NONE;
     point.activationTime = null;
     point.color = gray;
@@ -364,23 +364,38 @@ function drawScore() {
     ctx.save();
     ctx.globalAlpha = scoreAlpha;
     ctx.fillStyle = SCORE.color;
+    ctx.font = "100px Font Over";
+    ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 50, 100 );
+    ctx.restore();
+}
+
+function drawFinalScore() {
+    ctx.save();
+    ctx.globalAlpha = scoreAlpha;
+    ctx.fillStyle = SCORE.color;
     ctx.font = "700px Font Over";
     ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 270, 750);
     ctx.restore();
 }
 
 function drawBot() {
+    if (BOT.team === TEAM_STATES.PURPLE) {
+        PLAYER.color = red;
+    }
+    if (PLAYER.team === TEAM_STATES.YELLOW) {
+        PLAYER.color = green;
+    }
     if (BOT.state === BOT_STATES.ACTIVE) {
         ctx.fillStyle = BOT.color;
         ctx.fillRect(BOT.x, BOT.y, BOT.size, BOT.size);
     }
     if (BOT.state === BOT_STATES.DEAD) {
         setTimeout(() => {
-            BOT.color = 'red';
+            BOT.color = red;
             BOT.x = botStartX;
             BOT.y = botStartY;
             BOT.state = BOT_STATES.ACTIVE;
-        }, 5000)
+        }, 1000)
     }
 }
 
@@ -508,7 +523,6 @@ function resetLevel() {
     BOT.x = botStartX;
     BOT.y = botStartY;
     BOT.speed = 300; // сброс скорости, если она менялась
-    BOT.color = 'red'; // сброс цвета, если он менялся
     BOT.team = TEAM_STATES.YELLOW; // сброс команды, если это актуально
 
     scoreAlpha = 0.2; // Сброс прозрачности счёта
@@ -519,7 +533,7 @@ function resetLevel() {
     });
 
     setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
-    countdown(); // Запускаем анимацию и звук отсчёта
+    // countdown(); // Запускаем анимацию и звук отсчёта
 }
 
 function init() {
@@ -565,7 +579,9 @@ function main() {
         render();
     }
     else {
-        window.load("menu_all.html");
+        drawBackground();
+        drawFinalScore();
+        setTimeout(() => {window.location.href = 'menu_all.html';}, 1500);
     }
     lastTime = now;
     requestAnimFrame(main);
@@ -816,7 +832,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                laserAppearanceAudio.play();
+                playLaserSound();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
                 point.activationTime = Date.now();
@@ -869,7 +885,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                laserAppearanceAudio.play();
+                playLaserSound();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = BOT.team; // Убедитесь, что присваивается команда бота
                 point.activationTime = Date.now();
@@ -942,6 +958,10 @@ function updateEntities(dt) {
     }
     if (PLAYER.state === PLAYER_STATES.DEAD) {
         SCORE.team2 += 1;
+        resetLevel();
+    }
+    if (BOT.state === BOT_STATES.DEAD) {
+        SCORE.team1 += 1;
         resetLevel();
     }
 }
