@@ -5,6 +5,7 @@ const green = "#00A86B";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
+const white = "#FFF";
 const GAME_STATES = {
     START: "start",
     PLAY: "play",
@@ -36,6 +37,12 @@ const TEAM_STATES = {
     PURPLE: "purple",
     YELLOW: "yellow"
 }
+
+let SCORE = {
+    color: white,
+    team1: 0,
+    team2: 0
+}
 let DEFAULT_POINTS = [
     {
         id: 0,
@@ -50,7 +57,7 @@ let DEFAULT_POINTS = [
         angle: 0,
         existTime: 10000,
         state: POINT_STATES.INACTIVE,
-        speed: 50,
+        speed: 0,
         direction: 0
     },
     {
@@ -66,7 +73,7 @@ let DEFAULT_POINTS = [
         angle: 0,
         existTime: 10000,
         state: POINT_STATES.INACTIVE,
-        speed: 50,
+        speed: 0,
         direction: Math.PI
     },
     {
@@ -260,6 +267,7 @@ gameThemeAudio.src = '../src/sound/game_theme.MP3';
 let laserAppearanceAudio = new Audio();
 laserAppearanceAudio.preload = 'auto';
 laserAppearanceAudio.src = '../src/sound/laser_appearance.MP3';
+let scoreAlpha = 0.2;
 
 const botStartX = canvasWidth - 50;
 const botStartY = canvasHeight / 2;
@@ -331,6 +339,17 @@ function resetPoint(point, index) {
     point.speed = defaultPoint.speed;
 }
 
+function respawnPoint(point, index) {
+    if (point.id !== 0 && point.id !== 1) {
+        point.state = POINT_STATES.INVISIBLE;
+    }
+    else
+    point.team = TEAM_STATES.NONE;
+    point.activationTime = null;
+    point.color = gray;
+    point.height = 10;
+}
+
 let ctx = canvas.getContext("2d");
 
 canvas.width = GAME.width;
@@ -339,6 +358,15 @@ canvas.height = GAME.height;
 function drawBackground() {
     ctx.fillStyle = GAME.background;
     ctx.fillRect(0, 0, GAME.width, GAME.height);
+}
+
+function drawScore() {
+    ctx.save();
+    ctx.globalAlpha = scoreAlpha;
+    ctx.fillStyle = SCORE.color;
+    ctx.font = "700px Font Over";
+    ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 270, 750);
+    ctx.restore();
 }
 
 function drawBot() {
@@ -352,7 +380,7 @@ function drawBot() {
             BOT.x = botStartX;
             BOT.y = botStartY;
             BOT.state = BOT_STATES.ACTIVE;
-        }, 1000)
+        }, 5000)
     }
 }
 
@@ -442,17 +470,62 @@ function drawPoints() {
     });
 }
 
+function fadeOutScore() {
+    // Уменьшаем уровень прозрачности каждые 100 миллисекунд
+    const fadeOutInterval = setInterval(() => {
+        scoreAlpha -= 0.02; // Регулируйте значение для изменения скорости исчезания
+
+        // Останавливаем интервал, когда прозрачность достигает или падает ниже нуля
+        if (scoreAlpha <= 0) {
+            clearInterval(fadeOutInterval);
+            scoreAlpha = 0; // Убедитесь, что значение не станет отрицательным
+        }
+    }, 30); // Интервал времени в миллисекундах
+}
+
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
     drawBackground();
+    drawScore();
     drawPoints();
     drawPlayer();
     drawBot();
 }
 
+function resetLevel() {
+    gameTime = -4.2;
+    cordInit();  // Сбрасываем координаты игрока и бота
+
+    // Сбрасываем параметры игрока
+    PLAYER.state = PLAYER_STATES.ACTIVE;
+    PLAYER.x = playerStartX;
+    PLAYER.y = playerStartY;
+    PLAYER.speed = 300; // сброс скорости, если она менялась
+    PLAYER.team = TEAM_STATES.PURPLE; // сброс команды, если это актуально
+
+    // Сбрасываем параметры бота
+    BOT.state = BOT_STATES.ACTIVE;
+    BOT.x = botStartX;
+    BOT.y = botStartY;
+    BOT.speed = 300; // сброс скорости, если она менялась
+    BOT.color = 'red'; // сброс цвета, если он менялся
+    BOT.team = TEAM_STATES.YELLOW; // сброс команды, если это актуально
+
+    scoreAlpha = 0.2; // Сброс прозрачности счёта
+
+    // Сбрасываем параметры всех точек
+    POINTS.forEach((point, index) => {
+        respawnPoint(point, index);
+    });
+
+    setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
+    countdown(); // Запускаем анимацию и звук отсчёта
+}
+
 function init() {
     cordInit();
     drawBackground();
+    drawScore();
     drawPoints();
     drawPlayer();
     drawBot();
@@ -487,8 +560,13 @@ function cordInit() {
 function main() {
     let now = Date.now();
     let dt = (now - lastTime) / 1000.0;
-    update(dt);
-    render();
+    if (SCORE.team1 < 3 && SCORE.team2 < 3) {
+        update(dt);
+        render();
+    }
+    else {
+        window.load("menu_all.html");
+    }
     lastTime = now;
     requestAnimFrame(main);
 }
@@ -567,7 +645,6 @@ function botMovement(dt) {
     }
 
     function findActivePointInArea(point) {
-
         if (point.state === POINT_STATES.ACTIVE) {
             if (loopIndexActive === 0) {
                 idInactive = 0;
@@ -724,7 +801,7 @@ function checkLaserBounds() {
         ];
 
         for (const corner of playerCorners) {
-            // расчитываем удаленность угловой точки игрока от центра лазера
+            // рассчитываем удаленность угловой точки игрока от центра лазера
             const dx = corner.x - point.x;
             const dy = corner.y - point.y;
 
@@ -777,7 +854,7 @@ function checkLaserBounds() {
             }
         }
         for (const corner of botCorners) {
-            // расчитываем удаленность угловой точки игрока от центра лазера
+            // рассчитываем удаленность угловой точки игрока от центра лазера
             const dx = corner.x - point.x;
             const dy = corner.y - point.y;
 
@@ -863,10 +940,14 @@ function updateEntities(dt) {
         PLAYER.x = 30;
         PLAYER.y = 30;
     }
+    if (PLAYER.state === PLAYER_STATES.DEAD) {
+        SCORE.team2 += 1;
+        resetLevel();
+    }
 }
 
 function movePoint(point, dt) {
-    if (point.id === 0 || point.id === 1 || point.id === 2 || point.id === 3) {
+    if (point.id === 2 || point.id === 3) {
         if (point.x <= 50) {
             point.direction = 0; // угол 0 радиан означает движение вправо
         }
@@ -875,7 +956,6 @@ function movePoint(point, dt) {
         }
     }
     point.x += Math.cos(point.direction) * point.speed * dt;
-    console.log(point.id, point.x, point.direction, point.speed, dt)
 }
 
 function updateVisibilityPoints(point) {
@@ -897,5 +977,6 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
 };
 
+setTimeout(fadeOutScore, 6800);
 init();
 
