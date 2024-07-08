@@ -58,8 +58,8 @@ function initEventListeners() {
 
     if (buttonBot) {
         buttonBot.addEventListener('click', () => {
-            centralPartMenu.classList.add("central-part__menu-animate-out");
-            setTimeout(() => transitionToPage("with_bot.html"), 2000);
+            // centralPartMenu.classList.add("central-part__menu-animate-out");
+            setTimeout(() => transitionToPage("with_bot.html"), 0);
         });
     }
 
