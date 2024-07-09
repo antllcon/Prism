@@ -222,7 +222,7 @@
     color: white;
     font: 700 120px/100px Font_Over;
     animation: 2s alternate animateChapterLobby;
-    margin: 49px 50px 50px 73px;
+    margin: 100px 50px 50px 73px;
 }
 
 .chapter__code {
