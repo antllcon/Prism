@@ -253,13 +253,13 @@ let lastTime;
 
 let countdownAudio = new Audio();
 countdownAudio.preload = 'auto';
-countdownAudio.src = '../src/sound/countdown.MP3';
+//countdownAudio.src = '../src/sound/countdown.MP3';
 let gameThemeAudio = new Audio();
 gameThemeAudio.preload = 'auto';
-gameThemeAudio.src = '../src/sound/game_theme.MP3';
+//gameThemeAudio.src = '../src/sound/game_theme.MP3';
 let laserAppearanceAudio = new Audio();
 laserAppearanceAudio.preload = 'auto';
-laserAppearanceAudio.src = '../src/sound/laser_appearance.MP3';
+//laserAppearanceAudio.src = '../src/sound/laser_appearance.MP3';
 
 const botStartX = canvasWidth - 50;
 const botStartY = canvasHeight / 2;
@@ -466,7 +466,7 @@ function countdown() {
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(countdownGif);
-    countdownGif.src = "src/img/cat.gif";
+    //countdownGif.src = "src/img/cat.gif";
     countdownAudio.play();
     setTimeout(() => {
         gameThemeAudio.play();
