@@ -1,11 +1,10 @@
 const canvasWidth = 1820;
 const canvasHeight = 1024;
-const red = "#f8df5c";
-const green = "#8f23dc";
+const red = "#FC0000";
+const green = "#00A86B";
 const gray = "#666";
 const dark = "#333";
 const black = "#111";
-const white = "#FFF";
 const GAME_STATES = {
     START: "start",
     PLAY: "play",
@@ -37,12 +36,6 @@ const TEAM_STATES = {
     PURPLE: "purple",
     YELLOW: "yellow"
 }
-
-let SCORE = {
-    color: white,
-    team1: 0,
-    team2: 0
-}
 let DEFAULT_POINTS = [
     {
         id: 0,
@@ -57,7 +50,7 @@ let DEFAULT_POINTS = [
         angle: 0,
         existTime: 10000,
         state: POINT_STATES.INACTIVE,
-        speed: 0,
+        speed: 50,
         direction: 0
     },
     {
@@ -73,7 +66,7 @@ let DEFAULT_POINTS = [
         angle: 0,
         existTime: 10000,
         state: POINT_STATES.INACTIVE,
-        speed: 0,
+        speed: 50,
         direction: Math.PI
     },
     {
@@ -260,17 +253,13 @@ let lastTime;
 
 let countdownAudio = new Audio();
 countdownAudio.preload = 'auto';
-countdownAudio.src = '../src/sound/countdown.MP3';
+//countdownAudio.src = '../src/sound/countdown.MP3';
 let gameThemeAudio = new Audio();
 gameThemeAudio.preload = 'auto';
-gameThemeAudio.src = '../src/sound/game_theme.MP3';
-gameThemeAudio.loop = true;
-gameThemeAudio.autoplay = true;
-function playLaserSound() {
-    const laserSound = new Audio('../src/sound/laser_appearance.MP3');
-    laserSound.play();
-}
-let scoreAlpha = 0.2;
+//gameThemeAudio.src = '../src/sound/game_theme.MP3';
+let laserAppearanceAudio = new Audio();
+laserAppearanceAudio.preload = 'auto';
+//laserAppearanceAudio.src = '../src/sound/laser_appearance.MP3';
 
 const botStartX = canvasWidth - 50;
 const botStartY = canvasHeight / 2;
@@ -297,7 +286,7 @@ let BOT = {
     x: 200,
     y: 200,
     size: 10,
-    color: red,
+    color: 'red',
     speed: 300,
     team: TEAM_STATES.YELLOW,
     state: BOT_STATES.ACTIVE,
@@ -342,16 +331,6 @@ function resetPoint(point, index) {
     point.speed = defaultPoint.speed;
 }
 
-function respawnPoint(point) {
-    if (point.id !== 0 && point.id !== 1) {
-        point.state = POINT_STATES.INVISIBLE;
-    }
-    point.team = TEAM_STATES.NONE;
-    point.activationTime = null;
-    point.color = gray;
-    point.height = 10;
-}
-
 let ctx = canvas.getContext("2d");
 
 canvas.width = GAME.width;
@@ -362,38 +341,14 @@ function drawBackground() {
     ctx.fillRect(0, 0, GAME.width, GAME.height);
 }
 
-function drawScore() {
-    ctx.save();
-    ctx.globalAlpha = scoreAlpha;
-    ctx.fillStyle = SCORE.color;
-    ctx.font = "100px Font Over";
-    ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 50, 100 );
-    ctx.restore();
-}
-
-function drawFinalScore() {
-    ctx.save();
-    ctx.globalAlpha = scoreAlpha;
-    ctx.fillStyle = SCORE.color;
-    ctx.font = "700px Font Over";
-    ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 270, 750);
-    ctx.restore();
-}
-
 function drawBot() {
-    if (BOT.team === TEAM_STATES.PURPLE) {
-        PLAYER.color = red;
-    }
-    if (PLAYER.team === TEAM_STATES.YELLOW) {
-        PLAYER.color = green;
-    }
     if (BOT.state === BOT_STATES.ACTIVE) {
         ctx.fillStyle = BOT.color;
         ctx.fillRect(BOT.x, BOT.y, BOT.size, BOT.size);
     }
     if (BOT.state === BOT_STATES.DEAD) {
         setTimeout(() => {
-            BOT.color = red;
+            BOT.color = 'red';
             BOT.x = botStartX;
             BOT.y = botStartY;
             BOT.state = BOT_STATES.ACTIVE;
@@ -487,61 +442,17 @@ function drawPoints() {
     });
 }
 
-function fadeOutScore() {
-    // Уменьшаем уровень прозрачности каждые 100 миллисекунд
-    const fadeOutInterval = setInterval(() => {
-        scoreAlpha -= 0.02; // Регулируйте значение для изменения скорости исчезания
-
-        // Останавливаем интервал, когда прозрачность достигает или падает ниже нуля
-        if (scoreAlpha <= 0) {
-            clearInterval(fadeOutInterval);
-            scoreAlpha = 0; // Убедитесь, что значение не станет отрицательным
-        }
-    }, 30); // Интервал времени в миллисекундах
-}
-
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
     drawBackground();
-    drawScore();
     drawPoints();
     drawPlayer();
     drawBot();
 }
 
-function resetLevel() {
-    gameTime = -4.2;
-    cordInit();  // Сбрасываем координаты игрока и бота
-
-    // Сбрасываем параметры игрока
-    PLAYER.state = PLAYER_STATES.ACTIVE;
-    PLAYER.x = playerStartX;
-    PLAYER.y = playerStartY;
-    PLAYER.speed = 300; // сброс скорости, если она менялась
-    PLAYER.team = TEAM_STATES.PURPLE; // сброс команды, если это актуально
-
-    // Сбрасываем параметры бота
-    BOT.state = BOT_STATES.ACTIVE;
-    BOT.x = botStartX;
-    BOT.y = botStartY;
-    BOT.speed = 300; // сброс скорости, если она менялась
-    BOT.team = TEAM_STATES.YELLOW; // сброс команды, если это актуально
-
-    scoreAlpha = 0.2; // Сброс прозрачности счёта
-
-    // Сбрасываем параметры всех точек
-    POINTS.forEach((point, index) => {
-        respawnPoint(point, index);
-    });
-
-    setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
-    // countdown(); // Запускаем анимацию и звук отсчёта
-}
-
 function init() {
     cordInit();
     drawBackground();
-    drawScore();
     drawPoints();
     drawPlayer();
     drawBot();
@@ -555,7 +466,7 @@ function countdown() {
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(countdownGif);
-    countdownGif.src = "src/img/cat.gif";
+    //countdownGif.src = "src/img/cat.gif";
     countdownAudio.play();
     setTimeout(() => {
         gameThemeAudio.play();
@@ -576,15 +487,8 @@ function cordInit() {
 function main() {
     let now = Date.now();
     let dt = (now - lastTime) / 1000.0;
-    if (SCORE.team1 < 3 && SCORE.team2 < 3) {
-        update(dt);
-        render();
-    }
-    else {
-        drawBackground();
-        drawFinalScore();
-        setTimeout(() => {window.location.href = 'menu_all.html';}, 1500);
-    }
+    update(dt);
+    render();
     lastTime = now;
     requestAnimFrame(main);
 }
@@ -663,6 +567,7 @@ function botMovement(dt) {
     }
 
     function findActivePointInArea(point) {
+
         if (point.state === POINT_STATES.ACTIVE) {
             if (loopIndexActive === 0) {
                 idInactive = 0;
@@ -819,7 +724,7 @@ function checkLaserBounds() {
         ];
 
         for (const corner of playerCorners) {
-            // рассчитываем удаленность угловой точки игрока от центра лазера
+            // расчитываем удаленность угловой точки игрока от центра лазера
             const dx = corner.x - point.x;
             const dy = corner.y - point.y;
 
@@ -834,7 +739,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                playLaserSound();
+                laserAppearanceAudio.play();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
                 point.activationTime = Date.now();
@@ -872,7 +777,7 @@ function checkLaserBounds() {
             }
         }
         for (const corner of botCorners) {
-            // рассчитываем удаленность угловой точки игрока от центра лазера
+            // расчитываем удаленность угловой точки игрока от центра лазера
             const dx = corner.x - point.x;
             const dy = corner.y - point.y;
 
@@ -887,7 +792,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                playLaserSound();
+                laserAppearanceAudio.play();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = BOT.team; // Убедитесь, что присваивается команда бота
                 point.activationTime = Date.now();
@@ -958,18 +863,10 @@ function updateEntities(dt) {
         PLAYER.x = 30;
         PLAYER.y = 30;
     }
-    if (PLAYER.state === PLAYER_STATES.DEAD) {
-        SCORE.team2 += 1;
-        resetLevel();
-    }
-    if (BOT.state === BOT_STATES.DEAD) {
-        SCORE.team1 += 1;
-        resetLevel();
-    }
 }
 
 function movePoint(point, dt) {
-    if (point.id === 2 || point.id === 3) {
+    if (point.id === 0 || point.id === 1 || point.id === 2 || point.id === 3) {
         if (point.x <= 50) {
             point.direction = 0; // угол 0 радиан означает движение вправо
         }
@@ -978,6 +875,7 @@ function movePoint(point, dt) {
         }
     }
     point.x += Math.cos(point.direction) * point.speed * dt;
+    console.log(point.id, point.x, point.direction, point.speed, dt)
 }
 
 function updateVisibilityPoints(point) {
@@ -999,6 +897,5 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
 };
 
-setTimeout(fadeOutScore, 6800);
 init();
 
