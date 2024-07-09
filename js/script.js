@@ -264,6 +264,8 @@ countdownAudio.src = '../src/sound/countdown.MP3';
 let gameThemeAudio = new Audio();
 gameThemeAudio.preload = 'auto';
 gameThemeAudio.src = '../src/sound/game_theme.MP3';
+gameThemeAudio.loop = true;
+gameThemeAudio.autoplay = true;
 function playLaserSound() {
     const laserSound = new Audio('../src/sound/laser_appearance.MP3');
     laserSound.play();
