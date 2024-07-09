@@ -10,6 +10,8 @@ let buttonMenu;
 let audioThemeMenu = new Audio();
 audioThemeMenu.preload = 'auto';
 audioThemeMenu.src = '../src/sound/menu_theme.MP3';
+audioThemeMenu.loop = true;
+audioThemeMenu.autoplay = true;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -46,6 +48,7 @@ function loadToMainPageLink() {
 }
 
 function initEventListeners() {
+    nameGame = document.getElementById('central-part-menu');
     centralPartMenu = document.getElementById('central-part-menu');
     buttonBot = document.getElementById('button-bot');
     buttonPlayer = document.getElementById('button-player');
@@ -97,8 +100,10 @@ function initEventListeners() {
 
 // Initial load of the menu page
 loadHTML('menu.html', (html) => {
-    audioThemeMenu.play();
     callback(html);
+    audioThemeMenu.play();
     loadToMainPageLink();
     initEventListeners();
 });
+
+
