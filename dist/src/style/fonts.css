@@ -1,9 +1,9 @@
 @font-face {
     font-family: Montserrat;
-    src: url("../fonts/Montserrat/Montserrat-Bold.ttf");
+    src: url("../assets/fonts/Montserrat/Montserrat-Bold.ttf");
 }
 
 @font-face {
     font-family: Font_Over;
-    src: url("../fonts/Font Over.otf");
+    src: url("../assets/fonts/Font Over.otf");
 }

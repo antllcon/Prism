@@ -84,7 +84,7 @@ body {
     display: flex;
     justify-content: space-between;
     position: relative;
-    background-image: url("../img/border_name.png");
+    background-image: url("../assets/img/border_name.png");
     background-repeat: no-repeat;
     height: 154px;
     margin-left: 60px;
