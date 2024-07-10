@@ -266,6 +266,10 @@ const botStartY = canvasHeight / 2;
 const playerStartX = 50;
 const playerStartY = canvasHeight / 2;
 
+const socket = io();
+
+ 
+
 let GAME = {
     width: canvasWidth,
     height: canvasHeight,
@@ -375,8 +379,31 @@ function drawPlayer() {
             PLAYER.state = PLAYER_STATES.ACTIVE;
         }, 1000); // Changed delay to 1000ms
     }
+}
 
-
+function drawPlayers() {
+    socket.on('roomIsReady', (players) => {
+        for (let index = 0; index < players.length; index++) {
+            if (PLAYER.state === PLAYER_STATES.ACTIVE) {
+                if (PLAYER.team === TEAM_STATES.PURPLE) {
+                    PLAYER.color = green;
+                }
+                if (PLAYER.team === TEAM_STATES.YELLOW) {
+                    PLAYER.color = red;
+                }
+                ctx.fillStyle = PLAYER.color;
+                ctx.fillRect(PLAYER.x + index*50, PLAYER.y + index*50, PLAYER.size, PLAYER.size);
+            }
+            if (PLAYER.state === PLAYER_STATES.DEAD) {
+                setTimeout(() => {
+                    PLAYER.color = green;
+                    PLAYER.x = 10;
+                    PLAYER.y = 10;
+                    PLAYER.state = PLAYER_STATES.ACTIVE;
+                }, 1000); // Changed delay to 1000ms
+            }
+        }
+    })
 }
 
 function drawPoints() {
@@ -446,24 +473,24 @@ function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
     drawBackground();
     drawPoints();
-    drawPlayer();
+    drawPlayers();
     drawBot();
 }
 
 function init() {
-    window.addEventListener('beforeunload', function(e) {
-        e.preventDefault(); // Предотвращаем стандартное поведение
-        e.returnValue = ''; // Убираем сообщение о подтверждении
-    
-        // Здесь вы можете вызвать функцию для отправки уведомления на сервер
-        socket.emit('clientDisconnected', { clientId: socket.id });
-    });
+    connect();
     cordInit();
     drawBackground();
     drawPoints();
-    drawPlayer();
+    drawPlayers();
     drawBot();
     countdown();
+}
+
+function connect() {
+    socket.on('connect', () => { 
+        console.log('Connected to server with id:', socket.id); 
+    });
 }
 
 function countdown() {

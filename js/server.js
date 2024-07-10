@@ -45,10 +45,12 @@ app.get('/', (req, res) => {
 let players = [];
 // Обработчик подключения клиента к сокету
 io.on('connection', (socket) => {
+
     players.push(getPlayer(socket));
     setTimeout(() => {
         console.log(players);
     }, 1000)
+
     socket.on('disconnect', () => {
         console.log('disconnected');
         playersModified = players.filter((player) => 
@@ -59,6 +61,10 @@ io.on('connection', (socket) => {
         }, 1000)
         players = playersModified;
     })
+    
+    if (players.length === 2) {
+        socket.emit('roomIsReady', players);
+    }
 });
 
 
