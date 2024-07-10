@@ -42,23 +42,25 @@ app.get('/', (req, res) => {
     res.sendFile(path.dirname(__dirname) + '/dist/index.html');
 });
 
-const players = [];
+let players = [];
 // Обработчик подключения клиента к сокету
 io.on('connection', (socket) => {
     players.push(getPlayer(socket));
     setTimeout(() => {
         console.log(players);
     }, 1000)
+    socket.on('disconnect', () => {
+        console.log('disconnected');
+        playersModified = players.filter((player) => 
+            player.id !== socket.id
+        );
+        setTimeout(() => {
+            console.log(playersModified);
+        }, 1000)
+        players = playersModified;
+    })
 });
-io.on('clientDisconnected', (clientId) => {
-    console.log('disconnected');
-    players = players.filter((player) => 
-        player.id !== clientId
-    )
-    setTimeout(() => {
-        console.log(players);
-    }, 1000)
-})
+
 
 // Запуск сервера
 const PORT = process.env.PORT || 3000;
