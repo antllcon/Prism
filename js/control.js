@@ -1,6 +1,5 @@
 import {i} from "./constants"
 
-console.log(i);
 (function() {
     let pressedKeys = {};
 
