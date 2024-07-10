@@ -451,6 +451,13 @@ function render() {
 }
 
 function init() {
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault(); // Предотвращаем стандартное поведение
+        e.returnValue = ''; // Убираем сообщение о подтверждении
+    
+        // Здесь вы можете вызвать функцию для отправки уведомления на сервер
+        socket.emit('clientDisconnected', { clientId: socket.id });
+    });
     cordInit();
     drawBackground();
     drawPoints();
@@ -875,7 +882,6 @@ function movePoint(point, dt) {
         }
     }
     point.x += Math.cos(point.direction) * point.speed * dt;
-    console.log(point.id, point.x, point.direction, point.speed, dt)
 }
 
 function updateVisibilityPoints(point) {

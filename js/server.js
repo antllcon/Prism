@@ -42,13 +42,31 @@ app.get('/', (req, res) => {
     res.sendFile(path.dirname(__dirname) + '/dist/index.html');
 });
 
+const players = [];
 // Обработчик подключения клиента к сокету
 io.on('connection', (socket) => {
-    console.log('Client connected0000:', socket.id);
+    players.push(getPlayer(socket));
+    setTimeout(() => {
+        console.log(players);
+    }, 1000)
 });
+io.on('clientDisconnected', (clientId) => {
+    console.log('disconnected');
+    players = players.filter((player) => 
+        player.id !== clientId
+    )
+    setTimeout(() => {
+        console.log(players);
+    }, 1000)
+})
 
 // Запуск сервера
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
+
+function getPlayer(socket) {
+    const player = {id: socket.id};
+    return player;
+}
