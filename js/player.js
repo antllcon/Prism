@@ -1,3 +1,17 @@
+
+//game.js
+let canvasHeight = 150;
+export {
+    canvasHeight,
+}
+module.exports = {canvasHeight}
+
+//player.js
+
+import { canvasHeight } from "./game.js";
+const canvasheight = require("game.js").canvasHeight
+
+
 const PLAYER_STATES = {
     ACTIVE: 'active',
     STUNNED: 'stunned',
@@ -47,5 +61,11 @@ class Player {
     }
     getY() {
         return this.y;
+    }
+    setX(x) {
+        this.x = x;
+    }
+    setY(y) {
+        this.y = y;
     }
 }
