@@ -96,8 +96,6 @@ function drawPlayer() {
             PLAYER.state = PLAYER_STATES.ACTIVE;
         }, 1000); // Changed delay to 1000ms
     }
-
-
 }
 
 
@@ -114,7 +112,7 @@ function init() {
     drawBackground();
     drawPoints();
     drawPlayer();
-    drawBot();
+    //drawBot();
     countdown();
 }
 
@@ -522,19 +520,6 @@ function updateEntities(dt) {
         PLAYER.x = 30;
         PLAYER.y = 30;
     }
-}
-
-function movePoint(point, dt) {
-    if (point.id === 0 || point.id === 1 || point.id === 2 || point.id === 3) {
-        if (point.x <= 50) {
-            point.direction = 0; // угол 0 радиан означает движение вправо
-        }
-        if (point.x >= 1760) {
-            point.direction = Math.PI; // угол PI радиан означает движение влево
-        }
-    }
-    point.x += Math.cos(point.direction) * point.speed * dt;
-    console.log(point.id, point.x, point.direction, point.speed, dt)
 }
 
 function updateVisibilityPoints(point) {
