@@ -1,5 +1,4 @@
 // noinspection JSPrimitiveTypeWrapperUsage
-
 import {ctx} from "../game/model";
 import {DEFAULT_POINTS, POINT_STATES, POINT_TYPES} from "./const";
 import {POINTS} from "./model";
@@ -114,7 +113,6 @@ export function movePoint(point, dt) {
         }
     }
     point.x += Math.cos(point.direction) * point.speed * dt;
-    console.log(point.id, point.x, point.direction, point.speed, dt)
 }
 
 export function updateVisibilityPoints(point) {

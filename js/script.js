@@ -9,22 +9,34 @@ import {GAME} from "./script/game/model";
 import {BOT} from "./script/bot/model";
 import {drawPoints, movePoint, resetPoint, updateVisibilityPoints} from "./script/point/point";
 import {POINTS} from "./script/point/model";
+import {Player} from "./script/player/model";
+
+// где-то тут был const socket = io();
+
 
 // в константе players должен лежать айди игрока, сейчас это заглушка
-const players = {
-    1: [
+const socketIds = [
+    [
         { id: '1'}
     ],
-    2: [
+    [
         { id: '2'}
     ],
-    3: [
+    [
         { id: '3' }
     ],
-    4: [
+    [
         { id: '4'}
     ]
-};
+];
+
+
+//инициализоровать по айди
+//и отрисовать по айди переходя в цикле по массиву
+//внести в инит, и игровой цикл
+
+
+
 
 let canvas = document.getElementById("canvas");
 export let gameTime = 0;
@@ -32,6 +44,9 @@ let lastTime;
 
 //вынесла весь код по объявлению аудио в countdownAudio
 //остальной закомментировала (laser Appearance)
+//
+
+
 const botStartX = canvasWidth - 50;
 const botStartY = canvasHeight / 2;
 const playerStartX = 50;
@@ -93,6 +108,11 @@ function drawPlayer() {
     }
 }
 
+//создания плеер
+
+//function drawPlayerEntity();
+
+
 
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
@@ -102,11 +122,38 @@ function render() {
     drawBot();
 }
 
+function createPlayers() {
+    let activePlayers = []
+    //socket.on('roomIsReady', (socketIds) => {
+    let socket = {
+        //костыль
+        id: socketIds[0].id
+    }
+    for (let i = 0; i < socketIds.length; i++) {
+
+        activePlayers[i] = new Player(i, socketIds[i].id, socket.id);
+
+    }
+    //})
+    return activePlayers
+}
+
+let activePlayers = [];
+
+function drawPlayerEntity(activePlayers) {
+    
+}
+
 function init() {
     cordInit();
     drawBackground();
     drawPoints();
     drawPlayer();
+
+
+
+    activePlayers = createPlayers();
+    drawPlayerEntity(activePlayers);
     //drawBot();
     countdown();
 }

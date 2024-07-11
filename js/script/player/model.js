@@ -11,7 +11,9 @@ export const PLAYER = {
     state: PLAYER_STATES.ACTIVE
 }
 export class Player {
-    constructor(i) {
+    constructor(i, id, socket_id)  {
+        this.id = id;
+        this.main = (socket_id === id) ? true: false;
         this.x = PLAYER.x[i];
         this.y = PLAYER.y[i];
         this.size = PLAYER.size;
