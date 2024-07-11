@@ -241,15 +241,24 @@ function handleEntityPlayerInput(dt) {
 function checkLaserBounds() {
 
     POINTS.forEach(point => {
+        let player = getMyPlayer(activePlayers);
         const sin = Math.sin(point.angle);
         const cos = Math.cos(point.angle);
 
-        const playerCorners = [
+        /*const playerCorners = [
             {x: PLAYER.x, y: PLAYER.y},
             {x: PLAYER.x + PLAYER.size, y: PLAYER.y},
             {x: PLAYER.x, y: PLAYER.y + PLAYER.size},
             {x: PLAYER.x + PLAYER.size, y: PLAYER.y + PLAYER.size}
+        ];*/
+        // в будущем
+        const playerCorners = [
+            {x: player.getX(), y: player.getY()},
+            {x: player.getX() + player.getSize(), y: player.getY()},
+            {x: player.getX(), y: player.getY() + player.getSize()},
+            {x: player.getX() + player.getSize(), y: player.getY() + player.getSize()}
         ];
+
         const botCorners = [
             {x: BOT.x, y: BOT.y},
             {x: BOT.x + BOT.size, y: BOT.y},
@@ -270,12 +279,14 @@ function checkLaserBounds() {
             // и так ищем коллизию игрока с лазером
 
             // Если точка принимает неактивное состояние
+            // Активация лазера
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
                 //laserAppearanceAudio.play();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
+                point.team = player.getTeam();
                 point.activationTime = Date.now();
             }
 
