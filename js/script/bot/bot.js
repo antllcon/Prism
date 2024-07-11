@@ -1,5 +1,8 @@
 import {BOT_STATES, botStartX, botStartY} from './const'
 import {BOT} from './model'
+import {POINT_STATES} from "../point/const";
+import {POINTS} from "../point/model";
+import {GAME} from "../game/model";
 
 export function drawBot() {
     if (BOT.state === BOT_STATES.ACTIVE) {

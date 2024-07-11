@@ -10,6 +10,7 @@ import {BOT} from "./script/bot/model";
 import {drawPoints, movePoint, resetPoint, updateVisibilityPoints} from "./script/point/point";
 import {POINTS} from "./script/point/model";
 import {getMyPlayer, Player} from "./script/player/model";
+import {botMovement} from "./script/bot/bot";
 
 // где-то тут был const socket = io();
 
@@ -36,16 +37,12 @@ const socketIds = [
 //внести в инит, и игровой цикл
 
 
-
-
 let canvas = document.getElementById("canvas");
 export let gameTime = 0;
 let lastTime;
 
 //вынесла весь код по объявлению аудио в countdownAudio
 //остальной закомментировала (laser Appearance)
-//
-
 
 const botStartX = canvasWidth - 50;
 const botStartY = canvasHeight / 2;
@@ -125,9 +122,6 @@ function drawPlayerEntity(activePlayers) {
     })
 }
 
-
-
-
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
     drawBackground();
@@ -162,7 +156,7 @@ function init() {
     drawPlayer();
     activePlayers = createPlayers();
     drawPlayerEntity(activePlayers);
-    //drawBot();
+    drawBot();
     countdown();
 }
 
@@ -185,6 +179,7 @@ function countdown() {
 }
 
 function cordInit() {
+    //для класса бесполезно
     PLAYER.x = playerStartX;
     PLAYER.y = playerStartY;
     BOT.x = botStartX;
@@ -209,162 +204,7 @@ function update(dt) {
     updateEntities(dt);
 }
 
-function botMovement(dt) {
-    let loopIndexInactive = 0;
-    let loopIndexActive = 0;
-    let idInactive;
-    let dxMinInactive;
-    let dyMinInactive;
-    let hypMinInactive;
-
-    let idActive;
-    let dxMinActive;
-    let dyMinActive;
-    let hypMinActive;
-    let inRangeOfLaser;
-
-    let dxInactive;
-    let dxActive;
-    let dyInactive;
-    let dyActive;
-    findNearestPoint(POINTS);
-    if (inRangeOfLaser) {
-        moveBotOutOfLaserSpiral(); // заносит в dxActive и dyActive приращение для убегания по спирали
-    }
-    moveBotToLaser(); // заносит в dxInactive и dyInactive приращение для движения к цели
-    getRightDirection(); // дает приоритет убеганию, контролирует предельную скорость
-
-
-    function findNearestPoint(POINTS) {
-        POINTS.forEach(point => {
-            findInactivePointAndCompare(point);
-            findActivePointInArea(point);
-        });
-    }
-
-    function findInactivePointAndCompare(point) {
-        if (point.state === POINT_STATES.INACTIVE) {
-            if (loopIndexInactive === 0) {
-                idInactive = 0;
-                dxMinInactive = point.x - BOT.x;
-                dyMinInactive = point.y - BOT.y;
-                hypMinInactive = Math.sqrt(dxMinInactive ** 2 + dyMinInactive ** 2);
-            }
-            let dy;
-            let dx;
-
-            if (Math.abs(point.y + (GAME.height - BOT.y)) < Math.abs(point.y - BOT.y)) {
-                dy = point.y + (GAME.height - BOT.y);
-            } else {
-                dy = point.y - BOT.y;
-            }
-            if (Math.abs(point.x + (GAME.width - BOT.x)) < Math.abs(point.x - BOT.x)) {
-                dx = point.x + (GAME.width - BOT.x);
-            } else {
-                dx = point.x - BOT.x;
-            }
-            let hyp = Math.sqrt(dx ** 2 + dy ** 2);
-            if (hyp < hypMinInactive) {
-                idInactive = point.id;
-                dxMinInactive = dx;
-                dyMinInactive = dy;
-                hypMinInactive = hyp;
-            }
-            loopIndexInactive++;
-        }
-    }
-
-    function findActivePointInArea(point) {
-
-        if (point.state === POINT_STATES.ACTIVE) {
-            if (loopIndexActive === 0) {
-                idInactive = 0;
-                dxMinActive = point.x - BOT.x;
-                dyMinActive = point.y - BOT.y;
-                hypMinActive = Math.sqrt(dxMinActive ** 2 + dyMinActive ** 2);
-            }
-            let dx = point.x - BOT.x;
-            let dy = point.y - BOT.y;
-            let hyp = Math.sqrt(dx ** 2 + dy ** 2);
-            if (hyp < hypMinActive) {
-                idActive = point.id;
-                dxMinActive = dx;
-                dyMinActive = dy;
-                hypMinActive = hyp;
-            }
-            inRangeOfLaser = (hypMinActive - BOT.size * Math.sqrt(2) < point.size / 2);
-            loopIndexActive++;
-        }
-    }
-
-    function moveBotToLaser() {
-        dxInactive = BOT.speed * dxMinInactive / hypMinInactive * dt;
-        dyInactive = BOT.speed * dyMinInactive / hypMinInactive * dt;
-    }
-
-    function moveBotOutOfLaserSpiral() {
-        // Определяем угол между ботом и точкой
-        const angle = Math.atan2(dyMinActive, dxMinActive);
-
-        // Радиальная скорость (от центра прочь)
-        const radialSpeed = BOT.speed * dt;
-
-        // Угловая скорость (по окружности)
-        const angularSpeed = BOT.speed * dt / hypMinActive;
-        // Обновляем координаты бота
-        dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
-        dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
-    }
-
-    function getRightDirection() {
-        if (inRangeOfLaser) {
-            if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
-                if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
-                    BOT.x += dxActive + dxInactive;
-                    BOT.y += dyActive + dyInactive;
-                } else {
-                    const angle = Math.atan2(dyActive + dyInactive, dxActive + dxInactive);
-                    BOT.x += BOT.speed * dt * Math.cos(angle);
-                    BOT.y += BOT.speed * dt * Math.sin(angle);
-                }
-            }
-            if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
-                if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
-                    BOT.x += dxActive + dxInactive;
-                    BOT.y += dyActive;
-                } else {
-                    const angle = Math.atan2(dyActive, dxActive + dxInactive);
-                    BOT.x += BOT.speed * dt * Math.cos(angle);
-                    BOT.y += BOT.speed * dt * Math.sin(angle);
-                }
-            }
-            if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
-                if (Math.sqrt((dxActive) ** 2 + (dyActive + dyInactive) ** 2) < BOT.speed * dt) {
-                    BOT.x += dxActive;
-                    BOT.y += dyActive + dyInactive;
-                } else {
-                    const angle = Math.atan2(dyActive + dyInactive, dxActive);
-                    BOT.x += BOT.speed * dt * Math.cos(angle);
-                    BOT.y += BOT.speed * dt * Math.sin(angle);
-                }
-            }
-            if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
-                if (Math.sqrt((dxActive) ** 2 + (dyActive) ** 2) < BOT.speed * dt) {
-                    BOT.x += dxActive;
-                    BOT.y += dyActive;
-                } else {
-                    const angle = Math.atan2(dyActive, dxActive);
-                    BOT.x += BOT.speed * dt * Math.cos(angle);
-                    BOT.y += BOT.speed * dt * Math.sin(angle);
-                }
-            }
-        } else {
-            BOT.x += dxInactive;
-            BOT.y += dyInactive;
-        }
-    }
-}
-
+//это для let player
 function handleInput(dt) {
     if (input.isDown('LEFT') || input.isDown('a')) {
         PLAYER.x -= PLAYER.speed * dt;
@@ -379,10 +219,9 @@ function handleInput(dt) {
         PLAYER.y -= PLAYER.speed * dt;
     }
 }
-
+//это для class player
 function handleEntityPlayerInput(dt) {
     const player = getMyPlayer(activePlayers);
-    console.log(player)
     if (input.isDown('LEFT') || input.isDown('a')) {
         player.moveOn(player.getSpeed() * dt * (-1), 0)
     }
@@ -533,18 +372,21 @@ function checkCollisions() {
 }
 
 function checkBorderGameBounds() {
+    //переделываем на класс player
     // Проход через границы поля для ИГРОКА
-    if (PLAYER.x < 0) {
-        PLAYER.x = GAME.width - PLAYER.size;
-    } else if (PLAYER.x + PLAYER.size > GAME.width) {
-        PLAYER.x = 0;
+    let player = getMyPlayer(activePlayers);
+    if (player.getX() < 0) {
+        player.setX(GAME.width - player.getSize());
+    } else if (player.getX() + player.getSize() > GAME.width) {
+        player.setX(0)
     }
 
-    if (PLAYER.y < 0) {
-        PLAYER.y = GAME.height - PLAYER.size;
-    } else if (PLAYER.y + PLAYER.size > GAME.height) {
-        PLAYER.y = 0;
+    if (player.getY() < 0) {
+        player.setY(GAME.height - player.getSize());
+    } else if (player.getY + player.getSize() > GAME.height) {
+        player.setY(0)  ;
     }
+
     // Проход через границы поля БОТА
     if (BOT.x < 0) {
         BOT.x = GAME.width - BOT.size;

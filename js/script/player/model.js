@@ -26,15 +26,12 @@ export class Player {
     getSize(){
         return this.size
     }
-
     getTeam(){
         return this.team
     }
-
     isAlive(){
         return this.state === PLAYER_STATES.ACTIVE
     }
-
     isDead(){
         return this.state === PLAYER_STATES.DEAD
     }
