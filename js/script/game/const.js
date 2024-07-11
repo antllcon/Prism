@@ -1,5 +1,4 @@
 export const canvasWidth = 1820;
-
 export const canvasHeight = 1024;
 export const red = "#FC0000";
 export const green = "#00A86B";
@@ -14,4 +13,8 @@ export const GAME_STATES = {
     PAUSE: "pause"
 }
 
-
+export const TEAM_STATES = {
+    NONE: "none",
+    PURPLE: "purple",
+    YELLOW: "yellow"
+}

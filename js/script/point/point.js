@@ -1,5 +1,9 @@
 // noinspection JSPrimitiveTypeWrapperUsage
 
+import {ctx} from "../game/model";
+import {DEFAULT_POINTS, POINT_STATES} from "./const";
+import {POINTS} from "./model";
+
 export function createPoint(point) {
     return {
         id: point.id,

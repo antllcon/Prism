@@ -1,4 +1,5 @@
 import {BOT_STATES} from "./const";
+import {TEAM_STATES} from "../game/const";
 
 export let BOT = {
     x: 200,

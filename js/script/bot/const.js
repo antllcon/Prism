@@ -1,3 +1,5 @@
+import {canvasHeight, canvasWidth} from "../game/const";
+
 export const BOT_STATES = {
     ACTIVE: 'active',
     STUNNED: 'stunned',
