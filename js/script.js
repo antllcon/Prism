@@ -12,6 +12,9 @@ import {POINTS} from "./script/point/model";
 import {getMyPlayer, Player} from "./script/player/model";
 import {botMovement} from "./script/bot/bot";
 
+
+
+
 // где-то тут был const socket = io();
 
 
@@ -48,6 +51,9 @@ const botStartX = canvasWidth - 50;
 const botStartY = canvasHeight / 2;
 const playerStartX = 50;
 const playerStartY = canvasHeight / 2;
+
+const socket = io();
+
 
 let PLAYER = {
     x: 30,
@@ -150,6 +156,7 @@ let activePlayers = [];
 
 
 function init() {
+    connect();
     cordInit();
     drawBackground();
     drawPoints();
@@ -158,6 +165,12 @@ function init() {
     drawPlayerEntity(activePlayers);
     drawBot();
     countdown();
+}
+
+function connect() {
+    socket.on('connect', () => {
+        console.log('Connected to server with id:', socket.id);
+    });
 }
 
 function countdown() {
