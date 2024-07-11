@@ -1,3 +1,5 @@
+import {playMenuTheme} from "./sound/menuThemeAudio";
+
 let centralPartMenu;
 let nameGame;
 let buttonBot;
@@ -8,11 +10,6 @@ let buttonLobby;
 let buttonConnect;
 let buttonPlay;
 let buttonMenu;
-let audioThemeMenu = new Audio();
-audioThemeMenu.preload = 'auto';
-audioThemeMenu.src = '../src/sound/menu_theme.MP3';
-audioThemeMenu.loop = true;
-audioThemeMenu.autoplay = true;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -102,7 +99,7 @@ function initEventListeners() {
 // Initial load of the menu page
 loadHTML('menu.html', (html) => {
     callback(html);
-    audioThemeMenu.play();
+    playMenuTheme();
     loadToMainPageLink();
     initEventListeners();
 });

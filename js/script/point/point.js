@@ -1,7 +1,9 @@
 // noinspection JSPrimitiveTypeWrapperUsage
+
+import {POINTS, DEFAULT_POINTS} from "./model";
+import {POINT_STATES, POINT_TYPES} from "./const";
 import {ctx} from "../game/model";
-import {DEFAULT_POINTS, POINT_STATES, POINT_TYPES} from "./const";
-import {POINTS} from "./model";
+import {gray, TEAM_STATES} from "../game/const";
 import {gameTime} from "../../script"
 
 export function createPoint(point) {
@@ -103,8 +105,18 @@ export function drawPoints() {
     });
 }
 
+export function respawnPoint(point) {
+    if (point.id !== 0 && point.id !== 1) {
+        point.state = POINT_STATES.INVISIBLE;
+    }
+    point.team = TEAM_STATES.NONE;
+    point.activationTime = null;
+    point.color = gray;
+    point.height = 10;
+}
+
 export function movePoint(point, dt) {
-    if (point.id === 0 || point.id === 1 || point.id === 2 || point.id === 3) {
+    if (point.id === 2 || point.id === 3) {
         if (point.x <= 50) {
             point.direction = 0; // угол 0 радиан означает движение вправо
         }
@@ -113,6 +125,7 @@ export function movePoint(point, dt) {
         }
     }
     point.x += Math.cos(point.direction) * point.speed * dt;
+    console.log(point.id, point.x, point.direction, point.speed, dt)
 }
 
 export function updateVisibilityPoints(point) {

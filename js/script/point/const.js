@@ -1,5 +1,3 @@
-import {gray, TEAM_STATES} from "../game/const";
-
 export const POINT_STATES = {
     ACTIVE: 'active',
     INACTIVE: 'inactive',

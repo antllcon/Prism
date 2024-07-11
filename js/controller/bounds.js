@@ -1,10 +1,11 @@
-import {PLAYER} from "../script/player/model";
-import {PLAYER_STATES} from "../script/player/const";
 import {BOT} from "../script/bot/model";
 import {BOT_STATES} from "../script/bot/const";
-import {GAME} from "../script/game/model";
+import {PLAYER} from "../script/player/model";
+import {PLAYER_STATES} from "../script/player/const";
 import {POINTS} from "../script/point/model"
 import {POINT_STATES, POINT_TYPES} from "../script/point/const";
+import {GAME} from "../script/game/model";
+import {playLaserAppearance} from "../sound/laserAppearanceAudio";
 
 function checkBorderGameBounds() {
     // Проход через границы поля для ИГРОКА
@@ -68,7 +69,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                laserAppearanceAudio.play();
+                playLaserAppearance();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
                 point.activationTime = Date.now();
@@ -121,7 +122,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                laserAppearanceAudio.play();
+                playLaserAppearance();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = BOT.team; // Убедитесь, что присваивается команда бота
                 point.activationTime = Date.now();

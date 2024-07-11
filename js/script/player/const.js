@@ -5,7 +5,6 @@ export const PLAYER_STATES = {
     STUNNED: 'stunned',
     DEAD: 'dead'
 }
-
 export const playerStartX = 50;
 export const playerStartY = canvasHeight / 2;
 

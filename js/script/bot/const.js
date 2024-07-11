@@ -5,6 +5,5 @@ export const BOT_STATES = {
     STUNNED: 'stunned',
     DEAD: 'dead'
 }
-
 export const botStartX = canvasWidth - 50;
 export const botStartY = canvasHeight / 2;
