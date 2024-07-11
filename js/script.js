@@ -9,25 +9,25 @@ import {GAME} from "./script/game/model";
 import {BOT} from "./script/bot/model";
 import {drawPoints, movePoint, resetPoint, updateVisibilityPoints} from "./script/point/point";
 import {POINTS} from "./script/point/model";
-import {Player} from "./script/player/model";
+import {getMyPlayer, Player} from "./script/player/model";
 
 // где-то тут был const socket = io();
 
 
 // в константе players должен лежать айди игрока, сейчас это заглушка
 const socketIds = [
-    [
+
         { id: '1'}
-    ],
-    [
+    ,
+
         { id: '2'}
-    ],
-    [
+    ,
+
         { id: '3' }
-    ],
-    [
+    ,
+
         { id: '4'}
-    ]
+
 ];
 
 
@@ -104,13 +104,27 @@ function drawPlayer() {
             PLAYER.x = 10;
             PLAYER.y = 10;
             PLAYER.state = PLAYER_STATES.ACTIVE;
-        }, 1000); // Changed delay to 1000ms
+        }, 1000);
     }
 }
 
-//создания плеер
+function drawPlayerEntity(activePlayers) {
+    activePlayers.forEach(player => {
+        if (player.isAlive()) {
+            ctx.fillStyle = player.getColor;
+            ctx.fillRect(player.getX(), player.getY(), player.getSize(), player.getSize());
+        }
+        if (player.isDead()) {
+            setTimeout(() => {
+                player.setColor(green);
+                player.setX(10);
+                player.setY(10);
+                player.renaissance();
+            }, 1000); // Changed delay to 1000ms
+        }
+    })
+}
 
-//function drawPlayerEntity();
 
 
 
@@ -119,6 +133,7 @@ function render() {
     drawBackground();
     drawPoints();
     drawPlayer();
+    drawPlayerEntity(activePlayers);
     drawBot();
 }
 
@@ -130,7 +145,6 @@ function createPlayers() {
         id: socketIds[0].id
     }
     for (let i = 0; i < socketIds.length; i++) {
-
         activePlayers[i] = new Player(i, socketIds[i].id, socket.id);
 
     }
@@ -140,18 +154,12 @@ function createPlayers() {
 
 let activePlayers = [];
 
-function drawPlayerEntity(activePlayers) {
-    
-}
 
 function init() {
     cordInit();
     drawBackground();
     drawPoints();
     drawPlayer();
-
-
-
     activePlayers = createPlayers();
     drawPlayerEntity(activePlayers);
     //drawBot();
@@ -195,7 +203,8 @@ function main() {
 function update(dt) {
     gameTime += dt;
     botMovement(dt);
-    handleInput(dt);
+    //handleInput(dt);
+    handleEntityPlayerInput(dt);
     checkCollisions();
     updateEntities(dt);
 }
@@ -370,6 +379,25 @@ function handleInput(dt) {
         PLAYER.y -= PLAYER.speed * dt;
     }
 }
+
+function handleEntityPlayerInput(dt) {
+    const player = getMyPlayer(activePlayers);
+    console.log(player)
+    if (input.isDown('LEFT') || input.isDown('a')) {
+        player.moveOn(player.getSpeed() * dt * (-1), 0)
+    }
+    if (input.isDown('RIGHT') || input.isDown('d')) {
+        player.moveOn(player.getSpeed() * dt, 0)
+    }
+    if (input.isDown('DOWN') || input.isDown('s')) {
+        player.moveOn(0,player.getSpeed() * dt )
+    }
+    if (input.isDown('UP') || input.isDown('w')) {
+        console.log(dt, "dt undefined")
+        player.moveOn(0,player.getSpeed() * dt * (-1))
+    }
+}
+
 
 function checkLaserBounds() {
 
