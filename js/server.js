@@ -53,13 +53,12 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('disconnected');
-        playersModified = players.filter((player) => 
+        players = players.filter((player) =>
             player.id !== socket.id
         );
         setTimeout(() => {
-            console.log(playersModified);
+            console.log(players);
         }, 1000)
-        players = playersModified;
     })
     
     if (players.length === 2) {
@@ -74,7 +73,3 @@ http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
 
-function getPlayer(socket) {
-    const player = {id: socket.id};
-    return player;
-}
