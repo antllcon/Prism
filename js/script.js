@@ -49,6 +49,16 @@ const botStartY = canvasHeight / 2;
 const playerStartX = 50;
 const playerStartY = canvasHeight / 2;
 
+const socket = io();
+
+
+
+let GAME = {
+    width: canvasWidth,
+    height: canvasHeight,
+    background: dark,
+    state: GAME_STATES.PLAY
+};
 let PLAYER = {
     x: 30,
     y: 30,
@@ -150,6 +160,7 @@ let activePlayers = [];
 
 
 function init() {
+    connect();
     cordInit();
     drawBackground();
     drawPoints();
@@ -158,6 +169,12 @@ function init() {
     drawPlayerEntity(activePlayers);
     drawBot();
     countdown();
+}
+
+function connect() {
+    socket.on('connect', () => {
+        console.log('Connected to server with id:', socket.id);
+    });
 }
 
 function countdown() {
