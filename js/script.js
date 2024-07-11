@@ -169,7 +169,16 @@ function init() {
 
 function connect() {
     socket.on('connect', () => {
+        //на room is full событие
+        let player = getMyPlayer(activePlayers)
         console.log('Connected to server with id:', socket.id);
+        let transPlayer = {
+            team: player.getTeam(),
+            color: player.getColor(),
+            x: player.getX(),
+            socket_id: socket.id
+        }
+        console.log(transPlayer)
     });
 }
 
