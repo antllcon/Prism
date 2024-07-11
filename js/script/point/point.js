@@ -98,3 +98,13 @@ export function drawPoints() {
         }
     });
 }
+
+export function respawnPoint(point) {
+    if (point.id !== 0 && point.id !== 1) {
+        point.state = POINT_STATES.INVISIBLE;
+    }
+    point.team = TEAM_STATES.NONE;
+    point.activationTime = null;
+    point.color = gray;
+    point.height = 10;
+}

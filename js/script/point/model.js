@@ -12,7 +12,7 @@ let DEFAULT_POINTS = [
         angle: 0,
         existTime: 10000,
         state: POINT_STATES.INACTIVE,
-        speed: 50,
+        speed: 0,
         direction: 0
     },
     {
@@ -28,7 +28,7 @@ let DEFAULT_POINTS = [
         angle: 0,
         existTime: 10000,
         state: POINT_STATES.INACTIVE,
-        speed: 50,
+        speed: 0,
         direction: Math.PI
     },
     {
