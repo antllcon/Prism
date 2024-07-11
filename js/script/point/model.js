@@ -2,7 +2,7 @@ import {POINT_STATES, POINT_TYPES} from "./const";
 import {gray, TEAM_STATES} from "../game/const";
 import {createPoint} from "./point";
 
-let DEFAULT_POINTS = [
+export let DEFAULT_POINTS = [
     {
         id: 0,
         x: 910, // canvasWidth / 2

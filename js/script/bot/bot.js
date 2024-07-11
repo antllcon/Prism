@@ -1,5 +1,8 @@
 import {BOT_STATES, botStartX, botStartY} from './const'
 import {BOT} from './model'
+import {ctx, GAME} from "../game/model";
+import {POINTS} from "../point/model";
+import {POINT_STATES} from "../point/const";
 
 export function drawBot() {
     if (BOT.state === BOT_STATES.ACTIVE) {
@@ -8,7 +11,7 @@ export function drawBot() {
     }
     if (BOT.state === BOT_STATES.DEAD) {
         setTimeout(() => {
-            BOT.color = 'red';
+            BOT.color = yellow;
             BOT.x = botStartX;
             BOT.y = botStartY;
             BOT.state = BOT_STATES.ACTIVE;

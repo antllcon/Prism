@@ -1,10 +1,11 @@
 // в константе socket должен лежать айди игрока
 // и по каждому айди мы должны его рисовать
-import {canvasHeight, canvasWidth, black, green, dark, gray, red,} from "./script/game/const";
+import {canvasHeight, canvasWidth, black, purple, yellow,} from "./script/game/const";
 import {PLAYER_STATES} from "./script/player/const";
-import {GAME_STATES, TEAM_STATES} from "./script/game/const";
+import {TEAM_STATES} from "./script/game/const";
 import {BOT_STATES} from "./script/bot/const";
-import {POINT_TYPES, DEFAULT_POINTS, POINT_STATES} from "./script/point/const";
+import {DEFAULT_POINTS} from "./script/point/model";
+import {POINT_TYPES, POINT_STATES} from "./script/point/const";
 import {GAME} from "./script/game/model";
 import {BOT} from "./script/bot/model";
 import {drawPoints, movePoint, resetPoint, updateVisibilityPoints} from "./script/point/point";
@@ -58,13 +59,19 @@ function drawBackground() {
 }
 
 function drawBot() {
+    if (BOT.team === TEAM_STATES.PURPLE) {
+        PLAYER.color = yellow;
+    }
+    if (PLAYER.team === TEAM_STATES.YELLOW) {
+        PLAYER.color = purple;
+    }
     if (BOT.state === BOT_STATES.ACTIVE) {
         ctx.fillStyle = BOT.color;
         ctx.fillRect(BOT.x, BOT.y, BOT.size, BOT.size);
     }
     if (BOT.state === BOT_STATES.DEAD) {
         setTimeout(() => {
-            BOT.color = 'red';
+            BOT.color = yellow;
             BOT.x = botStartX;
             BOT.y = botStartY;
             BOT.state = BOT_STATES.ACTIVE;
@@ -75,17 +82,17 @@ function drawBot() {
 function drawPlayer() {
     if (PLAYER.state === PLAYER_STATES.ACTIVE) {
         if (PLAYER.team === TEAM_STATES.PURPLE) {
-            PLAYER.color = green;
+            PLAYER.color = purple;
         }
         if (PLAYER.team === TEAM_STATES.YELLOW) {
-            PLAYER.color = red;
+            PLAYER.color = yellow;
         }
         ctx.fillStyle = PLAYER.color;
         ctx.fillRect(PLAYER.x, PLAYER.y, PLAYER.size, PLAYER.size);
     }
     if (PLAYER.state === PLAYER_STATES.DEAD) {
         setTimeout(() => {
-            PLAYER.color = green;
+            PLAYER.color = purple;
             PLAYER.x = 10;
             PLAYER.y = 10;
             PLAYER.state = PLAYER_STATES.ACTIVE;

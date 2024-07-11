@@ -1,9 +1,9 @@
-import {canvasHeight, canvasWidth} from "../game/const";
 import {PLAYER_STATES} from "./const";
+import {canvasHeight, canvasWidth} from "../game/const";
 
 export const PLAYER = {
-    x: [ 50, 50, canvasWidth-50, canvasWidth-50],
-    y: [ canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
+    x: [50, 50, canvasWidth-50, canvasWidth-50],
+    y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
     size: 10,
     speed: 50,
     team: ['purple', 'yellow', 'purple', 'yellow'],
