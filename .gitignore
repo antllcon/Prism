@@ -1,2 +1,6 @@
 /vendor/
 /node_modules
+/dist/control.js
+/dist/menu.js
+/dist/sprite.js
+/dist/script.js

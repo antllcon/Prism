@@ -14,4 +14,8 @@ export const GAME_STATES = {
     PAUSE: "pause"
 }
 
-
+export const TEAM_STATES = {
+    NONE: "none",
+    PURPLE: "purple",
+    YELLOW: "yellow"
+}
