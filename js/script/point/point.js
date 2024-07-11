@@ -1,6 +1,6 @@
 // noinspection JSPrimitiveTypeWrapperUsage
 
-function createPoint(point) {
+export function createPoint(point) {
     return {
         id: point.id,
         x: point.x,
@@ -20,7 +20,7 @@ function createPoint(point) {
     };
 }
 
-function resetPoint(point, index) {
+export function resetPoint(point, index) {
     const defaultPoint = DEFAULT_POINTS[index];
     point.id = defaultPoint.id;
     point.y = defaultPoint.y;

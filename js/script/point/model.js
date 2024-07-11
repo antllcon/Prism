@@ -209,4 +209,4 @@ let DEFAULT_POINTS = [
     },
 ];
 
-let POINTS = DEFAULT_POINTS.map(createPoint);
+export let POINTS = DEFAULT_POINTS.map(createPoint);

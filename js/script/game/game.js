@@ -4,6 +4,7 @@ import {drawBot, botMovement} from "../bot/bot";
 import {drawPlayer} from "../player/player";
 import {drawPoints} from "../point/point"
 import {gameThemeAudio} from "../../sound/gameThemeAudio";
+import {checkCollisions} from "../../controller/bounds";
 
 export function drawBackground() {
     ctx.fillStyle = GAME.background;
