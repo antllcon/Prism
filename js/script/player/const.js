@@ -1,4 +1,4 @@
-import {canvasHeight} from "../game/const";
+import {canvasHeight, canvasWidth} from "../game/const";
 
 export const PLAYER_STATES = {
     ACTIVE: 'active',
@@ -7,3 +7,6 @@ export const PLAYER_STATES = {
 }
 export const playerStartX = 50;
 export const playerStartY = canvasHeight / 2;
+
+console.log(canvasWidth, canvasHeight, "hello from js/player/constants")
+
