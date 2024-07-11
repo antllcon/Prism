@@ -1,3 +1,4 @@
+
 const canvasWidth = 1820;
 const canvasHeight = 1024;
 const red = "#FC0000";

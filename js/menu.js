@@ -1,4 +1,5 @@
 let centralPartMenu;
+let nameGame;
 let buttonBot;
 let buttonPlayer;
 let button1vs1;
