@@ -39,7 +39,7 @@ function loadToMainPageLink() {
     let toMainPage = document.createElement("a");
     toMainPage.classList.add("logo");
     toMainPage.href = "";
-    loadHTML("src/img/prism.svg", (html) => {
+    loadHTML("src/assets/img/prism.svg", (html) => {
         toMainPage.innerHTML = html;
     });
     document.body.appendChild(toMainPage);
@@ -69,7 +69,7 @@ function initEventListeners() {
     }
 
     if (button1vs1) {
-        button1vs1.addEventListener('click', () => { window.location.href = "index.html"; });
+        button1vs1.addEventListener('click', () => { window.location.href = "game.html"; });
     }
 
     if (button2vs2) {
@@ -88,7 +88,7 @@ function initEventListeners() {
     }
 
     if (buttonPlay) {
-        buttonPlay.addEventListener('click', () => { window.location.href = "index.html"; });
+        buttonPlay.addEventListener('click', () => { window.location.href = "game.html"; });
     }
 
     if (buttonMenu) {

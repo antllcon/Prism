@@ -1,26 +1,24 @@
 import {TEAM_STATES} from "./const";
 import {ctx, GAME, lastTime, gameTime} from "./model";
 import {BOT} from "../bot/model";
-import {drawBot, botMovement} from "../bot/bot";
 import {BOT_STATES, botStartX, botStartY} from "../bot/const";
 import {PLAYER} from "../player/model";
-import {drawPlayer, handleInput} from "../player/player";
 import {PLAYER_STATES, playerStartX, playerStartY} from "../player/const";
 import {POINTS} from "../point/model";
 import {POINT_STATES} from "../point/const";
-import {drawPoints, movePoint, resetPoint, respawnPoint, updateVisibilityPoints} from "../point/point"
+import {movePoint, resetPoint, respawnPoint, updateVisibilityPoints} from "../point/point"
 import {SCORE, scoreAlpha} from "../score/model";
-import {drawFinalScore, drawScore, fadeOutScore} from "../score/score";
-import {checkCollisions} from "../../controller/bounds";
+import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
+import {main} from "../../script";
 
-function drawBackground() {
+export function drawBackground() {
     ctx.fillStyle = GAME.background;
     ctx.fillRect(0, 0, GAME.width, GAME.height);
 }
 
-function countdown() {
+export function countdown() {
     let inputTime = Date.now(); // возможно вообще не нужен
     let background = document.createElement("div");
     let countdownGif = document.createElement("img");
@@ -38,7 +36,7 @@ function countdown() {
     }, 4200)
 }
 
-function cordInit() {
+export function cordInit() {
     PLAYER.x = playerStartX;
     PLAYER.y = playerStartY;
     BOT.x = botStartX;
@@ -71,53 +69,10 @@ function resetLevel() {
     });
 
     setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
-    // countdown(); // Запускаем анимацию и звук отсчёта
+    countdown(); // Запускаем анимацию и звук отсчёта
 }
 
-function render() {
-    ctx.clearRect(0, 0, GAME.width, GAME.height);
-    drawBackground();
-    drawScore();
-    drawPoints();
-    drawPlayer();
-    drawBot();
-}
-
-function update(dt) {
-    gameTime += dt;
-    botMovement(dt);
-    handleInput(dt);
-    checkCollisions();
-    updateEntities(dt);
-}
-
-function main() {
-    let now = Date.now();
-    let dt = (now - lastTime) / 1000.0;
-    if (SCORE.team1 < 3 && SCORE.team2 < 3) {
-        update(dt);
-        render();
-    }
-    else {
-        drawBackground();
-        drawFinalScore();
-        setTimeout(() => {window.location.href = 'menu_all.html';}, 1500);
-    }
-    lastTime = now;
-    requestAnimFrame(main);
-}
-
-function init() {
-    cordInit();
-    drawBackground();
-    drawScore();
-    drawPoints();
-    drawPlayer();
-    drawBot();
-    countdown();
-}
-
-function updateEntities(dt) {
+export function updateEntities(dt) {
     POINTS.forEach(point => {
         if (point.state === POINT_STATES.ACTIVE) {
             if (Date.now() - point.activationTime < point.existTime) {
@@ -157,10 +112,3 @@ function updateEntities(dt) {
         resetLevel();
     }
 }
-
-window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
-    window.setTimeout(callback, 1000 / 60);
-};
-
-setTimeout(fadeOutScore, 6800);
-init();

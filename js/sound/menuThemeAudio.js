@@ -1,4 +1,4 @@
-const menuThemeAudio = new Audio('./sounds/menu_theme.mp3');
+const menuThemeAudio = new Audio('src/assets/sound/sounds/menu_theme.mp3');
 menuThemeAudio.loop = true;
 menuThemeAudio.autoplay = true;
 

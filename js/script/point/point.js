@@ -4,7 +4,7 @@ import {POINTS, DEFAULT_POINTS} from "./model";
 import {POINT_STATES, POINT_TYPES} from "./const";
 import {ctx} from "../game/model";
 import {gray, TEAM_STATES} from "../game/const";
-import {gameTime} from "../../script"
+import {gameTime} from "../game/model"
 
 export function createPoint(point) {
     return {
