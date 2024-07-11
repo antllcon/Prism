@@ -285,20 +285,20 @@ function checkLaserBounds() {
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
                 //laserAppearanceAudio.play();
                 point.state = POINT_STATES.ACTIVE;
-                point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
+                // point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
                 point.team = player.getTeam();
                 point.activationTime = Date.now();
             }
 
             // Проверка коллизий с лазерами
             if (point.state === POINT_STATES.ACTIVE) {
-                if (point.type === POINT_TYPES.CROSS && point.team !== PLAYER.team) { // Крест
+                if (point.type === POINT_TYPES.CROSS && point.team !== player.getTeam()) { // Крест
                     if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.width / 2) ||
                         (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.width / 2)) {
-                        PLAYER.state = PLAYER_STATES.DEAD;
+                        player.die();
                     }
                 }
-                if (point.type === POINT_TYPES.TRIGRAPH && point.team !== PLAYER.team) { // Три-радиус
+                if (point.type === POINT_TYPES.TRIGRAPH && point.team !== player.getTeam()) { // Три-радиус
                     const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
 
                     angles.forEach(angle => {
@@ -309,14 +309,14 @@ function checkLaserBounds() {
                         const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
 
                         if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.height / 2) {
-                            PLAYER.state = PLAYER_STATES.DEAD;
+                            player.die();
                         }
                     });
                 }
-                if (point.type === POINT_TYPES.LINE && point.team !== PLAYER.team) { // Прямая линия (горизонтальная)
+                if (point.type === POINT_TYPES.LINE && point.team !== player.getTeam()) { // Прямая линия (горизонтальная)
                     if (corner.y >= point.y - point.width / 2 && corner.y <= point.y + point.width / 2 &&
                         corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
-                        PLAYER.state = PLAYER_STATES.DEAD;
+                        player.die();
                     }
                 }
             }
