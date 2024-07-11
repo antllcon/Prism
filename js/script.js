@@ -7,9 +7,8 @@ import {BOT_STATES} from "./script/bot/const";
 import {POINT_TYPES, DEFAULT_POINTS, POINT_STATES} from "./script/point/const";
 import {GAME} from "./script/game/model";
 import {BOT} from "./script/bot/model";
-import {drawPoints, resetPoint} from "./script/point/point";
+import {drawPoints, movePoint, resetPoint, updateVisibilityPoints} from "./script/point/point";
 import {POINTS} from "./script/point/model";
-
 
 // в константе players должен лежать айди игрока, сейчас это заглушка
 const players = {
@@ -27,19 +26,16 @@ const players = {
     ]
 };
 
-
 let canvas = document.getElementById("canvas");
-let gameTime = 0;
+export let gameTime = 0;
 let lastTime;
 
 //вынесла весь код по объявлению аудио в countdownAudio
 //остальной закомментировала (laser Appearance)
-
 const botStartX = canvasWidth - 50;
 const botStartY = canvasHeight / 2;
 const playerStartX = 50;
 const playerStartY = canvasHeight / 2;
-
 
 let PLAYER = {
     x: 30,
@@ -50,7 +46,6 @@ let PLAYER = {
     color: black,
     state: PLAYER_STATES.ACTIVE
 };
-
 
 let ctx = canvas.getContext("2d");
 
@@ -519,20 +514,6 @@ function updateEntities(dt) {
     if (PLAYER.state === PLAYER_STATES.STUNNED) {
         PLAYER.x = 30;
         PLAYER.y = 30;
-    }
-}
-
-function updateVisibilityPoints(point) {
-    if (point.type === POINT_TYPES.TRIGRAPH) {
-        if (5 <= point.id && point.id <= 12 && gameTime > 3) {
-            point.state = POINT_STATES.INACTIVE;
-        }
-        if (2 <= point.id && point.id <= 3 && gameTime > 6) {
-            point.state = POINT_STATES.INACTIVE;
-        }
-    }
-    if (point.type === POINT_TYPES.CROSS && gameTime > 15) {
-        point.state = POINT_STATES.INACTIVE;
     }
 }
 
