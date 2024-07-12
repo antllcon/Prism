@@ -3,7 +3,7 @@
 import {GAME, gameState, lastState} from "./script/game/model";
 import {drawPoints} from "./script/point/point";
 import {botMovement, drawBot} from "./script/bot/bot";
-import {drawPlayer, drawPlayerEntity, handleInput} from "./script/player/player";
+import {drawPlayer, handleInput} from "./script/player/player";
 import {SCORE} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {cordInit, countdown, drawBackground, updateEntities} from "./script/game/game";
@@ -26,7 +26,7 @@ function render() {
     drawBackground();
     drawScore();
     drawPoints();
-    drawPlayer();
+    drawPlayer(activePlayers);
     drawBot();
 }
 
@@ -61,7 +61,7 @@ function init() {
     drawBackground();
     drawScore();
     drawPoints();
-    drawPlayerEntity(activePlayers);
+    drawPlayer(activePlayers);
     drawBot();
     countdown();
 }

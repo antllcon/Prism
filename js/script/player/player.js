@@ -35,28 +35,7 @@ export function handleInput(dt) {
     }
 }
 
-export function drawPlayer() {
-    if (PLAYER.state === PLAYER_STATES.ACTIVE) {
-        if (PLAYER.team === TEAM_STATES.PURPLE) {
-            PLAYER.color = purple;
-        }
-        if (PLAYER.team === TEAM_STATES.YELLOW) {
-            PLAYER.color = yellow;
-        }
-        ctx.fillStyle = PLAYER.color;
-        ctx.fillRect(PLAYER.x, PLAYER.y, PLAYER.size, PLAYER.size);
-    }
-    if (PLAYER.state === PLAYER_STATES.DEAD) {
-        setTimeout(() => {
-            PLAYER.color = purple;
-            PLAYER.x = 10;
-            PLAYER.y = 10;
-            PLAYER.state = PLAYER_STATES.ACTIVE;
-        }, 1000);
-    }
-}
-
-export function drawPlayerEntity(activePlayers) {
+export function drawPlayer(activePlayers) {
     activePlayers.forEach(player => {
         if (player.isAlive()) {
             ctx.fillStyle = player.getColor;
@@ -71,32 +50,6 @@ export function drawPlayerEntity(activePlayers) {
             }, 1000); // Changed delay to 1000ms
         }
     })
-}
-
-// в разработке...
-export function drawPlayers() {
-    //socket.on('roomIsReady', (players) => {
-        for (let i = 0; i < players.length; i++) {
-            if (PLAYER.state === PLAYER_STATES.ACTIVE) {
-                if (PLAYER.team[i] === TEAM_STATES.PURPLE) {
-                    PLAYER.color = purple;
-                }
-                if (PLAYER.team[i] === TEAM_STATES.YELLOW) {
-                    PLAYER.color = yellow;
-                }
-                ctx.fillStyle = PLAYER.color[i];
-                ctx.fillRect(PLAYER.x + i * 50, PLAYER.y + i * 50, PLAYER.size, PLAYER.size);
-            }
-            if (PLAYER.state === PLAYER_STATES.DEAD) {
-                setTimeout(() => {
-                    PLAYER.color = purple;
-                    PLAYER.x = 10;
-                    PLAYER.y = 10;
-                    PLAYER.state = PLAYER_STATES.ACTIVE;
-                }, 1000);
-            }
-        }
-    //})
 }
 
 export function createPlayers(players, myId) {
