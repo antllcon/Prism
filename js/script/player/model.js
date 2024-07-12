@@ -13,7 +13,7 @@ export const PLAYER = {
 export class Player {
     constructor(i, id, socket_id)  {
         this.id = id;
-        this.main = (socket_id === id) ? true: false;
+        this.main = (socket_id === id);
         this.x = PLAYER.x[i];
         this.y = PLAYER.y[i];
         this.size = PLAYER.size;

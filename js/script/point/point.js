@@ -2,9 +2,9 @@
 
 import {POINTS, DEFAULT_POINTS} from "./model";
 import {POINT_STATES, POINT_TYPES} from "./const";
-import {ctx} from "../game/model";
+import {ctx} from "../../script";
 import {gray, TEAM_STATES} from "../game/const";
-import {gameTime} from "../game/model"
+import {gameState} from "../game/model"
 
 export function createPoint(point) {
     return {
@@ -125,19 +125,18 @@ export function movePoint(point, dt) {
         }
     }
     point.x += Math.cos(point.direction) * point.speed * dt;
-    console.log(point.id, point.x, point.direction, point.speed, dt)
 }
 
 export function updateVisibilityPoints(point) {
     if (point.type === POINT_TYPES.TRIGRAPH) {
-        if (5 <= point.id && point.id <= 12 && gameTime > 3) {
+        if (5 <= point.id && point.id <= 12 && gameState.gameTime > 3) {
             point.state = POINT_STATES.INACTIVE;
         }
-        if (2 <= point.id && point.id <= 3 && gameTime > 6) {
+        if (2 <= point.id && point.id <= 3 && gameState.gameTime > 6) {
             point.state = POINT_STATES.INACTIVE;
         }
     }
-    if (point.type === POINT_TYPES.CROSS && gameTime > 15) {
+    if (point.type === POINT_TYPES.CROSS && gameState.gameTime > 15) {
         point.state = POINT_STATES.INACTIVE;
     }
 }

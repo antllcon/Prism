@@ -1,7 +1,7 @@
 import {PLAYER} from "./model";
 import {PLAYER_STATES} from "./const";
 import {purple, yellow, TEAM_STATES} from "../game/const";
-import {ctx} from "../game/model";
+import {ctx} from "../../script";
 
 export function handleInput(dt) {
     if (input.isDown('LEFT') || input.isDown('a')) {

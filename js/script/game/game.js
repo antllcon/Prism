@@ -1,5 +1,5 @@
 import {TEAM_STATES} from "./const";
-import {ctx, GAME, lastTime, gameTime} from "./model";
+import {GAME, lastState, gameState} from "./model";
 import {BOT} from "../bot/model";
 import {BOT_STATES, botStartX, botStartY} from "../bot/const";
 import {PLAYER} from "../player/model";
@@ -7,11 +7,11 @@ import {PLAYER_STATES, playerStartX, playerStartY} from "../player/const";
 import {POINTS} from "../point/model";
 import {POINT_STATES} from "../point/const";
 import {movePoint, resetPoint, respawnPoint, updateVisibilityPoints} from "../point/point"
-import {SCORE, scoreAlpha} from "../score/model";
+import {SCORE, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main} from "../../script";
+import {main, ctx} from "../../script";
 
 export function drawBackground() {
     ctx.fillStyle = GAME.background;
@@ -19,19 +19,19 @@ export function drawBackground() {
 }
 
 export function countdown() {
-    let inputTime = Date.now(); // возможно вообще не нужен
+    //let inputTime = Date.now(); // возможно вообще не нужен
     let background = document.createElement("div");
     let countdownGif = document.createElement("img");
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(countdownGif);
-    countdownGif.src = "dist/assets/src/img/cat.gif";
+    countdownGif.src = "./src/assets/img/cat.gif";
     playCountdown();
     setTimeout(() => {
         playGameTheme();
         background.remove();
         countdownGif.remove();
-        lastTime = Date.now();
+        lastState.lastTime = Date.now();
         main();
     }, 4200)
 }
@@ -44,7 +44,7 @@ export function cordInit() {
 }
 
 function resetLevel() {
-    gameTime = -4.2;
+    gameState.gameTime = -4.2;
     cordInit();  // Сбрасываем координаты игрока и бота
 
     // Сбрасываем параметры игрока
@@ -61,7 +61,7 @@ function resetLevel() {
     BOT.speed = 300; // сброс скорости, если она менялась
     BOT.team = TEAM_STATES.YELLOW; // сброс команды, если это актуально
 
-    scoreAlpha = 0.2; // Сброс прозрачности счёта
+    scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
     // Сбрасываем параметры всех точек
     POINTS.forEach((point, index) => {
