@@ -38,7 +38,7 @@ export function handleInput(dt) {
 export function drawPlayer(activePlayers) {
     activePlayers.forEach(player => {
         if (player.isAlive()) {
-            ctx.fillStyle = player.getColor;
+            ctx.fillStyle = player.getColor();
             ctx.fillRect(player.getX(), player.getY(), player.getSize(), player.getSize());
         }
         if (player.isDead()) {

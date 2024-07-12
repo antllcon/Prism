@@ -2,20 +2,20 @@ import {PLAYER_STATES} from "./const";
 import {canvasHeight, canvasWidth} from "../game/const";
 
 export const PLAYER = {
-    x: [50, 50, canvasWidth-50, canvasWidth-50],
-    y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
+    xCord: [50, 50, canvasWidth-50, canvasWidth-50],
+    yCord: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
     size: 10,
     speed: 300,
-    team: ['purple', 'yellow', 'purple', 'yellow'],
-    color: ['purple', 'yellow', 'purple', 'yellow'],
+    team: ['purple', 'purple', 'yellow', 'yellow'],
+    color: ['purple', 'purple', 'yellow', 'yellow'],
     state: PLAYER_STATES.ACTIVE
 }
 export class Player {
     constructor(i, id, socket_id)  {
         this.id = id;
         this.main = (socket_id === id);
-        this.x = PLAYER.x[i];
-        this.y = PLAYER.y[i];
+        this.x = PLAYER.xCord[i];
+        this.y = PLAYER.yCord[i];
         this.size = PLAYER.size;
         this.speed = PLAYER.speed;
         this.team = PLAYER.team[i];

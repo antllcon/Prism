@@ -56,7 +56,7 @@ export function main() {
 
 function init() {
     connect();
-    initPlayers();
+    // initPlayers();
     cordInit();
     drawBackground();
     drawScore();
