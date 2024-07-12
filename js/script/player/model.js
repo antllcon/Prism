@@ -23,19 +23,19 @@ export class Player {
         this.state = PLAYER.state;
     }
 
-    getSize(){
+    getSize() {
         return this.size
     }
 
-    getTeam(){
+    getTeam() {
         return this.team
     }
 
-    isAlive(){
+    isAlive() {
         return this.state === PLAYER_STATES.ACTIVE
     }
 
-    isDead(){
+    isDead() {
         return this.state === PLAYER_STATES.DEAD
     }
 
@@ -47,7 +47,7 @@ export class Player {
         this.y += y;
     }
 
-    getSpeed(){
+    getSpeed() {
         return this.speed
     }
 
@@ -72,13 +72,13 @@ export class Player {
     setY(y) {
         this.y = y;
     }
-    renaissance(){
+    renaissance() {
         this.state = PLAYER_STATES.ACTIVE
     }
 
 }
 
-export function getMyPlayer(players){
+export function getMyPlayer(players) {
     const mainPlayer = players.find(player => player.main);
     return mainPlayer || {};
 }
