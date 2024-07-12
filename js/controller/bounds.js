@@ -1,7 +1,8 @@
 import {BOT} from "../script/bot/model";
 import {BOT_STATES} from "../script/bot/const";
-import {PLAYER} from "../script/player/model";
-import {PLAYER_STATES} from "../script/player/const";
+import {getMyPlayer} from "../script/player/player";
+import {Player} from "../script/player/model";
+import {activePlayers} from "../script";
 import {POINTS} from "../script/point/model"
 import {POINT_STATES, POINT_TYPES} from "../script/point/const";
 import {GAME} from "../script/game/model";
@@ -9,15 +10,24 @@ import {GAME} from "../script/game/model";
 function checkLaserBounds() {
 
     POINTS.forEach(point => {
+        let player = getMyPlayer(activePlayers);
         const sin = Math.sin(point.angle);
         const cos = Math.cos(point.angle);
 
-        const playerCorners = [
+        /*const playerCorners = [
             {x: PLAYER.x, y: PLAYER.y},
             {x: PLAYER.x + PLAYER.size, y: PLAYER.y},
             {x: PLAYER.x, y: PLAYER.y + PLAYER.size},
             {x: PLAYER.x + PLAYER.size, y: PLAYER.y + PLAYER.size}
+        ];*/
+        // в будущем
+        const playerCorners = [
+            {x: player.getX(), y: player.getY()},
+            {x: player.getX() + player.getSize(), y: player.getY()},
+            {x: player.getX(), y: player.getY() + player.getSize()},
+            {x: player.getX() + player.getSize(), y: player.getY() + player.getSize()}
         ];
+
         const botCorners = [
             {x: BOT.x, y: BOT.y},
             {x: BOT.x + BOT.size, y: BOT.y},
@@ -38,24 +48,26 @@ function checkLaserBounds() {
             // и так ищем коллизию игрока с лазером
 
             // Если точка принимает неактивное состояние
+            // Активация лазера
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
                 //laserAppearanceAudio.play();
                 point.state = POINT_STATES.ACTIVE;
-                point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
+                // point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
+                point.team = player.getTeam();
                 point.activationTime = Date.now();
             }
 
             // Проверка коллизий с лазерами
             if (point.state === POINT_STATES.ACTIVE) {
-                if (point.type === POINT_TYPES.CROSS && point.team !== PLAYER.team) { // Крест
+                if (point.type === POINT_TYPES.CROSS && point.team !== player.getTeam()) { // Крест
                     if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.width / 2) ||
                         (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.width / 2)) {
-                        PLAYER.state = PLAYER_STATES.DEAD;
+                        player.die();
                     }
                 }
-                if (point.type === POINT_TYPES.TRIGRAPH && point.team !== PLAYER.team) { // Три-радиус
+                if (point.type === POINT_TYPES.TRIGRAPH && point.team !== player.getTeam()) { // Три-радиус
                     const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
 
                     angles.forEach(angle => {
@@ -66,14 +78,14 @@ function checkLaserBounds() {
                         const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
 
                         if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.height / 2) {
-                            PLAYER.state = PLAYER_STATES.DEAD;
+                            player.die();
                         }
                     });
                 }
-                if (point.type === POINT_TYPES.LINE && point.team !== PLAYER.team) { // Прямая линия (горизонтальная)
+                if (point.type === POINT_TYPES.LINE && point.team !== player.getTeam()) { // Прямая линия (горизонтальная)
                     if (corner.y >= point.y - point.width / 2 && corner.y <= point.y + point.width / 2 &&
                         corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
-                        PLAYER.state = PLAYER_STATES.DEAD;
+                        player.die();
                     }
                 }
             }
@@ -136,16 +148,17 @@ function checkLaserBounds() {
 
 function checkBorderGameBounds() {
     // Проход через границы поля для ИГРОКА
-    if (PLAYER.x < 0) {
-        PLAYER.x = GAME.width - PLAYER.size;
-    } else if (PLAYER.x + PLAYER.size > GAME.width) {
-        PLAYER.x = 0;
+    let player = getMyPlayer(activePlayers);
+    if (player.getX() < 0) {
+        player.setX(GAME.width - player.getSize());
+    } else if (player.getX() + player.getSize() > GAME.width) {
+        player.setX(0)
     }
 
-    if (PLAYER.y < 0) {
-        PLAYER.y = GAME.height - PLAYER.size;
-    } else if (PLAYER.y + PLAYER.size > GAME.height) {
-        PLAYER.y = 0;
+    if (player.getY() < 0) {
+        player.setY(GAME.height - player.getSize());
+    } else if (player.getY + player.getSize() > GAME.height) {
+        player.setY(0)  ;
     }
     // Проход через границы поля БОТА
     if (BOT.x < 0) {

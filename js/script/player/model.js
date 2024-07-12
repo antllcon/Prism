@@ -78,7 +78,3 @@ export class Player {
     }
 }
 
-export function getMyPlayer(players) {
-    const mainPlayer = players.find(player => player.main);
-    return mainPlayer || {};
-}
