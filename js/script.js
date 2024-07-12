@@ -1,12 +1,7 @@
 // в константе socket должен лежать айди игрока
 // и по каждому айди мы должны его рисовать
-import {PLAYER_STATES} from "./script/player/const";
-import {BOT_STATES} from "./script/bot/const";
-import {POINT_TYPES, POINT_STATES} from "./script/point/const";
 import {GAME, gameState, lastState} from "./script/game/model";
-import {BOT} from "./script/bot/model";
 import {drawPoints} from "./script/point/point";
-import {POINTS} from "./script/point/model";
 import {botMovement, drawBot} from "./script/bot/bot";
 import {drawPlayer, handleInput} from "./script/player/player";
 import {SCORE} from "./script/score/model";

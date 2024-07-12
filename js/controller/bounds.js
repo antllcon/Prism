@@ -5,7 +5,6 @@ import {PLAYER_STATES} from "../script/player/const";
 import {POINTS} from "../script/point/model"
 import {POINT_STATES, POINT_TYPES} from "../script/point/const";
 import {GAME} from "../script/game/model";
-import {playLaserAppearance} from "../sound/laserAppearanceAudio";
 
 function checkLaserBounds() {
 
