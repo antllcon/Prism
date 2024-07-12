@@ -23,6 +23,11 @@ let players = [];
 // Обработчик подключения клиента к сокету
 io.on('connection', (socket) => {
     console.log(socket.id, "socket id")
+    players.push(socket.id);
+    if (players.length === 2) {
+        socket.emit('roomIsReady', players)
+    }
+
     socket.on('createRoom', (roomId) => {
         if (!rooms[roomId]) {
             rooms[roomId] = { clients: [], messages: [] };
@@ -38,6 +43,9 @@ io.on('connection', (socket) => {
             socket.emit('joinedRoom', roomId);
             console.log('Joined to room');
             broadcastRoomUpdate(roomId);
+            if (rooms[roomId].clients.length === 2) {
+                socket.emit('roomIsReady', rooms[roomId].clients)
+            }
         }
     });
 
@@ -50,14 +58,14 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('change', (data, socket) => {
+    socket.on('sendDataToServer', (transPlayer) => {
         //внутри data находятся данные о плеере текущего клиента
         players.forEach(player => {
-            if (player.id === socket.id) {
-                updatePlayer(player, data);
+            if (player.id === transPlayer.id) {
+                updatePlayer(player, transPlayer);
+                socket.to(rooms[roomId]).emit('dataFromServer', player);
             }
         });
-        socket.emit('dataChanged');
     });
 
     socket.on('requestOnDataFromServer', () => {
@@ -75,12 +83,12 @@ io.on('connection', (socket) => {
     }
 });
 
-function updatePlayer(player, data) {
-    player.x = data.player.x;
-    player.y = data.player.y;
-    player.team = data.player.team;
-    player.color = data.player.color;
-    player.state = data.player.state;
+function updatePlayer(player, transPlayer) {
+    player.x = transPlayer.x;
+    player.y = transPlayer.y;
+    player.team = transPlayer.team;
+    player.color = transPlayer.color;
+    player.state = transPlayer.state;
 }
 
 function broadcastRoomUpdate(roomId) {

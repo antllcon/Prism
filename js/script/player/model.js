@@ -23,11 +23,29 @@ export class Player {
         this.state = PLAYER.state;
     }
 
+    getId() {
+        return this.id;
+    }
+    getX() {
+        return this.x;
+    }
+    getY() {
+        return this.y;
+    }
     getSize(){
-        return this.size
+        return this.size;
+    }
+    getSpeed(){
+        return this.speed;
     }
     getTeam(){
-        return this.team
+        return this.team;
+    }
+    getColor() {
+        return this.color;
+    }
+    getState() {
+        return this.state;
     }
     isAlive(){
         return this.state === PLAYER_STATES.ACTIVE
@@ -35,7 +53,6 @@ export class Player {
     isDead(){
         return this.state === PLAYER_STATES.DEAD
     }
-
     createPlayer() {
         return new Player();
     }
@@ -43,25 +60,11 @@ export class Player {
         this.x += x;
         this.y += y;
     }
-
-    getSpeed(){
-        return this.speed
-    }
-
     die() {
         this.state = PLAYER_STATES.DEAD;
     }
     setColor(color) {
         this.color = color;
-    }
-    getColor() {
-        return this.color;
-    }
-    getX() {
-        return this.x;
-    }
-    getY() {
-        return this.y;
     }
     setX(x) {
         this.x = x;
@@ -72,7 +75,6 @@ export class Player {
     renaissance(){
         this.state = PLAYER_STATES.ACTIVE
     }
-
 }
 
 export function getMyPlayer(players){

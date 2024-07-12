@@ -12,29 +12,6 @@ import {POINTS} from "./script/point/model";
 import {getMyPlayer, Player} from "./script/player/model";
 import {botMovement} from "./script/bot/bot";
 
-
-
-
-// где-то тут был const socket = io();
-
-
-// в константе players должен лежать айди игрока, сейчас это заглушка
-const socketIds = [
-
-        { id: '1'}
-    ,
-
-        { id: '2'}
-    ,
-
-        { id: '3' }
-    ,
-
-        { id: '4'}
-
-];
-
-
 //инициализоровать по айди
 //и отрисовать по айди переходя в цикле по массиву
 //внести в инит, и игровой цикл
@@ -137,18 +114,11 @@ function render() {
     drawBot();
 }
 
-function createPlayers() {
-    let activePlayers = []
-    //socket.on('roomIsReady', (socketIds) => {
-    let socket = {
-        //костыль
-        id: socketIds[0].id
+function createPlayers(players, myId) {
+    let activePlayers = [];
+    for (let i = 0; i < players.length; i++) {
+        activePlayers[i] = new Player(i, players[i], myId);
     }
-    for (let i = 0; i < socketIds.length; i++) {
-        activePlayers[i] = new Player(i, socketIds[i].id, socket.id);
-
-    }
-    //})
     return activePlayers
 }
 
@@ -157,11 +127,11 @@ let activePlayers = [];
 
 function init() {
     connect();
+    initPlayers();
     cordInit();
     drawBackground();
     drawPoints();
     drawPlayer();
-    activePlayers = createPlayers();
     drawPlayerEntity(activePlayers);
     drawBot();
     countdown();
@@ -170,16 +140,22 @@ function init() {
 function connect() {
     socket.on('connect', () => {
         //на room is full событие
-        let player = getMyPlayer(activePlayers)
+        // let player = getMyPlayer(activePlayers)
         console.log('Connected to server with id:', socket.id);
-        let transPlayer = {
-            team: player.getTeam(),
-            color: player.getColor(),
-            x: player.getX(),
-            socket_id: socket.id
-        }
-        console.log(transPlayer)
+        // let transPlayer = {
+        //     team: player.getTeam(),
+        //     color: player.getColor(),
+        //     x: player.getX(),
+        //     socket_id: socket.id
+        // }
+        // console.log(transPlayer)
     });
+}
+
+function initPlayers() {
+    socket.on('roomIsReady', (players) => {
+        activePlayers = createPlayers(players, socket.id);
+    })
 }
 
 function countdown() {
@@ -208,10 +184,35 @@ function cordInit() {
     BOT.y = botStartY;
 }
 
+function sendDataToServer() {
+    playerAsEntity = getMyPlayer(activePlayers);
+    let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
+    socket.emit('sendDataToServer', transmittedPlayer);
+}
+
+function prepTransmittedPlayer(playerAsEntity) {
+    return {
+        id: playerAsEntity.getId(),
+        x: playerAsEntity.getX(),
+        y: playerAsEntity.getY(),
+        team: playerAsEntity.getTeam(),
+        color: playerAsEntity.getColor(),
+        state: playerAsEntity.getState()
+    }
+}
+
+function getDataFromServer() {
+    socket.on('dataChanged', () => {
+        
+    })
+}
+
 function main() {
     let now = Date.now();
     let dt = (now - lastTime) / 1000.0;
     update(dt);
+    sendDataToServer();
+    getDataFromServer();
     render();
     lastTime = now;
     requestAnimFrame(main);
