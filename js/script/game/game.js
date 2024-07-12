@@ -2,16 +2,15 @@ import {TEAM_STATES} from "./const";
 import {GAME, lastState, gameState} from "./model";
 import {BOT} from "../bot/model";
 import {BOT_STATES, botStartX, botStartY} from "../bot/const";
-import {PLAYER} from "../player/model";
-import {PLAYER_STATES, playerStartX, playerStartY} from "../player/const";
 import {POINTS} from "../point/model";
 import {POINT_STATES} from "../point/const";
 import {movePoint, resetPoint, respawnPoint, updateVisibilityPoints} from "../point/point"
+import {getMyPlayer, resetAllPlayers} from "../player/player"
 import {SCORE, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main, ctx} from "../../script";
+import {main, ctx, activePlayers} from "../../script";
 
 export function drawBackground() {
     ctx.fillStyle = GAME.background;
@@ -37,22 +36,21 @@ export function countdown() {
 }
 
 export function cordInit() {
-    PLAYER.x = playerStartX;
-    PLAYER.y = playerStartY;
     BOT.x = botStartX;
     BOT.y = botStartY;
 }
 
 function resetLevel() {
     gameState.gameTime = -4.2;
-    cordInit();  // Сбрасываем координаты игрока и бота
+    // cordInit();  // Сбрасываем координаты игрока и бота
 
+    resetAllPlayers();
     // Сбрасываем параметры игрока
-    PLAYER.state = PLAYER_STATES.ACTIVE;
-    PLAYER.x = playerStartX;
-    PLAYER.y = playerStartY;
-    PLAYER.speed = 300; // сброс скорости, если она менялась
-    PLAYER.team = TEAM_STATES.PURPLE; // сброс команды, если это актуально
+    // PLAYER.state = PLAYER_STATES.ACTIVE;
+    // PLAYER.x = playerStartX;
+    // PLAYER.y = playerStartY;
+    // PLAYER.speed = 300; // сброс скорости, если она менялась
+    // PLAYER.team = TEAM_STATES.PURPLE; // сброс команды, если это актуально
 
     // Сбрасываем параметры бота
     BOT.state = BOT_STATES.ACTIVE;
@@ -73,11 +71,12 @@ function resetLevel() {
 }
 
 export function updateEntities(dt) {
+    let player = getMyPlayer(activePlayers);
     POINTS.forEach(point => {
         if (point.state === POINT_STATES.ACTIVE) {
             if (Date.now() - point.activationTime < point.existTime) {
-                if (point.team === PLAYER.team) {
-                    point.color = PLAYER.color;
+                if (point.team === player.getTeam()) {
+                    point.color = player.getColor();
                     point.height = 5;
                 }
                 if (point.team === BOT.team) {
@@ -99,14 +98,22 @@ export function updateEntities(dt) {
             movePoint(point, dt);
         }
     })
-    if (PLAYER.state === PLAYER_STATES.STUNNED) {
-        PLAYER.x = 30;
-        PLAYER.y = 30;
-    }
-    if (PLAYER.state === PLAYER_STATES.DEAD) {
-        SCORE.team2 += 1;
-        resetLevel();
-    }
+    // if (PLAYER.state === PLAYER_STATES.STUNNED) {
+    //     PLAYER.x = 30;
+    //     PLAYER.y = 30;
+    // }
+    activePlayers.forEach(player => {
+        if (player.isDead()) {
+            if (player.getTeam() === 'purple') {
+                SCORE.team2 += 1;
+            }
+            if (player.getTeam() === 'yellow') {
+                SCORE.team1 += 1;
+            }
+            resetLevel();
+        }
+    });
+    
     if (BOT.state === BOT_STATES.DEAD) {
         SCORE.team1 += 1;
         resetLevel();

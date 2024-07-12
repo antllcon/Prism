@@ -1,9 +1,9 @@
 import {PLAYER_STATES} from "./const";
 import {canvasHeight, canvasWidth} from "../game/const";
 
-export const PLAYER = {
-    xCord: [50, 50, canvasWidth-50, canvasWidth-50],
-    yCord: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
+export const DEFAULT_PLAYERS = {
+    x: [50, 50, canvasWidth-50, canvasWidth-50],
+    y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
     size: 10,
     speed: 300,
     team: ['purple', 'purple', 'yellow', 'yellow'],
@@ -14,13 +14,13 @@ export class Player {
     constructor(i, id, socket_id)  {
         this.id = id;
         this.main = (socket_id === id);
-        this.x = PLAYER.xCord[i];
-        this.y = PLAYER.yCord[i];
-        this.size = PLAYER.size;
-        this.speed = PLAYER.speed;
-        this.team = PLAYER.team[i];
-        this.color = PLAYER.color[i];
-        this.state = PLAYER.state;
+        this.x = DEFAULT_PLAYERS.x[i];
+        this.y = DEFAULT_PLAYERS.y[i];
+        this.size = DEFAULT_PLAYERS.size;
+        this.speed = DEFAULT_PLAYERS.speed;
+        this.team = DEFAULT_PLAYERS.team[i];
+        this.color = DEFAULT_PLAYERS.color[i];
+        this.state = DEFAULT_PLAYERS.state;
     }
 
     getId() {

@@ -1,6 +1,4 @@
-import {PLAYER, Player} from "./model";
-import {PLAYER_STATES} from "./const";
-import {purple, yellow, TEAM_STATES} from "../game/const";
+import {DEFAULT_PLAYERS, Player} from "./model";
 import {ctx, activePlayers} from "../../script";
 
 // export function handleInput(dt) {
@@ -30,7 +28,6 @@ export function handleInput(dt) {
         player.moveOn(0,player.getSpeed() * dt )
     }
     if (input.isDown('UP') || input.isDown('w')) {
-        console.log(dt, "dt undefined")
         player.moveOn(0,player.getSpeed() * dt * (-1))
     }
 }
@@ -63,4 +60,12 @@ export function createPlayers(players, myId) {
 export function getMyPlayer(players) {
     const mainPlayer = players.find(player => player.main);
     return mainPlayer || {};
+}
+
+export function resetAllPlayers() {
+    for (let i = 0; i < activePlayers.length; i++) {
+        activePlayers[i].setX(DEFAULT_PLAYERS.x[i]);
+        activePlayers[i].setY(DEFAULT_PLAYERS.y[i]);
+        activePlayers[i].renaissance();
+    }
 }
