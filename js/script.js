@@ -18,21 +18,14 @@ canvas.height = GAME.height;
 
 // в константе players должен лежать айди игрока, сейчас это заглушка
 const socketIds = [
+        { id: '1'},
 
-        { id: '1'}
-    ,
+        { id: '2'},
 
-        { id: '2'}
-    ,
-
-        { id: '3' }
-    ,
+        { id: '3' },
 
         { id: '4'}
-
 ];
-
-
 
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
