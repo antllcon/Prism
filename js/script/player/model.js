@@ -1,9 +1,9 @@
-import {canvasHeight, canvasWidth} from "../game/const";
 import {PLAYER_STATES} from "./const";
+import {canvasHeight, canvasWidth} from "../game/const";
 
 export const PLAYER = {
-    x: [ 50, 50, canvasWidth-50, canvasWidth-50],
-    y: [ canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
+    x: [50, 50, canvasWidth-50, canvasWidth-50],
+    y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
     size: 10,
     speed: 300,
     team: ['purple', 'yellow', 'purple', 'yellow'],
@@ -13,7 +13,7 @@ export const PLAYER = {
 export class Player {
     constructor(i, id, socket_id)  {
         this.id = id;
-        this.main = (socket_id === id) ? true: false;
+        this.main = (socket_id === id);
         this.x = PLAYER.x[i];
         this.y = PLAYER.y[i];
         this.size = PLAYER.size;
@@ -32,13 +32,13 @@ export class Player {
     getY() {
         return this.y;
     }
-    getSize(){
+    getSize() {
         return this.size;
     }
     getSpeed(){
         return this.speed;
     }
-    getTeam(){
+    getTeam() {
         return this.team;
     }
     getColor() {
@@ -47,10 +47,10 @@ export class Player {
     getState() {
         return this.state;
     }
-    isAlive(){
+    isAlive() {
         return this.state === PLAYER_STATES.ACTIVE
     }
-    isDead(){
+    isDead() {
         return this.state === PLAYER_STATES.DEAD
     }
     createPlayer() {
@@ -60,6 +60,7 @@ export class Player {
         this.x += x;
         this.y += y;
     }
+
     die() {
         this.state = PLAYER_STATES.DEAD;
     }
@@ -72,12 +73,12 @@ export class Player {
     setY(y) {
         this.y = y;
     }
-    renaissance(){
+    renaissance() {
         this.state = PLAYER_STATES.ACTIVE
     }
 }
 
-export function getMyPlayer(players){
+export function getMyPlayer(players) {
     const mainPlayer = players.find(player => player.main);
     return mainPlayer || {};
 }

@@ -1,3 +1,5 @@
+import {playMenuTheme} from "./sound/menuThemeAudio";
+
 let centralPartMenu;
 let nameGame;
 let buttonBot;
@@ -8,11 +10,6 @@ let buttonLobby;
 let buttonConnect;
 let buttonPlay;
 let buttonMenu;
-let audioThemeMenu = new Audio();
-audioThemeMenu.preload = 'auto';
-audioThemeMenu.src = '../src/sound/menu_theme.MP3';
-audioThemeMenu.loop = true;
-audioThemeMenu.autoplay = true;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -42,7 +39,7 @@ function loadToMainPageLink() {
     let toMainPage = document.createElement("a");
     toMainPage.classList.add("logo");
     toMainPage.href = "";
-    loadHTML("src/img/prism.svg", (html) => {
+    loadHTML("src/assets/img/prism.svg", (html) => {
         toMainPage.innerHTML = html;
     });
     document.body.appendChild(toMainPage);
@@ -72,7 +69,7 @@ function initEventListeners() {
     }
 
     if (button1vs1) {
-        button1vs1.addEventListener('click', () => { window.location.href = "index.html"; });
+        button1vs1.addEventListener('click', () => { window.location.href = "game.html"; });
     }
 
     if (button2vs2) {
@@ -91,7 +88,7 @@ function initEventListeners() {
     }
 
     if (buttonPlay) {
-        buttonPlay.addEventListener('click', () => { window.location.href = "index.html"; });
+        buttonPlay.addEventListener('click', () => { window.location.href = "game.html"; });
     }
 
     if (buttonMenu) {
@@ -102,7 +99,7 @@ function initEventListeners() {
 // Initial load of the menu page
 loadHTML('menu.html', (html) => {
     callback(html);
-    audioThemeMenu.play();
+    playMenuTheme();
     loadToMainPageLink();
     initEventListeners();
 });

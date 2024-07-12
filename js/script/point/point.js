@@ -1,8 +1,10 @@
 // noinspection JSPrimitiveTypeWrapperUsage
-import {ctx} from "../game/model";
-import {DEFAULT_POINTS, POINT_STATES, POINT_TYPES} from "./const";
-import {POINTS} from "./model";
-import {gameTime} from "../../script"
+
+import {POINTS, DEFAULT_POINTS} from "./model";
+import {POINT_STATES, POINT_TYPES} from "./const";
+import {ctx} from "../../script";
+import {gray, TEAM_STATES} from "../game/const";
+import {gameState} from "../game/model"
 
 export function createPoint(point) {
     return {
@@ -103,8 +105,18 @@ export function drawPoints() {
     });
 }
 
+export function respawnPoint(point) {
+    if (point.id !== 0 && point.id !== 1) {
+        point.state = POINT_STATES.INVISIBLE;
+    }
+    point.team = TEAM_STATES.NONE;
+    point.activationTime = null;
+    point.color = gray;
+    point.height = 10;
+}
+
 export function movePoint(point, dt) {
-    if (point.id === 0 || point.id === 1 || point.id === 2 || point.id === 3) {
+    if (point.id === 2 || point.id === 3) {
         if (point.x <= 50) {
             point.direction = 0; // угол 0 радиан означает движение вправо
         }
@@ -117,14 +129,14 @@ export function movePoint(point, dt) {
 
 export function updateVisibilityPoints(point) {
     if (point.type === POINT_TYPES.TRIGRAPH) {
-        if (5 <= point.id && point.id <= 12 && gameTime > 3) {
+        if (5 <= point.id && point.id <= 12 && gameState.gameTime > 3) {
             point.state = POINT_STATES.INACTIVE;
         }
-        if (2 <= point.id && point.id <= 3 && gameTime > 6) {
+        if (2 <= point.id && point.id <= 3 && gameState.gameTime > 6) {
             point.state = POINT_STATES.INACTIVE;
         }
     }
-    if (point.type === POINT_TYPES.CROSS && gameTime > 15) {
+    if (point.type === POINT_TYPES.CROSS && gameState.gameTime > 15) {
         point.state = POINT_STATES.INACTIVE;
     }
 }

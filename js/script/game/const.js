@@ -1,10 +1,11 @@
 export const canvasWidth = 1820;
 export const canvasHeight = 1024;
-export const red = "#FC0000";
-export const green = "#00A86B";
+export const yellow = "#f8df5c";
+export const purple = "#8f23dc";
 export const gray = "#666";
 export const dark = "#333";
 export const black = "#111";
+export const white = "#FFF";
 
 export const GAME_STATES = {
     START: "start",
