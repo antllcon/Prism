@@ -7,33 +7,6 @@ import {POINT_STATES, POINT_TYPES} from "../script/point/const";
 import {GAME} from "../script/game/model";
 import {playLaserAppearance} from "../sound/laserAppearanceAudio";
 
-function checkBorderGameBounds() {
-    // Проход через границы поля для ИГРОКА
-    if (PLAYER.x < 0) {
-        PLAYER.x = GAME.width - PLAYER.size;
-    } else if (PLAYER.x + PLAYER.size > GAME.width) {
-        PLAYER.x = 0;
-    }
-
-    if (PLAYER.y < 0) {
-        PLAYER.y = GAME.height - PLAYER.size;
-    } else if (PLAYER.y + PLAYER.size > GAME.height) {
-        PLAYER.y = 0;
-    }
-    // Проход через границы поля БОТА
-    if (BOT.x < 0) {
-        BOT.x = GAME.width - BOT.size;
-    } else if (BOT.x + BOT.size > GAME.width) {
-        BOT.x = 0;
-    }
-
-    if (BOT.y < 0) {
-        BOT.y = GAME.height - BOT.size;
-    } else if (BOT.y + BOT.size > GAME.height) {
-        BOT.y = 0;
-    }
-}
-
 function checkLaserBounds() {
 
     POINTS.forEach(point => {
@@ -69,7 +42,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                playLaserAppearance();
+                //laserAppearanceAudio.play();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
                 point.activationTime = Date.now();
@@ -122,7 +95,7 @@ function checkLaserBounds() {
             if (point.state === POINT_STATES.INACTIVE &&
                 rotatedX > -point.width / 2 && rotatedX < point.width / 2 &&
                 rotatedY > -point.height / 2 && rotatedY < point.height / 2) {
-                playLaserAppearance();
+                //laserAppearanceAudio.play();
                 point.state = POINT_STATES.ACTIVE;
                 point.team = BOT.team; // Убедитесь, что присваивается команда бота
                 point.activationTime = Date.now();
@@ -160,6 +133,33 @@ function checkLaserBounds() {
             }
         }
     });
+}
+
+function checkBorderGameBounds() {
+    // Проход через границы поля для ИГРОКА
+    if (PLAYER.x < 0) {
+        PLAYER.x = GAME.width - PLAYER.size;
+    } else if (PLAYER.x + PLAYER.size > GAME.width) {
+        PLAYER.x = 0;
+    }
+
+    if (PLAYER.y < 0) {
+        PLAYER.y = GAME.height - PLAYER.size;
+    } else if (PLAYER.y + PLAYER.size > GAME.height) {
+        PLAYER.y = 0;
+    }
+    // Проход через границы поля БОТА
+    if (BOT.x < 0) {
+        BOT.x = GAME.width - BOT.size;
+    } else if (BOT.x + BOT.size > GAME.width) {
+        BOT.x = 0;
+    }
+
+    if (BOT.y < 0) {
+        BOT.y = GAME.height - BOT.size;
+    } else if (BOT.y + BOT.size > GAME.height) {
+        BOT.y = 0;
+    }
 }
 
 export function checkCollisions() {
