@@ -52,14 +52,13 @@ io.on('connection', (socket) => {
     socket.on('leaveRoom', (roomId) => {
         if (rooms[roomId]) {
             rooms[roomId].clients = rooms[roomId].clients.filter(clientId => clientId !== socket.id);
-            socket.leave(roomId); // Leave the room in Socket.IO
+            socket.leave(roomId);
             console.log('Left the room');
             broadcastRoomUpdate(roomId);
         }
     });
 
     socket.on('sendDataToServer', (transPlayer) => {
-        //внутри data находятся данные о плеере текущего клиента
         players.forEach(player => {
             if (player.id === transPlayer.id) {
                 updatePlayer(player, transPlayer);
@@ -96,7 +95,7 @@ function broadcastRoomUpdate(roomId) {
 }
 
 // Запуск сервера
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

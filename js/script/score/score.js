@@ -1,22 +1,22 @@
 import {scoreAlphaState} from "./model";
-import {SCORE} from "./model";
+import {SCORE, score} from "./model";
 import {ctx} from "../../script";
 
 export function drawScore() {
     ctx.save();
     ctx.globalAlpha = scoreAlphaState.scoreAlpha;
-    ctx.fillStyle = SCORE.color;
+    ctx.fillStyle = score.getColor();
     ctx.font = "100px Font Over";
-    ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 50, 100 );
+    ctx.fillText(`${score.getTeam1()}:${score.getTeam2()}`, 50, 100 );
     ctx.restore();
 }
 
 export function drawFinalScore() {
     ctx.save();
     ctx.globalAlpha = scoreAlphaState.scoreAlpha;
-    ctx.fillStyle = SCORE.color;
+    ctx.fillStyle = score.getColor();;
     ctx.font = "700px Font Over";
-    ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 270, 750);
+    ctx.fillText(`${score.getTeam1()}:${score.getTeam1()}`, 270, 750);
     ctx.restore();
 }
 

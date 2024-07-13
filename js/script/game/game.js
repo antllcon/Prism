@@ -1,19 +1,20 @@
 // import {TEAM_STATES} from "./const";
-import {GAME, lastState, gameState} from "./model";
+import {game, lastState, gameState} from "./model";
 import {POINTS} from "../point/model";
 import {POINT_STATES} from "../point/const";
 import {movePoint, resetPoint, respawnPoint, updateVisibilityPoints} from "../point/point"
 import {getMyPlayer, resetAllPlayers} from "../player/player"
 import {resetAllBots} from "../bot/bot"
-import {SCORE, scoreAlphaState} from "../score/model";
+import {score, SCORE, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
 import {main, ctx, activePlayers, activeBots} from "../../script";
+import {logPlugin} from "@babel/preset-env/lib/debug";
 
 export function drawBackground() {
-    ctx.fillStyle = GAME.background;
-    ctx.fillRect(0, 0, GAME.width, GAME.height);
+    ctx.fillStyle = game.getBackground();
+    ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
 }
 
 export function countdown() {
@@ -36,23 +37,8 @@ export function countdown() {
 
 function resetLevel() {
     gameState.gameTime = -4.2;
-    // cordInit();  // Сбрасываем координаты игрока и бота
-
-    // Сбрасываем параметры игрока
     resetAllPlayers();
-    // PLAYER.state = PLAYER_STATES.ACTIVE;
-    // PLAYER.x = playerStartX;
-    // PLAYER.y = playerStartY;
-    // PLAYER.speed = 300; // сброс скорости, если она менялась
-    // PLAYER.team = TEAM_STATES.PURPLE; // сброс команды, если это актуально
-
-    // Сбрасываем параметры бота
     resetAllBots();
-    // BOT.state = BOT_STATES.ACTIVE;
-    // BOT.x = botStartX;
-    // BOT.y = botStartY;
-    // BOT.speed = 300; // сброс скорости, если она менялась
-    // BOT.team = TEAM_STATES.YELLOW; // сброс команды, если это актуально
 
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
@@ -94,23 +80,27 @@ export function updateEntities(dt) {
                 movePoint(point, dt);
             }
         })
+        /////
         if (bot.isDead()) {
-            SCORE.team1 += 1;
+            if (bot.getTeam() === 'purple') {
+                score.increaseTeamYellow()
+            }
+            if (bot.getTeam() === 'yellow') {
+                score.increaseTeamPurple()
+            }
             resetLevel();
         }
     });
-    
-    // if (PLAYER.state === PLAYER_STATES.STUNNED) {
-    //     PLAYER.x = 30;
-    //     PLAYER.y = 30;
-    // }
+
     activePlayers.forEach(player => {
         if (player.isDead()) {
+            console.log("hey hey player is dead game js")
+            console.log(activeBots, "active bots game js in player.is dead")
             if (player.getTeam() === 'purple') {
-                SCORE.team2 += 1;
+                score.increaseTeamYellow()
             }
             if (player.getTeam() === 'yellow') {
-                SCORE.team1 += 1;
+                score.increaseTeamPurple()
             }
             resetLevel();
         }
