@@ -4,7 +4,7 @@ import {getMyPlayer} from "../script/player/player";
 import {Player} from "../script/player/model";
 import {activePlayers, activeBots, points} from "../script";
 import {POINT_STATES, POINT_TYPES} from "../script/point/const";
-import {GAME} from "../script/game/model";
+import {GAME, game} from "../script/game/model";
 
 function checkLaserBounds() {
 
@@ -13,13 +13,6 @@ function checkLaserBounds() {
         const sin = Math.sin(point.angle);
         const cos = Math.cos(point.angle);
 
-        /*const playerCorners = [
-            {x: PLAYER.x, y: PLAYER.y},
-            {x: PLAYER.x + PLAYER.size, y: PLAYER.y},
-            {x: PLAYER.x, y: PLAYER.y + PLAYER.size},
-            {x: PLAYER.x + PLAYER.size, y: PLAYER.y + PLAYER.size}
-        ];*/
-        // в будущем
         const playerCorners = [
             {x: player.getX(), y: player.getY()},
             {x: player.getX() + player.getSize(), y: player.getY()},
@@ -34,7 +27,6 @@ function checkLaserBounds() {
             const dx = corner.x - point.getX();
             const dy = corner.y - point.getY();
 
-            // переводим удаленность в систему координат вращения лазера
             const rotatedX = cos * dx + sin * dy;
             const rotatedY = -sin * dx + cos * dy;
 
@@ -84,6 +76,7 @@ function checkLaserBounds() {
                 }
             }
         }
+
         activeBots.forEach(bot => {
             const botCorners = [
                 {x: bot.getX(), y: bot.getY()},
@@ -146,35 +139,36 @@ function checkLaserBounds() {
                 }
             }
         });
-        
+    activeBots.forEach(bot => {
+        console.log("x", bot.getX(), " y ", bot.getY(), " state ", bot.getState(), "bounds.js")
+        }
+    )
     });
 }
 
 function checkBorderGameBounds() {
-    // Проход через границы поля для ИГРОКА
     let player = getMyPlayer(activePlayers);
     if (player.getX() < 0) {
-        player.setX(GAME.width - player.getSize());
-    } else if (player.getX() + player.getSize() > GAME.width) {
+        player.setX(game.getWidth() - player.getSize());
+    } else if (player.getX() + player.getSize() > game.getWidth()) {
         player.setX(0)
     }
-
     if (player.getY() < 0) {
-        player.setY(GAME.height - player.getSize());
-    } else if (player.getY() + player.getSize() > GAME.height) {
+        player.setY(game.getHeight() - player.getSize());
+    } else if (player.getY() + player.getSize() > game.getHeight()) {
         player.setY(0)  ;
     }
-    // Проход через границы поля БОТА
     activeBots.forEach(bot => {
         if (bot.getX() < 0) {
-            bot.setX(GAME.width - bot.getSize());
-        } else if (bot.getX() + bot.getSize() > GAME.width) {
+            console.log(game.getWidth(), "getwidth bounds js")
+            bot.setX(game.getWidth() - bot.getSize());
+        } else if (bot.getX() + bot.getSize() > game.getWidth()) {
             bot.setX(0);
         }
     
         if (bot.getY() < 0) {
-            bot.setY(GAME.height - bot.getSize());
-        } else if (bot.getY() + bot.getSize() > GAME.height) {
+            bot.setY(game.getHeight() - bot.getSize());
+        } else if (bot.getY() + bot.getSize() > game.getHeight()) {
             bot.setY(0);
         }
     });

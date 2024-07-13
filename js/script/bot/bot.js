@@ -19,21 +19,15 @@ export function createBots() {
 
 export function drawBot() {
     activeBots.forEach(bot => {
-        if (bot.isAlive) {
+        if (bot.isAlive()) {
             ctx.fillStyle = bot.getColor();
             ctx.fillRect(bot.getX(), bot.getY(), bot.getSize(), bot.getSize());
         }
-        // if (bot.isDead) {
-        //     setTimeout(() => {
-        //         bot.setColor(yellow);
-        //         bot.setX(botStartX);
-        //         bot.setY(botStartY);
-        //         bot.setState(BOT_STATES.ACTIVE);
-        //     }, 1000)
+        // if (bot.isDead()) {
+        //     // bot.setState(BOT_STATES.ACTIVE);
         // }
     });
 }
-
 export function resetAllBots() {
     for (let i = 0; i < activeBots.length; i++) {
         activeBots[i].setX(DEFAULT_BOTS.x[requiredBots[i]]);
@@ -42,7 +36,7 @@ export function resetAllBots() {
     }
 }
 
-export function botMovement(dt, activeBots) {
+export function botMovement(dt) {
     activeBots.forEach(bot => {
         let loopIndexInactive = 0;
         let loopIndexActive = 0;

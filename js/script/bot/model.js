@@ -1,16 +1,7 @@
 import {BOT_STATES, DEFAULT_BOTS} from "./const";
 import {yellow, TEAM_STATES} from "../game/const";
 
-export let BOT = {
-    x: 200,
-    y: 200,
-    size: 10,
-    color: yellow,
-    speed: 300,
-    team: TEAM_STATES.YELLOW,
-    state: BOT_STATES.ACTIVE,
-    side: 'enemy'
-}
+
 
 export class Bot {
     constructor(i)  {
@@ -69,6 +60,8 @@ export class Bot {
     renaissance() {
         this.state = BOT_STATES.ACTIVE
     }
+
+
     setState(state) {
         this.state = state
     }

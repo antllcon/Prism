@@ -1,18 +1,19 @@
 // в константе socket должен лежать айди игрока
 // и по каждому айди мы должны его рисовать
-import {GAME, gameState, lastState} from "./script/game/model";
-import {drawPoints, createPoints} from "./script/point/point";
+import {game, gameState, lastState} from "./script/game/model";
+import {drawPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots} from "./script/bot/bot";
-import {drawPlayer, handleInput, createPlayers} from "./script/player/player";
-import {SCORE} from "./script/score/model";
+import {drawPlayer, handleInput, createPlayers, getMyPlayer} from "./script/player/player";
+import {SCORE, score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
-canvas.width = GAME.width;
-canvas.height = GAME.height;
+canvas.width = game.getWidth();
+console.log("sdasdadsasdasd");
+canvas.height = game.getHeight();
 const socket = io();
 
 export let activePlayers = [];
@@ -38,7 +39,7 @@ function init() {
 }
 
 function render() {
-    ctx.clearRect(0, 0, GAME.width, GAME.height);
+    ctx.clearRect(0, 0, game.getWidth(), game.getHeight());
     drawBackground();
     drawScore();
     drawPoints();
@@ -48,7 +49,7 @@ function render() {
 
 function update(dt) {
     gameState.gameTime += dt;
-    botMovement(dt, activeBots);
+    botMovement(dt);
     handleInput(dt);
     checkCollisions();
     updateEntities(dt);
@@ -57,7 +58,7 @@ function update(dt) {
 export function main() {
     let now = Date.now();
     let dt = (now - lastState.lastTime) / 1000.0;
-    if (SCORE.team1 < 3 && SCORE.team2 < 3) {
+    if (score.getTeam1() < 3 && score.getTeam2() < 3) {
         update(dt);
         render();
     }
@@ -70,7 +71,18 @@ export function main() {
     requestAnimFrame(main);
 }
 
-
+function init() {
+    connect();
+    // initPlayers();
+    activeBots = createBots();
+    console.log(activeBots);
+    drawBackground();
+    drawScore();
+    drawPoints();
+    drawPlayer(activePlayers);
+    drawBot();
+    countdown();
+}
 
 function connect() {
     socket.on('connect', () => {
@@ -86,7 +98,7 @@ function initPlayers() {
 }
 
 function sendDataToServer() {
-    playerAsEntity = getMyPlayer(activePlayers);
+    let playerAsEntity = getMyPlayer(activePlayers);
     let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
     socket.emit('sendDataToServer', transmittedPlayer);
 }
