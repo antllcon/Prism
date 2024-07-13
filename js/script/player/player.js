@@ -1,4 +1,5 @@
-import {DEFAULT_PLAYERS, Player} from "./model";
+import {Player} from "./model";
+import {DEFAULT_PLAYERS} from "./const";
 import {ctx, activePlayers} from "../../script";
 
 // export function handleInput(dt) {
@@ -50,11 +51,11 @@ export function drawPlayer(activePlayers) {
 }
 
 export function createPlayers(players, myId) {
-    let activePlayers = [];
+    let createdPlayers = [];
     for (let i = 0; i < players.length; i++) {
-        activePlayers[i] = new Player(i, players[i], myId);
+        createdPlayers[i] = new Player(i, players[i], myId);
     }
-    return activePlayers
+    return createdPlayers
 }
 
 export function getMyPlayer(players) {

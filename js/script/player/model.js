@@ -1,15 +1,7 @@
-import {PLAYER_STATES} from "./const";
+import {PLAYER_STATES, DEFAULT_PLAYERS} from "./const";
 import {canvasHeight, canvasWidth} from "../game/const";
 
-export const DEFAULT_PLAYERS = {
-    x: [50, 50, canvasWidth-50, canvasWidth-50],
-    y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
-    size: 10,
-    speed: 300,
-    team: ['purple', 'purple', 'yellow', 'yellow'],
-    color: ['purple', 'purple', 'yellow', 'yellow'],
-    state: PLAYER_STATES.ACTIVE
-}
+
 export class Player {
     constructor(i, id, socket_id)  {
         this.id = id;
@@ -52,9 +44,6 @@ export class Player {
     }
     isDead() {
         return this.state === PLAYER_STATES.DEAD
-    }
-    createPlayer() {
-        return new Player();
     }
     moveOn(x, y) {
         this.x += x;
