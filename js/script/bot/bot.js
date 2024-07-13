@@ -1,7 +1,7 @@
 import {BOT_STATES, DEFAULT_BOTS} from './const'
 import {Bot} from './model'
 import {GAME} from "../game/model";
-import {Points} from "../point/model";
+import {Point} from "../point/model";
 import {POINT_STATES} from "../point/const";
 import {ctx, activeBots, requiredBots, points} from "../../script"
 import {yellow} from "../game/const";
@@ -61,7 +61,7 @@ export function botMovement(dt, activeBots) {
         let dxActive;
         let dyInactive;
         let dyActive;
-        findNearestPoint(points);
+        findNearestPoint();
         if (inRangeOfLaser) {
             moveBotOutOfLaserSpiral(); // заносит в dxActive и dyActive приращение для убегания по спирали
         }
@@ -69,33 +69,33 @@ export function botMovement(dt, activeBots) {
         getRightDirection(); // дает приоритет убеганию, контролирует предельную скорость
 
 
-        function findNearestPoint(POINTS) {
-            POINTS.forEach(point => {
+        function findNearestPoint() {
+            points.forEach(point => {
                 findInactivePointAndCompare(point);
                 findActivePointInArea(point);
             });
         }
 
         function findInactivePointAndCompare(point) {
-            if (point.state === POINT_STATES.INACTIVE) {
+            if (point.isInactive()) {
                 if (loopIndexInactive === 0) {
                     idInactive = 0;
-                    dxMinInactive = point.x - bot.getX();
-                    dyMinInactive = point.y - bot.getY();
+                    dxMinInactive = point.getX() - bot.getX();
+                    dyMinInactive = point.getY() - bot.getY();
                     hypMinInactive = Math.sqrt(dxMinInactive ** 2 + dyMinInactive ** 2);
                 }
                 let dy;
                 let dx;
 
-                if (Math.abs(point.y + (GAME.height - bot.getY())) < Math.abs(point.y - bot.getY())) {
-                    dy = point.y + (GAME.height - bot.getY());
+                if (Math.abs(point.getY() + (GAME.height - bot.getY())) < Math.abs(point.getY() - bot.getY())) {
+                    dy = point.getY() + (GAME.height - bot.getY());
                 } else {
-                    dy = point.y - bot.getY();
+                    dy = point.getY() - bot.getY();
                 }
-                if (Math.abs(point.x + (GAME.width - bot.getX())) < Math.abs(point.x - bot.getX())) {
-                    dx = point.x + (GAME.width - bot.getX());
+                if (Math.abs(point.getX() + (GAME.width - bot.getX())) < Math.abs(point.getX() - bot.getX())) {
+                    dx = point.getX() + (GAME.width - bot.getX());
                 } else {
-                    dx = point.x - bot.getX();
+                    dx = point.getX() - bot.getX();
                 }
                 let hyp = Math.sqrt(dx ** 2 + dy ** 2);
                 if (hyp < hypMinInactive) {
@@ -110,23 +110,23 @@ export function botMovement(dt, activeBots) {
 
         function findActivePointInArea(point) {
 
-            if (point.state === POINT_STATES.ACTIVE) {
+            if (point.isActive()) {
                 if (loopIndexActive === 0) {
                     idInactive = 0;
-                    dxMinActive = point.x - bot.getX();
-                    dyMinActive = point.y - bot.getY();
+                    dxMinActive = point.getX() - bot.getX();
+                    dyMinActive = point.getY() - bot.getY();
                     hypMinActive = Math.sqrt(dxMinActive ** 2 + dyMinActive ** 2);
                 }
-                let dx = point.x - bot.getX();
-                let dy = point.y - bot.getY();
+                let dx = point.getX() - bot.getX();
+                let dy = point.getY() - bot.getY();
                 let hyp = Math.sqrt(dx ** 2 + dy ** 2);
                 if (hyp < hypMinActive) {
-                    idActive = point.id;
+                    idActive = point.getId();
                     dxMinActive = dx;
                     dyMinActive = dy;
                     hypMinActive = hyp;
                 }
-                inRangeOfLaser = (hypMinActive - bot.getSize() * Math.sqrt(2) < point.size / 2);
+                inRangeOfLaser = (hypMinActive - bot.getSize() * Math.sqrt(2) < point.getSize() / 2);
                 loopIndexActive++;
             }
         }
