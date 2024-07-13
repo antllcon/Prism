@@ -71,19 +71,6 @@ export function main() {
     requestAnimFrame(main);
 }
 
-function init() {
-    connect();
-    // initPlayers();
-    activeBots = createBots();
-    console.log(activeBots);
-    drawBackground();
-    drawScore();
-    drawPoints();
-    drawPlayer(activePlayers);
-    drawBot();
-    countdown();
-}
-
 function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
