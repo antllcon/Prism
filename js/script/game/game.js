@@ -1,15 +1,15 @@
 // import {TEAM_STATES} from "./const";
 import {GAME, lastState, gameState} from "./model";
-import {POINTS} from "../point/model";
+import {Point} from "../point/model";
 import {POINT_STATES} from "../point/const";
-import {movePoint, resetPoint, respawnPoint, updateVisibilityPoints} from "../point/point"
+import {movePoint, resetPoint, resetPoints, respawnPoint, updateVisibilityPoints} from "../point/point"
 import {getMyPlayer, resetAllPlayers} from "../player/player"
 import {resetAllBots} from "../bot/bot"
 import {SCORE, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main, ctx, activePlayers, activeBots} from "../../script";
+import {main, ctx, activePlayers, activeBots, points} from "../../script";
 
 export function drawBackground() {
     ctx.fillStyle = GAME.background;
@@ -57,9 +57,10 @@ function resetLevel() {
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
     // Сбрасываем параметры всех точек
-    POINTS.forEach((point, index) => {
-        respawnPoint(point, index);
-    });
+    resetPoints();
+    // POINTS.forEach((point, index) => {
+    //     respawnPoint(point, index);
+    // });
 
     setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
     countdown(); // Запускаем анимацию и звук отсчёта
@@ -68,29 +69,28 @@ function resetLevel() {
 export function updateEntities(dt) {
     let player = getMyPlayer(activePlayers);
     activeBots.forEach(bot => {
-        POINTS.forEach(point => {
-            if (point.state === POINT_STATES.ACTIVE) {
-                if (Date.now() - point.activationTime < point.existTime) {
-                    if (point.team === player.getTeam()) {
-                        point.color = player.getColor();
-                        point.height = 5;
+        points.forEach(point => {
+            if (point.isActive()) {
+                if (Date.now() - point.getActivationTime() < point.getExistTime()) {
+                    if (point.getTeam() === player.getTeam()) {
+                        point.setColor(player.getColor());
                     }
-                    if (point.team === bot.getTeam()) {
-                        point.color = bot.getColor();
-                        point.height = 5;
+                    if (point.getTeam() === bot.getTeam()) {
+                        point.setColor(bot.getColor());
                     }
+                    point.setHeight(5);
                 } else {
-                    point.state = POINT_STATES.INACTIVE;
-                    resetPoint(point, POINTS.indexOf(point));
+                    point.setInactive();
+                    resetPoint(point);
                 }
             }
-            if (point.state === POINT_STATES.INACTIVE) {
+            if (point.isInactive()) {
     
             }
-            if (point.state === POINT_STATES.INVISIBLE) {
+            if (point.isInvisible()) {
                 updateVisibilityPoints(point);
             }
-            if (point.state === POINT_STATES.ACTIVE || point.state === POINT_STATES.INACTIVE) {
+            if (point.isActive() || point.isInactive()) {
                 movePoint(point, dt);
             }
         })
@@ -99,11 +99,6 @@ export function updateEntities(dt) {
             resetLevel();
         }
     });
-    
-    // if (PLAYER.state === PLAYER_STATES.STUNNED) {
-    //     PLAYER.x = 30;
-    //     PLAYER.y = 30;
-    // }
     activePlayers.forEach(player => {
         if (player.isDead()) {
             if (player.getTeam() === 'purple') {

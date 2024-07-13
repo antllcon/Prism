@@ -1,216 +1,159 @@
-import {POINT_STATES, POINT_TYPES} from "./const";
-import {gray, TEAM_STATES} from "../game/const";
-import {createPoint} from "./point";
+import {POINT_STATES, POINT_TYPES, DEFAULT_POINTS} from "./const";
 
-export let DEFAULT_POINTS = [
-    {
-        id: 0,
-        x: 910, // canvasWidth / 2
-        y: 20,  // topLinePointDistance
-        width: 10,
-        height: 10,
-        size: 1000,
-        type: POINT_TYPES.LINE,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 1,
-        x: 910, // canvasWidth / 2
-        y: 1004, // canvasHeight - bottomLinePointDistance
-        width: 10,
-        height: 10,
-        size: 1000,
-        type: POINT_TYPES.LINE,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INACTIVE,
-        speed: 0,
-        direction: Math.PI
-    },
-    {
-        id: 2,
-        x: 455, // canvasWidth / 4
-        y: 512, // canvasHeight / 2
-        width: 10,
-        height: 10,
-        size: 350,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 150,
-        direction: 0
-    },
-    {
-        id: 3,
-        x: 1365, // canvasWidth / 4 * 3
-        y: 512, // canvasHeight / 2
-        width: 10,
-        height: 10,
-        size: 350,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 150,
-        direction: Math.PI
-    },
-    {
-        id: 4,
-        x: 910, // canvasWidth / 2
-        y: 512, // canvasHeight / 2
-        width: 10,
-        height: 10,
-        size: 2100,
-        type: POINT_TYPES.CROSS,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 5,
-        x: 1592.5, // canvasWidth * (7 / 8)
-        y: 804, // canvasHeight - bottomPointCrossDistance
-        width: 10,
-        height: 10,
-        size: 500,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 6,
-        x: 227.5, // canvasWidth * (1 / 8)
-        y: 804, // canvasHeight - bottomPointCrossDistance
-        width: 10,
-        height: 10,
-        size: 500,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 7,
-        x: 682.5, // canvasWidth * (3 / 8)
-        y: 804, // canvasHeight - bottomPointCrossDistance
-        width: 10,
-        height: 10,
-        size: 500,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 8,
-        x: 1137.5, // canvasWidth * (5 / 8)
-        y: 804, // canvasHeight - bottomPointCrossDistance
-        width: 10,
-        height: 10,
-        size: 500,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 9,
-        x: 1592.5, // canvasWidth * (7 / 8)
-        y: 210, // topPointCrossDistance
-        width: 10,
-        height: 10,
-        size: 500,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 10,
-        x: 227.5, // canvasWidth * (1 / 8)
-        y: 210, // topPointCrossDistance
-        width: 10,
-        height: 10,
-        size: 500,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 11,
-        x: 682.5, // canvasWidth * (3 / 8)
-        y: 210, // topPointCrossDistance
-        width: 10,
-        height: 10,
-        size: 500,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-    {
-        id: 12,
-        x: 1137.5, // canvasWidth * (5 / 8)
-        y: 210, // topPointCrossDistance
-        width: 10,
-        height: 10,
-        size: 500,
-        type: POINT_TYPES.TRIGRAPH,
-        team: TEAM_STATES.NONE,
-        color: gray,
-        angle: 0,
-        existTime: 10000,
-        state: POINT_STATES.INVISIBLE,
-        speed: 0,
-        direction: 0
-    },
-];
 
-export let POINTS = DEFAULT_POINTS.map(createPoint);
+
+export class Point {
+    constructor(i)  {
+        this.id = DEFAULT_POINTS.id[i];
+        this.x = DEFAULT_POINTS.x[i];
+        this.y = DEFAULT_POINTS.y[i];
+        this.width = DEFAULT_POINTS.width;
+        this.height = DEFAULT_POINTS.height;
+        this.size = DEFAULT_POINTS.size[i];
+        this.type = DEFAULT_POINTS.type[i];
+        this.team = DEFAULT_POINTS.team;
+        this.color = DEFAULT_POINTS.color;
+        this.angle = DEFAULT_POINTS.angle;
+        this.existTime = DEFAULT_POINTS.existTime;
+        this.activationTime = null;
+        this.state = DEFAULT_POINTS.state[i];
+        this.speed = DEFAULT_POINTS.speed;
+        this.direction = DEFAULT_POINTS.direction;
+    }
+
+    getId() {
+        return this.id;
+    }
+    getX() {
+        return this.x;
+    }
+    getY() {
+        return this.y;
+    }
+    getWidth() {
+        return this.width;
+    }
+    getHeight() {
+        return this.height;
+    }
+    getSize() {
+        return this.size;
+    }
+    getType() {
+        return this.type;
+    }
+    getTeam() {
+        return this.team;
+    }
+    getColor() {
+        return this.color;
+    }
+    getAngle() {
+        return this.angle;
+    }
+    getExistTime() {
+        return this.existTime;
+    }
+    getActivationTime() {
+        return this.activationTime;
+    }
+    getState(){
+        return this.state;
+    }
+    getSpeed(){
+        return this.speed;
+    }
+    getDirection(){
+        return this.direction;
+    }
+    
+    setId(id) {
+        this.id = id;
+    }
+    setX(x) {
+        this.x = x;
+    }
+    setY(y) {
+        this.y = y;
+    }
+    setWidth(width) {
+        this.width = width;
+    }
+    setHeight(height) {
+        this.height = height;
+    }
+    setSize(size) {
+        this.size = size;
+    }
+    setType(type) {
+        this.type = type;
+    }
+    setTeam(team) {
+        this.team = team;
+    }
+    setColor(color) {
+        this.color = color;
+    }
+    setAngle(angle) {
+        this.angle = angle;
+    }
+    setExistTime(existTime) {
+        this.existTime = existTime;
+    }
+    setActivationTime(activationTime) {
+        this.activationTime = activationTime;
+    }
+    setState(state){
+        this.state = state;
+    }
+    setSpeed(speed){
+        this.speed = speed;
+    }
+    setDirection(direction){
+        this.direction = direction;
+    }
+
+    isActive() {
+        return this.state === POINT_STATES.ACTIVE;
+    }
+    isInactive() {
+        return this.state === POINT_STATES.INACTIVE;
+    }
+    isInvisible() {
+        return this.state === POINT_STATES.INVISIBLE;
+    }
+    setActive() {
+        this.state = POINT_STATES.ACTIVE;
+    }
+    setInactive() {
+        this.state = POINT_STATES.INACTIVE;
+    }
+    setInvisible() {
+        this.state = POINT_STATES.INVISIBLE;
+    }
+
+    isTypeLine() {
+        return this.type === POINT_TYPES.LINE;
+    }
+    isTypeTrigraph() {
+        return this.type === POINT_TYPES.TRIGRAPH;
+    }
+    isTypeCross() {
+        return this.type === POINT_TYPES.CROSS;
+    }
+
+    setTypeLine() {
+        this.type = POINT_TYPES.LINE;
+    }
+    setTypeTrigraph() {
+        this.type = POINT_TYPES.TRIGRAPH;
+    }
+    setTypeCross() {
+        this.type = POINT_TYPES.CROSS;
+    }
+
+    moveOn(x, y) {
+        this.x += x;
+        this.y += y;
+    }
+}

@@ -1,9 +1,9 @@
 import {BOT_STATES, DEFAULT_BOTS} from './const'
 import {Bot} from './model'
 import {GAME} from "../game/model";
-import {POINTS} from "../point/model";
+import {Points} from "../point/model";
 import {POINT_STATES} from "../point/const";
-import {ctx, activeBots, requiredBots} from "../../script"
+import {ctx, activeBots, requiredBots, points} from "../../script"
 import {yellow} from "../game/const";
 
 export function createBots() {
@@ -61,7 +61,7 @@ export function botMovement(dt, activeBots) {
         let dxActive;
         let dyInactive;
         let dyActive;
-        findNearestPoint(POINTS);
+        findNearestPoint(points);
         if (inRangeOfLaser) {
             moveBotOutOfLaserSpiral(); // заносит в dxActive и dyActive приращение для убегания по спирали
         }

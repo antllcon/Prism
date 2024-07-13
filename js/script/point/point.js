@@ -1,142 +1,157 @@
 // noinspection JSPrimitiveTypeWrapperUsage
 
-import {POINTS, DEFAULT_POINTS} from "./model";
-import {POINT_STATES, POINT_TYPES} from "./const";
-import {ctx} from "../../script";
-import {gray, TEAM_STATES} from "../game/const";
+import {Point} from "./model";
+import {POINT_STATES, POINT_TYPES, pointsAmount} from "./const";
+import {ctx, points} from "../../script";
 import {gameState} from "../game/model"
 
-export function createPoint(point) {
-    return {
-        id: point.id,
-        x: point.x,
-        y: point.y,
-        width: point.width,
-        height: point.height,
-        size: point.size,
-        type: point.type,
-        team: point.team,
-        color: point.color,
-        angle: point.angle,
-        existTime: point.existTime,
-        activationTime: null,
-        state: point.state,
-        speed: point.speed,
-        direction: point.direction
-    };
+export function createPoints() {
+    for (let i = 0; i < pointsAmount; i++) {
+        points[i] = new Point(i);
+    }
+}
+// export function createPoint(point) {
+//     return {
+//         id: point.id,
+//         x: point.x,
+//         y: point.y,
+//         width: point.width,
+//         height: point.height,
+//         size: point.size,
+//         type: point.type,
+//         team: point.team,
+//         color: point.color,
+//         angle: point.angle,
+//         existTime: point.existTime,
+//         activationTime: null,
+//         state: point.state,
+//         speed: point.speed,
+//         direction: point.direction
+//     };
+// }
+
+export function resetPoints() {
+    createPoints();
 }
 
-export function resetPoint(point, index) {
-    const defaultPoint = DEFAULT_POINTS[index];
-    point.id = defaultPoint.id;
-    point.y = defaultPoint.y;
-    point.width = defaultPoint.width;
-    point.height = defaultPoint.height;
-    point.size = defaultPoint.size;
-    point.type = defaultPoint.type;
-    point.team = defaultPoint.team;
-    point.color = defaultPoint.color;
-    point.existTime = defaultPoint.existTime;
-    point.activationTime = null;
-    point.state = POINT_STATES.INACTIVE;
-    point.speed = defaultPoint.speed;
+export function resetPoint(point) {
+    let id = point.getId();
+    point = new Point(id);
+    // const defaultPoint = DEFAULT_POINTS[index];
+    // point.id = defaultPoint.id;
+    // point.y = defaultPoint.y;
+    // point.width = defaultPoint.width;
+    // point.height = defaultPoint.height;
+    // point.size = defaultPoint.size;
+    // point.type = defaultPoint.type;
+    // point.team = defaultPoint.team;
+    // point.color = defaultPoint.color;
+    // point.existTime = defaultPoint.existTime;
+    // point.activationTime = null;
+    // point.state = POINT_STATES.INACTIVE;
+    // point.speed = defaultPoint.speed;
 }
 
 export function drawPoints() {
-    POINTS.forEach(point => {
-        if (point.state === POINT_STATES.ACTIVE) {
-            if (point.type === POINT_TYPES.CROSS) {
-                point.angle += Math.PI / 180;
+    points.forEach(point => {
+        if (point.isActive()) {
+            console.log(point);
+            // console.log(point.isTypeTrigraph());
+            if (point.isTypeCross()) {
+                console.log('cross');
+                point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
-                ctx.translate(point.x, point.y);
-                ctx.rotate(point.angle);
-                ctx.strokeStyle = point.color;
+                ctx.translate(point.getX(), point.getY());
+                ctx.rotate(point.getAngle());
+                ctx.strokeStyle = point.getColor();
                 ctx.lineWidth = 5;
                 ctx.beginPath();
-                ctx.moveTo(-point.size / 2, 0);
-                ctx.lineTo(point.size / 2, 0);
-                ctx.moveTo(0, -point.size / 2);
-                ctx.lineTo(0, point.size / 2);
+                ctx.moveTo(-point.getSize() / 2, 0);
+                ctx.lineTo(point.getSize() / 2, 0);
+                ctx.moveTo(0, -point.getSize() / 2);
+                ctx.lineTo(0, point.getSize() / 2);
                 ctx.stroke();
                 ctx.restore();
             }
-            if (point.type === POINT_TYPES.TRIGRAPH) {
-                point.angle += Math.PI / 180;
+            if (point.isTypeTrigraph()) {
+                console.log('trigraph');
+                point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
-                ctx.translate(point.x, point.y);
-                ctx.rotate(point.angle);
-                ctx.strokeStyle = point.color;
+                ctx.translate(point.getX(), point.getY());
+                ctx.rotate(point.getAngle());
+                ctx.strokeStyle = point.getColor();
                 ctx.lineWidth = 5;
                 ctx.beginPath();
-                ctx.moveTo(point.size / 2, 0);
+                ctx.moveTo(point.getSize() / 2, 0);
                 ctx.lineTo(0, 0);
                 ctx.moveTo(0, 0);
-                ctx.lineTo(-point.size / 2 * Math.cos(Math.PI / 3), -point.size / 2 * Math.sin(Math.PI / 3));
+                ctx.lineTo(-point.getSize() / 2 * Math.cos(Math.PI / 3), -point.getSize() / 2 * Math.sin(Math.PI / 3));
                 ctx.moveTo(0, 0);
-                ctx.lineTo(-point.size / 2 * Math.cos(-Math.PI / 3), -point.size / 2 * Math.sin(-Math.PI / 3));
+                ctx.lineTo(-point.getSize() / 2 * Math.cos(-Math.PI / 3), -point.getSize() / 2 * Math.sin(-Math.PI / 3));
                 ctx.stroke();
                 ctx.restore();
             }
-            if (point.type === POINT_TYPES.LINE) {
+            if (point.isTypeLine()) {
+                // console.log('line');
                 ctx.save();
-                ctx.translate(point.x, point.y);
-                ctx.strokeStyle = point.color;
+                ctx.translate(point.getX(), point.getY());
+                ctx.strokeStyle = point.getColor();
                 ctx.lineWidth = 5;
                 ctx.beginPath();
-                ctx.moveTo(point.size, 0);
-                ctx.lineTo(-point.size, 0);
+                ctx.moveTo(point.getSize(), 0);
+                ctx.lineTo(-point.getSize(), 0);
                 ctx.stroke();
                 ctx.restore();
             }
 
         }
-        if (point.state === POINT_STATES.INACTIVE) {
-            point.angle += Math.PI / 180;
+        if (point.isInactive()) {
+            point.setAngle(point.getAngle() + Math.PI / 180);
             ctx.save();
-            ctx.translate(point.x + point.width / 2, point.y + point.height / 2);
-            ctx.rotate(point.angle);
-            ctx.fillStyle = point.color;
-            ctx.fillRect(-point.width / 2, -point.height / 2, point.width, point.height);
+            ctx.translate(point.getX() + point.getWidth() / 2, point.getY() + point.getHeight() / 2);
+            ctx.rotate(point.getAngle());
+            ctx.fillStyle = point.getColor();
+            ctx.fillRect(-point.getWidth() / 2, -point.getHeight() / 2, point.getWidth(), point.getHeight());
             ctx.restore();
         }
-        if (point.state === POINT_STATES.INVISIBLE) {
+        if (point.isInvisible()) {
 
         }
     });
 }
 
-export function respawnPoint(point) {
-    if (point.id !== 0 && point.id !== 1) {
-        point.state = POINT_STATES.INVISIBLE;
-    }
-    point.team = TEAM_STATES.NONE;
-    point.activationTime = null;
-    point.color = gray;
-    point.height = 10;
-}
+// export function respawnPoint(point) {
+//     if (point.id !== 0 && point.id !== 1) {
+//         point.state = POINT_STATES.INVISIBLE;
+//     }
+//     point.team = TEAM_STATES.NONE;
+//     point.activationTime = null;
+//     point.color = gray;
+//     point.height = 10;
+// }
 
 export function movePoint(point, dt) {
-    if (point.id === 2 || point.id === 3) {
-        if (point.x <= 50) {
-            point.direction = 0; // угол 0 радиан означает движение вправо
+    if (point.getId() === 2 || point.getId() === 3) {
+        if (point.getX() <= 50) {
+            point.setDirection(0); // угол 0 радиан означает движение вправо
         }
-        if (point.x >= 1760) {
-            point.direction = Math.PI; // угол PI радиан означает движение влево
+        if (point.getX() >= 1760) {
+            point.setDirection(Math.PI); // угол PI радиан означает движение влево
         }
     }
-    point.x += Math.cos(point.direction) * point.speed * dt;
+    point.moveOn(Math.cos(point.getDirection()) * point.getSpeed() * dt, 0);
 }
 
 export function updateVisibilityPoints(point) {
-    if (point.type === POINT_TYPES.TRIGRAPH) {
-        if (5 <= point.id && point.id <= 12 && gameState.gameTime > 3) {
-            point.state = POINT_STATES.INACTIVE;
+    if (point.isTypeTrigraph()) {
+        if (5 <= point.getId() && point.getId() <= 12 && gameState.gameTime > 3) {
+            point.setInactive();
         }
-        if (2 <= point.id && point.id <= 3 && gameState.gameTime > 6) {
-            point.state = POINT_STATES.INACTIVE;
+        if (2 <= point.getId() && point.getId() <= 3 && gameState.gameTime > 6) {
+            point.setInactive();
         }
     }
-    if (point.type === POINT_TYPES.CROSS && gameState.gameTime > 15) {
-        point.state = POINT_STATES.INACTIVE;
+    if (point.isTypeCross && gameState.gameTime > 15) {
+        point.setInactive();
     }
 }

@@ -1,7 +1,7 @@
 // в константе socket должен лежать айди игрока
 // и по каждому айди мы должны его рисовать
 import {GAME, gameState, lastState} from "./script/game/model";
-import {drawPoints} from "./script/point/point";
+import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots} from "./script/bot/bot";
 import {drawPlayer, handleInput, createPlayers} from "./script/player/player";
 import {SCORE} from "./script/score/model";
@@ -14,13 +14,28 @@ export let ctx = canvas.getContext("2d");
 canvas.width = GAME.width;
 canvas.height = GAME.height;
 const socket = io();
+
 export let activePlayers = [];
+export let points = [];
 export let requiredBots = [2, 3];
 export let activeBots = [];
 
 const players = ['1'];
 
 const socket_id = '1';
+
+function init() {
+    connect();
+    // initPlayers();
+    activeBots = createBots();
+    createPoints();
+    drawBackground();
+    drawScore();
+    drawPoints();
+    drawPlayer(activePlayers);
+    drawBot();
+    countdown();
+}
 
 function render() {
     ctx.clearRect(0, 0, GAME.width, GAME.height);
@@ -55,18 +70,7 @@ export function main() {
     requestAnimFrame(main);
 }
 
-function init() {
-    connect();
-    // initPlayers();
-    activeBots = createBots();
-    console.log(activeBots);
-    drawBackground();
-    drawScore();
-    drawPoints();
-    drawPlayer(activePlayers);
-    drawBot();
-    countdown();
-}
+
 
 function connect() {
     socket.on('connect', () => {

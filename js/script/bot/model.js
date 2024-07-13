@@ -69,4 +69,7 @@ export class Bot {
     renaissance() {
         this.state = BOT_STATES.ACTIVE
     }
+    setState(state) {
+        this.state = state
+    }
 }
