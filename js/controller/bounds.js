@@ -139,10 +139,6 @@ function checkLaserBounds() {
                 }
             }
         });
-    activeBots.forEach(bot => {
-        console.log("x", bot.getX(), " y ", bot.getY(), " state ", bot.getState(), "bounds.js")
-        }
-    )
     });
 }
 
@@ -160,7 +156,6 @@ function checkBorderGameBounds() {
     }
     activeBots.forEach(bot => {
         if (bot.getX() < 0) {
-            console.log(game.getWidth(), "getwidth bounds js")
             bot.setX(game.getWidth() - bot.getSize());
         } else if (bot.getX() + bot.getSize() > game.getWidth()) {
             bot.setX(0);

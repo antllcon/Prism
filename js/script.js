@@ -12,7 +12,6 @@ import {checkCollisions} from "./controller/bounds";
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
 canvas.width = game.getWidth();
-console.log("sdasdadsasdasd");
 canvas.height = game.getHeight();
 const socket = io();
 
