@@ -1,5 +1,7 @@
 import {playMenuTheme} from "./sound/menuThemeAudio";
 
+const socket = io();
+
 let centralPartMenu;
 let nameGame;
 let buttonBot;
@@ -77,7 +79,15 @@ function initEventListeners() {
     }
 
     if (buttonLobby) {
-        buttonLobby.addEventListener('click', () => { transitionToPage("lobby.html"); });
+        buttonLobby.addEventListener('click', () => { 
+            transitionToPage("lobby.html"); 
+            socket.emit('createRoom');
+            socket.on('roomCreated', (roomId) => {
+                socket.emit('joinRoom', roomId);
+            })
+            console.log(document);
+            document.querySelector('#roomId').textContent = 'roomId';
+        });
     }
 
     if (buttonConnect) {
@@ -103,5 +113,6 @@ loadHTML('menu.html', (html) => {
     loadToMainPageLink();
     initEventListeners();
 });
+
 
 

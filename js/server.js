@@ -22,26 +22,27 @@ let players = [];
 
 // Обработчик подключения клиента к сокету
 io.on('connection', (socket) => {
-    console.log(socket.id, "socket id")
     players.push(socket.id);
     if (players.length === 2) {
         socket.emit('roomIsReady', players)
     }
 
-    socket.on('createRoom', (roomId) => {
+    socket.on('createRoom', () => {
+        roomId = generateRoomId();
+        // Проверка id на уникальность сравнением со списком ids !!!!!!!! РЕАЛИЗОВАТЬ
         if (!rooms[roomId]) {
             rooms[roomId] = { clients: [], messages: [] };
             socket.emit('roomCreated', roomId);
-            console.log('Room created');
+            console.log('Room created with id: ', roomId);
         }
     });
 
     socket.on('joinRoom', (roomId) => {
-        if (!rooms[roomId]) {
+        if (rooms[roomId]) {
             rooms[roomId].clients.push(socket.id);
             socket.join(roomId); // Join the room in Socket.IO
             socket.emit('joinedRoom', roomId);
-            console.log('Joined to room');
+            console.log('Joined to room with id: ', roomId);
             broadcastRoomUpdate(roomId);
             if (rooms[roomId].clients.length === 2) {
                 socket.emit('roomIsReady', rooms[roomId].clients)
@@ -100,3 +101,12 @@ const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
+
+function generateRoomId() {
+    // Создаем строку из 6 цифр
+    let uniqueId = Math.random().toString().slice(-6);
+    // Преобразуем строку в число
+    uniqueId = parseInt(uniqueId);
+    // Возвращаем уникальное число
+    return uniqueId;
+}
