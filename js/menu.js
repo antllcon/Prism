@@ -2,6 +2,8 @@ import {playMenuTheme} from "./sound/menuThemeAudio";
 
 const socket = io();
 
+let globalRoomId;
+
 let centralPartMenu;
 let nameGame;
 let buttonBot;
@@ -12,6 +14,7 @@ let buttonLobby;
 let buttonConnect;
 let buttonPlay;
 let buttonMenu;
+let buttonEnter;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -33,6 +36,11 @@ function transitionToPage(file) {
             || file === 'with-player.html') {
             loadToMainPageLink();
         }
+        if (file === 'lobby.html') {            
+            let chapterCodeElement = document.querySelector('.chapter__code');
+            chapterCodeElement.textContent = globalRoomId;        
+        }
+
         initEventListeners();
     });
 }
@@ -58,6 +66,7 @@ function initEventListeners() {
     buttonConnect = document.getElementById('button-connect');
     buttonPlay = document.getElementById('button-play');
     buttonMenu = document.getElementById('button-menu');
+    buttonEnter = document.getElementById('button-enter');
 
     if (buttonBot) {
         buttonBot.addEventListener('click', () => {
@@ -84,10 +93,25 @@ function initEventListeners() {
             socket.emit('createRoom');
             socket.on('roomCreated', (roomId) => {
                 socket.emit('joinRoom', roomId);
+                globalRoomId = roomId;
             })
-            console.log(document);
-            document.querySelector('#roomId').textContent = 'roomId';
         });
+    }
+
+    if (buttonEnter) {
+        buttonEnter.addEventListener('click', () => {
+            const id = document.getElementById('input-code').value;
+            socket.emit('joinRoom', id);
+            socket.on('joinedRoom', () => {
+                transitionToPage("lobby.html"); 
+                console.log('transition');
+                globalRoomId = id;
+            })
+            socket.on('wrongId', () => {
+                // добавить обработку несуществующего айди комнаты
+            })
+            console.log(id, 'id');
+        })
     }
 
     if (buttonConnect) {

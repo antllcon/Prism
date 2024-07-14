@@ -41,12 +41,14 @@ io.on('connection', (socket) => {
         if (rooms[roomId]) {
             rooms[roomId].clients.push(socket.id);
             socket.join(roomId); // Join the room in Socket.IO
-            socket.emit('joinedRoom', roomId);
+            socket.emit('joinedRoom');
             console.log('Joined to room with id: ', roomId);
             broadcastRoomUpdate(roomId);
             if (rooms[roomId].clients.length === 2) {
                 socket.emit('roomIsReady', rooms[roomId].clients)
             }
+        } else {
+            socket.emit('wrongId');
         }
     });
 
