@@ -32,33 +32,20 @@ io.on('connection', (socket) => {
         // Проверка id на уникальность сравнением со списком ids !!!!!!!! РЕАЛИЗОВАТЬ
         if (!rooms[roomId]) {
             rooms[roomId] = { clients: [], messages: [] };
-            socket.emit('roomCreated', roomId);
             console.log('Room created with id: ', roomId);
+            joinRoom(roomId, socket);
+            // socket.emit('roomCreated');
         }
     });
 
     socket.on('joinRoom', (roomId) => {
-        if (rooms[roomId]) {
-            rooms[roomId].clients.push(socket.id);
-            socket.join(roomId); // Join the room in Socket.IO
-            socket.emit('joinedRoom');
-            console.log('Joined to room with id: ', roomId);
-            broadcastRoomUpdate(roomId);
-            if (rooms[roomId].clients.length === 2) {
-                socket.emit('roomIsReady', rooms[roomId].clients)
-            }
-        } else {
-            socket.emit('wrongId');
-        }
+        joinRoom(roomId, socket);
     });
 
-    socket.on('leaveRoom', (roomId) => {
-        if (rooms[roomId]) {
-            rooms[roomId].clients = rooms[roomId].clients.filter(clientId => clientId !== socket.id);
-            socket.leave(roomId); // Leave the room in Socket.IO
-            console.log('Left the room');
-            broadcastRoomUpdate(roomId);
-        }
+    socket.on('leaveRoom', () => {
+        roomId = findRoomBySocketId(socket.id);
+        console.log(roomId, 'on leaveRoom');
+        leaveRoom(roomId, socket);
     });
 
     socket.on('sendDataToServer', (transPlayer) => {
@@ -76,14 +63,14 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        players = players.filter((player) =>
-            player.id !== socket.id
-        );
+        // players = players.filter((player) =>
+        //     player.id !== socket.id
+        // );
+        let roomId = findRoomBySocketId(socket.id)
+        if (roomId) {
+            leaveRoom(roomId, socket);
+        }
     })
-
-    if (players.length === 2) {
-        socket.emit('roomIsReady', players);
-    }
 });
 
 function updatePlayer(player, transPlayer) {
@@ -111,4 +98,38 @@ function generateRoomId() {
     uniqueId = parseInt(uniqueId);
     // Возвращаем уникальное число
     return uniqueId;
+}
+
+function leaveRoom(roomId, socket) {
+    if (rooms[roomId]) {
+        rooms[roomId].clients = rooms[roomId].clients.filter(clientId => clientId !== socket.id);
+        socket.leave(roomId); // Leave the room in Socket.IO
+        console.log('Left the room with id: ', roomId);
+        broadcastRoomUpdate(roomId);
+    }
+}
+
+function findRoomBySocketId(id) {
+    let foundId;
+    Object.keys(rooms).forEach(roomId => {
+        if (rooms[roomId].clients.includes(id)) {
+            foundId = roomId;
+        }
+    });
+    if (foundId) {
+        return foundId;
+    } else {
+        return false;
+    }
+}
+function joinRoom(roomId, socket) {
+    if (rooms[roomId]) {
+        rooms[roomId].clients.push(socket.id);
+        socket.join(roomId); // Join the room in Socket.IO
+        socket.emit('joinedRoom', roomId);
+        console.log('Joined to room with id: ', roomId);
+        broadcastRoomUpdate(roomId);
+    } else {
+        socket.emit('wrongId');
+    }
 }

@@ -15,6 +15,7 @@ let buttonConnect;
 let buttonPlay;
 let buttonMenu;
 let buttonEnter;
+let buttonLeave;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -67,6 +68,7 @@ function initEventListeners() {
     buttonPlay = document.getElementById('button-play');
     buttonMenu = document.getElementById('button-menu');
     buttonEnter = document.getElementById('button-enter');
+    buttonLeave = document.getElementById('button-leave');
 
     if (buttonBot) {
         buttonBot.addEventListener('click', () => {
@@ -88,29 +90,36 @@ function initEventListeners() {
     }
 
     if (buttonLobby) {
-        buttonLobby.addEventListener('click', () => { 
-            transitionToPage("lobby.html"); 
+        buttonLobby.addEventListener('click', () => {
             socket.emit('createRoom');
-            socket.on('roomCreated', (roomId) => {
-                socket.emit('joinRoom', roomId);
+            socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
-            })
+                transitionToPage("lobby.html"); 
+            }) 
+            // socket.on('roomCreated', () => {
+            //     socket.emit('joinRoom');
+            // })
         });
     }
 
     if (buttonEnter) {
         buttonEnter.addEventListener('click', () => {
-            const id = document.getElementById('input-code').value;
-            socket.emit('joinRoom', id);
-            socket.on('joinedRoom', () => {
+            let inputRoomId = document.getElementById('input-code').value;
+            socket.emit('joinRoom', inputRoomId);
+            socket.on('joinedRoom', (roomId) => {
+                globalRoomId = roomId;
                 transitionToPage("lobby.html"); 
                 console.log('transition');
-                globalRoomId = id;
             })
             socket.on('wrongId', () => {
                 // добавить обработку несуществующего айди комнаты
             })
-            console.log(id, 'id');
+        })
+    }
+    if (buttonLeave) {
+        buttonLeave.addEventListener('click', () => {
+            socket.emit('leaveRoom');
+            transitionToPage("with-player.html"); 
         })
     }
 

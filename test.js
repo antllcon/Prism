@@ -1,12 +1,31 @@
-function generateUniqueId() {
-    // Создаем строку из 6 цифр
-    var uniqueId = Math.random().toString().slice(-6);
-    // Преобразуем строку в число
-    uniqueId = parseInt(uniqueId);
-    // Возвращаем уникальное число
-    return uniqueId;
+let rooms = {
+    '333333': {
+        clients: [123],
+        message: []
+    }
 }
 
-// Вызываем функцию и получаем уникальный ID
-var myUniqueId = generateUniqueId();
-console.log(myUniqueId);
+function findRoomBySocketId(id) {
+    let foundId;
+    Object.keys(rooms).forEach(roomId => {
+        if (rooms[roomId].clients.includes(id)) {
+            foundId = roomId;
+        }
+    });
+    if (foundId) {
+        return foundId;
+    } else {
+        return false;
+    }
+}
+console.log(findRoomBySocketId(123));
+
+
+function findRoomBySocketId(id) {
+    Object.keys(rooms).forEach(roomId => {
+        if (rooms[roomId].clients.includes(id)) {
+            return roomId;
+        }
+    });
+    return false;
+}
