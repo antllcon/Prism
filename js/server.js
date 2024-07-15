@@ -56,18 +56,16 @@ io.on('connection', (socket) => {
         socket.emit('dataFromServer', players);
     })
 
-    socket.on('disconnect', () => {
+    /*socket.on('disconnect', () => {
         let roomId = findRoomBySocketId(socket.id)
         if (roomId) {
             leaveRoom(roomId, socket);
         }
-    })
+    })*/
 
-
-    //  socket.on('playerIsReady')
     socket.on('playerIsReady', () => {
-
         let roomId  = findRoomBySocketId(socket.id);
+        console.log(roomId, 'друг в беде не бросит')
         rooms[roomId].readyClients++;
 
         if (rooms[roomId].readyClients === rooms[roomId].clients.length)
@@ -76,9 +74,14 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('requestOnClients', () =>{
-        let roomId  = findRoomBySocketId(socket.id);
-        socket.emit('sendClients', rooms[roomId].clients)
+    socket.on('requestForClients', () => {
+        console.log('requestForClients вызван')
+        // roomId пустой
+        // при это сокет айди есть
+        // rooms пустой
+        let roomId = findRoomBySocketId(socket.id);
+        console.log(rooms , 'неприятность эту мы переживем')
+        socket.emit('sendClients', rooms)
     })
 });
 

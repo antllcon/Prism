@@ -1,5 +1,3 @@
-// в константе socket должен лежать айди игрока
-// и по каждому айди мы должны его рисовать
 import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots} from "./script/bot/bot";
@@ -73,15 +71,16 @@ export function main() {
 function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
-        //activePlayers = createPlayers(players, socket_id);
-
-
+        initPlayers();
+        activePlayers = createPlayers(players, socket_id);
     });
 }
 
 function initPlayers() {
-    socket.emit('requestOnClients');
+    socket.emit('requestForClients');
     socket.on('sendClients', (clients) => {
+
+        console.log('sendClients вызван')
         console.log(clients);
         console.log('we are here')
         activePlayers = createPlayers(clients, socket.id);
