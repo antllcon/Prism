@@ -157,7 +157,7 @@ function initEventListeners() {
 
 }
 
-// Initial load of the menu page
+
 loadHTML('menu.html', (html) => {
     callback(html);
     playMenuTheme();

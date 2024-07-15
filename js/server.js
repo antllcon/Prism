@@ -22,7 +22,7 @@ let players = [];
 
 io.on('connection', (socket) => {
     socket.on('createRoom', () => {
-        roomId = generateRoomId();
+        let roomId = generateRoomId();
         // Проверка id на уникальность сравнением со списком ids !!!!!!!! РЕАЛИЗОВАТЬ
         if (!rooms[roomId]) {
             // readyClients
@@ -63,14 +63,22 @@ io.on('connection', (socket) => {
         }
     })
 
+
     //  socket.on('playerIsReady')
     socket.on('playerIsReady', () => {
+
         let roomId  = findRoomBySocketId(socket.id);
         rooms[roomId].readyClients++;
+
         if (rooms[roomId].readyClients === rooms[roomId].clients.length)
         {
             io.in(roomId).emit('roomIsReady')
         }
+    })
+
+    socket.on('requestOnClients', () =>{
+        let roomId  = findRoomBySocketId(socket.id);
+        socket.emit('sendClients', rooms[roomId].clients)
     })
 });
 

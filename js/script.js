@@ -8,6 +8,7 @@ import {SCORE, score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
+import {io} from "socket.io-client";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -26,7 +27,6 @@ const socket_id = '1';
 
 function init() {
     connect();
-    // initPlayers();
     activeBots = createBots();
     createPoints();
     drawBackground();
@@ -73,13 +73,19 @@ export function main() {
 function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
-        activePlayers = createPlayers(players, socket_id);
+        //activePlayers = createPlayers(players, socket_id);
+
+
     });
 }
 
 function initPlayers() {
-    socket.on('roomIsReady', (players) => {
-        activePlayers = createPlayers(players, socket.id);
+    socket.emit('requestOnClients');
+    socket.on('sendClients', (clients) => {
+        console.log(clients);
+        console.log('we are here')
+        activePlayers = createPlayers(clients, socket.id);
+        console.log(activePlayers, 'active players')
     })
 }
 

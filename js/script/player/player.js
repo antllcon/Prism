@@ -50,10 +50,10 @@ export function drawPlayer(activePlayers) {
     })
 }
 
-export function createPlayers(players, myId) {
+export function createPlayers(clients, myId) {
     let createdPlayers = [];
-    for (let i = 0; i < players.length; i++) {
-        createdPlayers[i] = new Player(i, players[i], myId);
+    for (let i = 0; i < clients.length; i++) {
+        createdPlayers[i] = new Player(i, clients[i], myId);
     }
     return createdPlayers
 }
