@@ -18,8 +18,8 @@ let rooms = {};
 let players = [];
 
 // socket.id по каким-то причинам не существует на беке
-
 // Обработчик подключения клиента к сокету
+
 io.on('connection', (socket) => {
     socket.on('createRoom', () => {
         roomId = generateRoomId();
@@ -37,13 +37,13 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leaveRoom', () => {
-        // не хватает let
-        roomId = findRoomBySocketId(socket.id);
+        let roomId = findRoomBySocketId(socket.id);
         leaveRoom(roomId, socket);
     });
 
     socket.on('sendDataToServer', (transPlayer) => {
         //внутри data находятся данные о плеере текущего клиента
+        let roomId = findRoomBySocketId(socket.id);
         players.forEach(player => {
             if (player.id === transPlayer.id) {
                 updatePlayer(player, transPlayer);
@@ -87,24 +87,21 @@ function broadcastRoomUpdate(roomId) {
 }
 
 // Запуск сервера
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
 
 function generateRoomId() {
-    // Создаем строку из 6 цифр
     let uniqueId = Math.random().toString().slice(-6);
-    // Преобразуем строку в число
     uniqueId = parseInt(uniqueId);
-    // Возвращаем уникальное число
     return uniqueId;
 }
 
 function leaveRoom(roomId, socket) {
     if (rooms[roomId]) {
         rooms[roomId].clients = rooms[roomId].clients.filter(clientId => clientId !== socket.id);
-        socket.leave(roomId); // Leave the room in Socket.IO
+        socket.leave(roomId);
         console.log(socket.id, ' left the room with id: ', roomId);
         broadcastRoomUpdate(roomId);
     }
@@ -126,7 +123,7 @@ function findRoomBySocketId(id) {
 function joinRoom(roomId, socket) {
     if (rooms[roomId]) {
         rooms[roomId].clients.push(socket.id);
-        socket.join(roomId.toString()); // Join the room in Socket.IO
+        socket.join(roomId.toString());
         socket.emit('joinedRoom', roomId);
         console.log(socket.id, ' joined the room ', roomId);
         broadcastRoomUpdate(roomId);
