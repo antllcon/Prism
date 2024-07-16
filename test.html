@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Player Cards</title>
+    <style>
+        .player {
+            /* базовые стили карточки */
+            width: 200px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .player-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .player-img-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        .player-img {
+            max-width: 100%;
+        }
+        .button-left, .button-right {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .arrow-left::before, .arrow-right::before {
+            content: '';
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        .arrow-left::before {
+            border-width: 5px 7px 5px 0;
+            border-color: transparent #000 transparent transparent;
+        }
+        .arrow-right::before {
+            border-width: 5px 0 5px 7px;
+            border-color: transparent transparent transparent #000;
+        }
+    </style>
+</head>
+<body>
+<div id="card-container"></div>
+
+<template id="player-template">
+    <div class="player" style="background-color: #6000C1;">
+        <div class="player-card-top">
+            <button class="button-left">
+                <i class="arrow-left"></i>
+            </button>
+            <div class="player-img-container">
+                <img class="player-img" alt="" src="src/assets/img/kandinsky-download-1719222086261%201.svg">
+            </div>
+            <button class="button-right">
+                <i class="arrow-right"></i>
+            </button>
+        </div>
+        <span class="player-count">PLAYER 1</span>
+        <span class="player-name">neon killer</span>
+    </div>
+</template>
+
+<template id="bot-template">
+    <div class="player" style="background-color: #00C161;">
+        <div class="player-card-top">
+            <button class="button-left">
+                <i class="arrow-left"></i>
+            </button>
+            <div class="player-img-container">
+                <img class="player-img" alt="" src="src/assets/img/bot-image.svg">
+            </div>
+            <button class="button-right">
+                <i class="arrow-right"></i>
+            </button>
+        </div>
+        <span class="player-count">BOT</span>
+        <span class="player-name">AI opponent</span>
+    </div>
+</template>
+
+<template id="waiting-template">
+    <div class="player" style="background-color: #C1C100;">
+        <div class="player-card-top">
+            <button class="button-left">
+                <i class="arrow-left"></i>
+            </button>
+            <div class="player-img-container">
+                <span>Waiting for player...</span>
+            </div>
+            <button class="button-right" onclick="addBot()">
+                Add Bot
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+    function loadCard(templateId) {
+        const template = document.getElementById(templateId);
+        const cardContainer = document.getElementById('card-container');
+        cardContainer.innerHTML = ''; // Очистить контейнер
+        const card = template.content.cloneNode(true);
+        cardContainer.appendChild(card);
+    }
+
+    function addBot() {
+        // Логика добавления бота
+        console.log('Adding bot...');
+        loadCard('bot-template');
+    }
+
+    // Пример использования
+    loadCard('waiting-template');
+</script>
+</body>
+</html>

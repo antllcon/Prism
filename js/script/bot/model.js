@@ -1,8 +1,6 @@
 import {BOT_STATES, DEFAULT_BOTS} from "./const";
 import {yellow, TEAM_STATES} from "../game/const";
 
-
-
 export class Bot {
     constructor(i)  {
         this.x = DEFAULT_BOTS.x[i];

@@ -12,10 +12,13 @@ let button1vs1;
 let button2vs2;
 let buttonLobby;
 let buttonConnect;
+let cardBox;
+let buttonGetBot;
 let buttonPlay;
 let buttonMenu;
-let buttonEnter;
 let buttonLeave;
+let inputRoomId;
+let waitingCard;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -46,6 +49,20 @@ function transitionToPage(file) {
     });
 }
 
+function loadCard(templateId) {
+    const template = document.getElementById(templateId);
+    const cardContainer = document.getElementById('card-container');
+    const card = template.content.cloneNode(true);
+    cardContainer.appendChild(card);
+}
+
+function addBot() {
+    const waitingCard = buttonGetBot.closest('.player');
+    const botTemplate = document.getElementById('bot-template');
+    const botCard= botTemplate.content.cloneNode(true);
+    waitingCard.replaceWith(botCard);
+}
+
 function loadToMainPageLink() {
     let toMainPage = document.createElement("a");
     toMainPage.classList.add("logo");
@@ -65,10 +82,13 @@ function initEventListeners() {
     button2vs2 = document.getElementById('button-2vs2');
     buttonLobby = document.getElementById('button-lobby');
     buttonConnect = document.getElementById('button-connect');
+    buttonGetBot = document.getElementById('get-bot');
+    cardBox = document.getElementById('card-container');
     buttonPlay = document.getElementById('button-play');
     buttonMenu = document.getElementById('button-menu');
-    buttonEnter = document.getElementById('button-enter');
     buttonLeave = document.getElementById('button-leave');
+    inputRoomId = document.getElementById('input-code');
+    waitingCard = document.getElementById('waiting-template');
 
     if (buttonBot) {
         buttonBot.addEventListener('click', () => {
@@ -94,44 +114,67 @@ function initEventListeners() {
             socket.emit('createRoom');
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
-                transitionToPage("lobby.html"); 
-            }) 
+                transitionToPage("lobby.html");
+            })
             // socket.on('roomCreated', () => {
             //     socket.emit('joinRoom');
             // })
         });
     }
 
-    if (buttonEnter) {
-        buttonEnter.addEventListener('click', () => {
-            let inputRoomId = document.getElementById('input-code').value;
-            socket.emit('joinRoom', inputRoomId);
-            socket.on('joinedRoom', (roomId) => {
-                globalRoomId = roomId;
-                transitionToPage("lobby.html"); 
-                console.log('transition');
-            })
-            socket.on('wrongId', () => {
-                // добавить обработку несуществующего айди комнаты
-            })
-        })
-    }
-    if (buttonLeave) {
-        buttonLeave.addEventListener('click', () => {
-            socket.emit('leaveRoom');
-            transitionToPage("with-player.html"); 
-        })
-    }
-
     if (buttonConnect) {
         buttonConnect.addEventListener('click', () => {
-            let inputField = document.getElementById('input-code');
-            inputField.classList.toggle("input-for-code")
+            inputRoomId.classList.toggle("input-for-code")
         });
     }
 
+    if (inputRoomId) {
+        inputRoomId.addEventListener('input', (event) => {
+            // Удаляем все нецифровые символы
+            inputRoomId.value = inputRoomId.value.replace(/\D/g, '');
+            if (inputRoomId.value.length === 6) {
+                let codeRoom = document.getElementById('input-code').value;
+                socket.emit('joinRoom', codeRoom);
+                socket.on('joinedRoom', (roomId) => {
+                    globalRoomId = roomId;
+                    transitionToPage("lobby.html");
+                    console.log('transition');
+                })
+                socket.on('wrongId', () => {
+                    // добавить обработку несуществующего айди комнаты
+                })
+            }
+            if (inputRoomId.value.length > 6) {
+                inputRoomId.value = inputRoomId.value.slice(0, 6);
+            }
+        });
+    }
+
+    if (cardBox) {
+        loadCard('player-template');
+        loadCard('waiting-template');
+        loadCard('waiting-template');
+        loadCard('waiting-template');
+
+        if (waitingCard) {
+            buttonGetBot.addEventListener('click', () => {addBot(this)});
+        }
+    }
+
     if (buttonPlay) {
-        buttonPlay.addEventListener('click', () => { window.location.href = "game.html"; });
+        buttonPlay.addEventListener('click', () => {
+            buttonPlay.textContent = 'READY';
+            setTimeout(() => {
+                window.location.href = "game.html";
+            }, 1000)
+        });
+    }
+
+    if (buttonLeave) {
+        buttonLeave.addEventListener('click', () => {
+            socket.emit('leaveRoom');
+            transitionToPage("with-player.html");
+        });
     }
 
     if (buttonMenu) {

@@ -12,7 +12,6 @@ import {checkCollisions} from "./controller/bounds";
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
 canvas.width = game.getWidth();
-console.log("sdasdadsasdasd");
 canvas.height = game.getHeight();
 const socket = io();
 
@@ -25,7 +24,7 @@ const players = ['1'];
 
 const socket_id = '1';
 
-function init() {
+export function init() {
     connect();
     // initPlayers();
     activeBots = createBots();
