@@ -55,10 +55,10 @@ export function resetPoint(point) {
 export function drawPoints() {
     points.forEach(point => {
         if (point.isActive()) {
-            console.log(point);
+            // console.log(point);
             // console.log(point.isTypeTrigraph());
             if (point.isTypeCross()) {
-                console.log('cross');
+                // console.log('cross');
                 point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
@@ -74,7 +74,7 @@ export function drawPoints() {
                 ctx.restore();
             }
             if (point.isTypeTrigraph()) {
-                console.log('trigraph');
+                // console.log('trigraph');
                 point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
