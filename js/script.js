@@ -25,6 +25,7 @@ const socket_id = '1';
 
 function init() {
     connect();
+    initEventListeners();
     activeBots = createBots();
     createPoints();
     drawBackground();
@@ -71,6 +72,7 @@ export function main() {
 function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
+        socket.emit('redirected');
         initPlayers();
         // activePlayers = createPlayers(players, socket_id);
     });
@@ -113,5 +115,16 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
 };
 
+function initEventListeners() {
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault(); // Предотвращаем стандартное поведение
+        e.returnValue = ''; // Убираем сообщение о подтверждении
+        // Здесь вы можете вызвать функцию для отправки уведомления на сервер
+        socket.emit('pageRefreshed');
+    });
+}
+
+
 setTimeout(fadeOutScore, 6800);
 init();
+
