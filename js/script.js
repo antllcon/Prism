@@ -4,7 +4,7 @@ import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots} from "./script/bot/bot";
 import {drawPlayer, handleInput, createPlayers, getMyPlayer} from "./script/player/player";
-import {SCORE, score} from "./script/score/model";
+import {score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
@@ -17,7 +17,7 @@ const socket = io();
 
 export let activePlayers = [];
 export let points = [];
-export let requiredBots = [2, 3];
+export let requiredBots = [2];
 export let activeBots = [];
 
 const players = ['1'];

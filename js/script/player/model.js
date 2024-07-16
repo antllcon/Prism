@@ -13,6 +13,7 @@ export class Player {
         this.team = DEFAULT_PLAYERS.team[i];
         this.color = DEFAULT_PLAYERS.color[i];
         this.state = DEFAULT_PLAYERS.state;
+
     }
 
     getId() {
@@ -65,5 +66,8 @@ export class Player {
     renaissance() {
         this.state = PLAYER_STATES.ACTIVE
     }
+
+
+
 }
 

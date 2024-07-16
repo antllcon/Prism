@@ -2,20 +2,7 @@ import {Player} from "./model";
 import {DEFAULT_PLAYERS} from "./const";
 import {ctx, activePlayers} from "../../script";
 
-// export function handleInput(dt) {
-//     if (input.isDown('LEFT') || input.isDown('a')) {
-//         PLAYER.x -= PLAYER.speed * dt;
-//     }
-//     if (input.isDown('RIGHT') || input.isDown('d')) {
-//         PLAYER.x += PLAYER.speed * dt;
-//     }
-//     if (input.isDown('DOWN') || input.isDown('s')) {
-//         PLAYER.y += PLAYER.speed * dt;
-//     }
-//     if (input.isDown('UP') || input.isDown('w')) {
-//         PLAYER.y -= PLAYER.speed * dt;
-//     }
-// }
+//убрала handleInput для обычного let Player
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);

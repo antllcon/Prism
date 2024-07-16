@@ -9,7 +9,8 @@ export const BOT_STATES = {
 export const DEFAULT_BOTS = {
     x: [50, 50, canvasWidth-50, canvasWidth-50],
     y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
-    size: 10,
+    //временное значение сайза
+    size: 50,
     speed: 300,
     team: ['purple', 'purple', 'yellow', 'yellow'],
     color: ['purple', 'purple', 'yellow', 'yellow'],
