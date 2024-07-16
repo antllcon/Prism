@@ -56,12 +56,12 @@ io.on('connection', (socket) => {
         socket.emit('dataFromServer', players);
     })
 
-    /*socket.on('disconnect', () => {
-        let roomId = findRoomBySocketId(socket.id)
-        if (roomId) {
-            leaveRoom(roomId, socket);
-        }
-    })*/
+    // socket.on('disconnect', () => {
+    //     let roomId = findRoomBySocketId(socket.id)
+    //     if (roomId) {
+    //         leaveRoom(roomId, socket);
+    //     }
+    // })
 
     socket.on('playerIsReady', () => {
         let roomId  = findRoomBySocketId(socket.id);
@@ -80,8 +80,8 @@ io.on('connection', (socket) => {
         // при это сокет айди есть
         // rooms пустой
         let roomId = findRoomBySocketId(socket.id);
-        console.log(rooms , 'неприятность эту мы переживем')
-        socket.emit('sendClients', rooms)
+        console.log(roomId, 'неприятность эту мы переживем')
+        socket.emit('sendClients', rooms[roomId].clients)
     })
 });
 
@@ -98,7 +98,7 @@ function broadcastRoomUpdate(roomId) {
 }
 
 // Запуск сервера
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
@@ -121,6 +121,8 @@ function leaveRoom(roomId, socket) {
 function findRoomBySocketId(id) {
     let foundId;
     Object.keys(rooms).forEach(roomId => {
+        console.log(rooms[roomId].clients, 'rooms[roomId].clients');
+        console.log(id, 'socket.id');
         if (rooms[roomId].clients.includes(id)) {
             foundId = roomId;
         }

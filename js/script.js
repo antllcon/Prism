@@ -72,7 +72,7 @@ function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
         initPlayers();
-        activePlayers = createPlayers(players, socket_id);
+        // activePlayers = createPlayers(players, socket_id);
     });
 }
 
@@ -82,7 +82,6 @@ function initPlayers() {
 
         console.log('sendClients вызван')
         console.log(clients);
-        console.log('we are here')
         activePlayers = createPlayers(clients, socket.id);
         console.log(activePlayers, 'active players')
     })
