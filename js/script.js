@@ -2,8 +2,14 @@
 // и по каждому айди мы должны его рисовать
 import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
-import {botMovement, drawBot, createBots} from "./script/bot/bot";
-import {drawPlayer, handleInput, createPlayers, getMyPlayer} from "./script/player/player";
+import {botMovement, drawBot, createBots, initBotAnimation} from "./script/bot/bot";
+import {
+    drawPlayer,
+    handleInput,
+    createPlayers,
+    getMyPlayer,
+    initPlayerAnimation
+} from "./script/player/player";
 import {SCORE, score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
@@ -12,7 +18,6 @@ import {checkCollisions} from "./controller/bounds";
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
 canvas.width = game.getWidth();
-console.log("sdasdadsasdasd");
 canvas.height = game.getHeight();
 const socket = io();
 
@@ -27,13 +32,14 @@ const socket_id = '1';
 
 function init() {
     connect();
-    // initPlayers();
     activeBots = createBots();
     createPoints();
     drawBackground();
     drawScore();
     drawPoints();
+    initPlayerAnimation();
     drawPlayer(activePlayers);
+    initBotAnimation();
     drawBot();
     countdown();
 }
@@ -43,6 +49,7 @@ function render() {
     drawBackground();
     drawScore();
     drawPoints();
+    initPlayerAnimation();
     drawPlayer(activePlayers);
     drawBot();
 }
@@ -61,11 +68,12 @@ export function main() {
     if (score.getTeam1() < 3 && score.getTeam2() < 3) {
         update(dt);
         render();
-    }
-    else {
+    } else {
         drawBackground();
         drawFinalScore();
-        setTimeout(() => {window.location.href = 'index.html';}, 1500);
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
     }
     lastState.lastTime = now;
     requestAnimFrame(main);
@@ -73,8 +81,8 @@ export function main() {
 
 function connect() {
     socket.on('connect', () => {
-        console.log('Connected to server with id:', socket.id);
         activePlayers = createPlayers(players, socket_id);
+        // console.log('Connected to server with id:', socket.id);
     });
 }
 
@@ -111,4 +119,5 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
 };
 
 setTimeout(fadeOutScore, 6800);
+
 init();
