@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const path = require('path');
+const string_decoder = require("node:string_decoder");
 const io = require('socket.io')(http);
 
 //нам нужно иметь на стороне сервера
@@ -131,4 +132,3 @@ function joinRoom(roomId, socket) {
         socket.emit('wrongId');
     }
 }
-

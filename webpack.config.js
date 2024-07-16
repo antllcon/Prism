@@ -7,7 +7,8 @@ module.exports = {
     control: './js/control.js',
     menu: './js/menu.js',
     script: './js/script.js',
-    sprite: './js/sprite.js'
+    sprite: './js/sprite.js',
+    server: './js/server.js'
   },
   output: {
     filename: '[name].js', // [name] будет заменен на ключ из entry
