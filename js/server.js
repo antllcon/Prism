@@ -131,3 +131,4 @@ function joinRoom(roomId, socket) {
         socket.emit('wrongId');
     }
 }
+
