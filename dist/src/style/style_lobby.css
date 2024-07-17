@@ -87,7 +87,7 @@
     padding-right: 80px;
 }
 
-.player-img-container{
+.player-img-container {
     background-color: inherit;
     margin-top: 15px;
     display: flex;
@@ -151,12 +151,10 @@
 }
 
 .arrow-left {
-    border-right: 12px solid #fff;
     left: 12px;
 }
 
 .arrow-right {
-    border-left: 12px solid #fff;
     right: 12px;
 }
 
@@ -180,30 +178,17 @@
 
 .player-get-bot {
     font: 700 18px Font_Over;
-    color: #CFA333;
-    background-color: #FFDA7B;
     width: 200px;
     height: 40px;
     align-self: center;
     text-align: center;
     border: none;
     cursor: pointer;
-    transition: background-color 0.5s ease-out, transform 0.5s ease-out;
-}
-
-.player-get-bot:hover {
-    background-color: rgb(253, 234, 182);
-    color: #bf9b39;
+    transition: transform 0.3s ease-out;
 }
 
 .player-get-bot:active {
-    background-color: rgb(253, 222, 144);
-    color: #bf9b39;
-    transform: scale(0.96);
-}
-
-.player-get-bot::selection {
-    background-color: #FFDA7B;
+    transform: scale(0.97);
 }
 
 .central-part-lobby {
