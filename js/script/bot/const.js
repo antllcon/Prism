@@ -11,7 +11,7 @@ export const DEFAULT_BOTS = {
     y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
     //временное значение сайза
     size: 50,
-    speed: 300,
+    speed: 200,
     team: ['purple', 'purple', 'yellow', 'yellow'],
     color: ['purple', 'purple', 'yellow', 'yellow'],
     state: BOT_STATES.ACTIVE

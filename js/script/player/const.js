@@ -11,7 +11,7 @@ export const DEFAULT_PLAYERS = {
     y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
     //временное значение сайза
     size: 50,
-    speed: 300,
+    speed: 500,
     team: ['purple', 'purple', 'yellow', 'yellow'],
     color: ['purple', 'purple', 'yellow', 'yellow'],
     state: PLAYER_STATES.ACTIVE,
@@ -19,3 +19,7 @@ export const DEFAULT_PLAYERS = {
 }
 
 
+export const ABILITY_SCALE_SPEED = 1;
+export const ABILITY_SCALE_MAX = 3;
+export const ABILITY_DURATION = 3;
+export const ABILITY_SPEED_MULTIPLAYER  = 3;

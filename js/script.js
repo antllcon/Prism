@@ -6,7 +6,7 @@ import {botMovement, drawBot, createBots} from "./script/bot/bot";
 import {drawPlayer, handleInput, createPlayers, getMyPlayer} from "./script/player/player";
 import {score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
-import {countdown, drawBackground, updateEntities} from "./script/game/game";
+import {countdown, createProgressBar, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
 
 let canvas = document.getElementById("canvas");
@@ -27,6 +27,9 @@ const socket_id = '1';
 function init() {
     connect();
     // initPlayers();
+    activePlayers = createPlayers(players, socket_id);
+    console.log(activePlayers, 'hi from init')
+    createProgressBar(activePlayers);
     activeBots = createBots();
     createPoints();
     drawBackground();
@@ -73,6 +76,7 @@ export function main() {
 function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
+        console.log(socket.id)
         activePlayers = createPlayers(players, socket_id);
     });
 }

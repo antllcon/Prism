@@ -169,7 +169,50 @@ function checkBorderGameBounds() {
     });
 }
 
+function checkPlayerBotCollisions() {
+    const player = getMyPlayer(activePlayers);
+
+    if (!player.abilityActive) {
+        return;
+    }
+
+    const playerRect = {
+        x: player.getX(),
+        y: player.getY(),
+        width: player.getSize(),
+        height: player.getSize()
+    };
+
+    activeBots.forEach(bot => {
+        const botRect = {
+            x: bot.getX(),
+            y: bot.getY(),
+            width: bot.getSize(),
+            height: bot.getSize()
+        };
+
+        if (checkRectCollision(playerRect, botRect)) {
+            // Вычислить направление толкания
+            const dx = player.getX() - bot.getX();
+            const dy = player.getY() - bot.getY();
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const pushForce = 30; // Регулируйте силу толкания
+            bot.moveOn(-dx / distance * pushForce, -dy / distance * pushForce);
+        }
+    });
+}
+
+function checkRectCollision(rect1, rect2) {
+    return (
+        rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y
+    );
+}
+
 export function checkCollisions() {
     checkBorderGameBounds();
     checkLaserBounds();
+    checkPlayerBotCollisions();
 }

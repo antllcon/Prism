@@ -1,4 +1,11 @@
-import {PLAYER_STATES, DEFAULT_PLAYERS} from "./const";
+import {
+    PLAYER_STATES,
+    DEFAULT_PLAYERS,
+    ABILITY_SCALE_SPEED,
+    ABILITY_SCALE_MAX,
+    ABILITY_DURATION,
+    ABILITY_SPEED_MULTIPLAYER
+} from "./const";
 import {canvasHeight, canvasWidth} from "../game/const";
 
 
@@ -13,60 +20,54 @@ export class Player {
         this.team = DEFAULT_PLAYERS.team[i];
         this.color = DEFAULT_PLAYERS.color[i];
         this.state = DEFAULT_PLAYERS.state;
-
+        this.abilityScale = 0;
+        this.abilityActive = false;
     }
 
-    getId() {
-        return this.id;
-    }
-    getX() {
-        return this.x;
-    }
-    getY() {
-        return this.y;
-    }
-    getSize() {
-        return this.size;
-    }
-    getSpeed(){
-        return this.speed;
-    }
-    getTeam() {
-        return this.team;
-    }
-    getColor() {
-        return this.color;
-    }
-    getState() {
-        return this.state;
-    }
-    isAlive() {
-        return this.state === PLAYER_STATES.ACTIVE
-    }
-    isDead() {
-        return this.state === PLAYER_STATES.DEAD
-    }
+    getId() {return this.id;}
+    getX() { return this.x; }
+    getY() { return this.y;}
+    getSize() { return this.size;}
+    getSpeed(){ return this.speed;}
+    getTeam() { return this.team;}
+    getColor() {return this.color;}
+    getState() { return this.state;}
+    isAlive() { return this.state === PLAYER_STATES.ACTIVE}
+    isDead() { return this.state === PLAYER_STATES.DEAD}
+
     moveOn(x, y) {
-        this.x += x;
-        this.y += y;
+        if (this.abilityActive) {
+            this.x += x * ABILITY_SPEED_MULTIPLAYER;
+            this.y += y * ABILITY_SPEED_MULTIPLAYER;
+        } else {
+            this.x += x;
+            this.y += y;
+        }
     }
 
-    die() {
-        this.state = PLAYER_STATES.DEAD;
-    }
-    setColor(color) {
-        this.color = color;
-    }
-    setX(x) {
-        this.x = x;
-    }
-    setY(y) {
-        this.y = y;
-    }
-    renaissance() {
-        this.state = PLAYER_STATES.ACTIVE
+    die() { this.state = PLAYER_STATES.DEAD;}
+    setColor(color) { this.color = color;}
+    setX(x) { this.x = x;}
+    setY(y) { this.y = y;}
+    renaissance() { this.state = PLAYER_STATES.ACTIVE}
+
+
+    updateAbilityScale(deltaTime) {
+        console.log("we are in update ability scale");
+        this.abilityScale += ABILITY_SCALE_SPEED * deltaTime;
+
+        if (this.abilityScale >= ABILITY_SCALE_MAX) {
+            this.activateAbility();
+            //this.abilityScale = 0;
+        }
     }
 
+    activateAbility() {
+        this.abilityActive = true;
+        setTimeout(() => {
+            this.abilityActive = false;
+        }, ABILITY_DURATION);
+    }
 
 
 }

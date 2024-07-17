@@ -1,11 +1,13 @@
 import {Player} from "./model";
 import {DEFAULT_PLAYERS} from "./const";
 import {ctx, activePlayers} from "../../script";
+import {logPlugin} from "@babel/preset-env/lib/debug";
 
 //убрала handleInput для обычного let Player
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
+    console.log(player, 'handleInput')
     if (input.isDown('LEFT') || input.isDown('a')) {
         player.moveOn(player.getSpeed() * dt * (-1), 0)
     }
@@ -42,6 +44,8 @@ export function createPlayers(players, myId) {
     for (let i = 0; i < players.length; i++) {
         createdPlayers[i] = new Player(i, players[i], myId);
     }
+    console.log('we are in create players')
+    console.log(createdPlayers, "created players")
     return createdPlayers
 }
 

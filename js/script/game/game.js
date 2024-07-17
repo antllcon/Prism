@@ -10,6 +10,7 @@ import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
 import {main, ctx, activePlayers, activeBots, points} from "../../script";
+import {logPlugin} from "@babel/preset-env/lib/debug";
 
 export function drawBackground() {
     ctx.fillStyle = game.getBackground();
@@ -51,8 +52,30 @@ function resetLevel() {
     countdown(); // Запускаем анимацию и звук отсчёта
 }
 
+
+
+/*function initProgressBar(player){
+    //у каждого должны быть по разным координатам, может тогда проще сразу над головой рисовать?
+    //думаю да
+    player.progressBar = new ProgressBar(player);
+}*/
+
+export function createProgressBar(activePlayers)
+{
+    console.log("we are in Progress Bar")
+    activePlayers.forEach(player => {
+
+        console.log(player, 'in create progress bar we are')
+        //initProgressBar(player);
+    })
+}
+
+
 export function updateEntities(dt) {
     let player = getMyPlayer(activePlayers);
+
+    player.updateAbilityScale(dt)
+
     activeBots.forEach(bot => {
         points.forEach(point => {
             if (point.isActive()) {

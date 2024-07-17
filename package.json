@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "webpack | nodemon js/server.js",
+    "build": "webpack  | nodemon js/server.js",
     "start": "nodemon --watch 'server.js' --exec 'node_modules/.bin/webpack-dev-server --config webpack.config.js'",
     "ws": "nodemon js/server.js"
   },
