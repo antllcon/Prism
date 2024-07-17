@@ -92,8 +92,6 @@ export function updateEntities(dt) {
     });
     activePlayers.forEach(player => {
         if (player.isDead()) {
-            console.log("hey hey player is dead game js")
-            console.log(activeBots, "active bots game js in player.is dead")
             if (player.getTeam() === 'purple') {
                 score.increaseTeamYellow()
             }

@@ -2,6 +2,7 @@ import {PLAYER_STATES, DEFAULT_PLAYERS} from "./const";
 
 export class Player {
     constructor(i, id, socket_id) {
+        this.type = DEFAULT_PLAYERS.type;
         this.id = id;
         this.main = (socket_id === id);
         this.x = DEFAULT_PLAYERS.x[i];
@@ -19,6 +20,7 @@ export class Player {
     }
 
     // Геттеры и сеттеры
+    getType() { return this.type; }
     getId() { return this.id; }
     getX() { return this.x; }
     getY() { return this.y; }
@@ -26,7 +28,6 @@ export class Player {
     getSpeed() { return this.speed; }
     getTeam() { return this.team; }
     getColor() { return this.color; }
-    getState() { return this.state; }
     getImage() { return this.image; }
     getLoad() { return this.load; }
     getCount() { return this.count; }

@@ -2,6 +2,7 @@ import {BOT_STATES, DEFAULT_BOTS} from "./const";
 
 export class Bot {
     constructor(i) {
+        this.type = DEFAULT_BOTS.type;
         this.x = DEFAULT_BOTS.x[i];
         this.y = DEFAULT_BOTS.y[i];
         this.size = DEFAULT_BOTS.size;
@@ -17,6 +18,10 @@ export class Bot {
     }
 
     // Геттеры
+    getType() {
+        return this.type;
+    }
+
     getX() {
         return this.x;
     }
@@ -39,10 +44,6 @@ export class Bot {
 
     getColor() {
         return this.color;
-    }
-
-    getState() {
-        return this.state;
     }
 
     getImage() {

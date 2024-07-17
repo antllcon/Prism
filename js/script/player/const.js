@@ -7,6 +7,7 @@ export const PLAYER_STATES = {
 }
 
 export const DEFAULT_PLAYERS = {
+    type: "player",
     x: [50, 50, canvasWidth-50, canvasWidth-50],
     y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
     size: 10,

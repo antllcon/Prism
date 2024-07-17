@@ -2,7 +2,7 @@ import {DEFAULT_BOTS} from './const'
 import {Bot} from './model'
 import {GAME} from "../game/model";
 
-import {ctx, activeBots, requiredBots, points} from "../../script"
+import {activeBots, requiredBots, points} from "../../script"
 
 
 export function createBots() {
@@ -23,55 +23,6 @@ export function initBotAnimation() {
             bot.setLoad(true);
         }
     })
-}
-
-export function drawBot() {
-
-    const endAnimation = 9;
-    const spriteSize = 64;
-
-    activeBots.forEach(bot => {
-        if (bot.isAlive()) {
-            ctx.fillStyle = bot.getColor();
-            ctx.fillRect(bot.getX(), bot.getY(), bot.getSize(), bot.getSize());
-            console.log(bot.getCount());
-            if (bot.getLoad() === true) {
-                switch (bot.getDirection()) {
-                    case "up":
-                        bot.setImage("./src/assets/sprites/bot/up.png");
-                        break;
-                    case "down":
-                        bot.setImage("./src/assets/sprites/bot/down.png");
-                        break;
-                    case "left":
-                        bot.setImage("./src/assets/sprites/bot/left.png");
-                        break;
-                    case "right":
-                        bot.setImage("./src/assets/sprites/bot/right.png");
-                        break;
-                }
-                ctx.drawImage(
-                    bot.getImage(),
-                    spriteSize * bot.getCount(),
-                    0,
-                    spriteSize,
-                    spriteSize,
-                    bot.getX() - (spriteSize / 2 - bot.getSize() / 2),
-                    bot.getY() - (spriteSize / 2 - bot.getSize() / 2),
-                    spriteSize,
-                    spriteSize
-                );
-                bot.setTick(bot.getTick() + 1);
-                if (bot.getTick() >= 2) {
-                    bot.setCount(bot.getCount() + 1);
-                    bot.setTick(0);
-                }
-            }
-            if (bot.getCount() === endAnimation) {
-                bot.setCount(0);
-            }
-        }
-    });
 }
 
 export function resetAllBots() {
@@ -237,7 +188,6 @@ export function botMovement(dt) {
                     bot.setDirection("up");
                 }
             }
-            console.log(`Bot direction updated to: ${bot.getDirection()}`); // Добавлено логирование
         }
     });
 }
