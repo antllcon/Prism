@@ -139,9 +139,6 @@ function checkLaserBounds() {
                 }
             }
         });
-    activeBots.forEach(bot => {
-        }
-    )
     });
 }
 

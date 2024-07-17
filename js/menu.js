@@ -16,6 +16,7 @@ let buttonPlay;
 let buttonMenu;
 let buttonEnter;
 let buttonLeave;
+let buttonReady;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -69,6 +70,8 @@ function initEventListeners() {
     buttonMenu = document.getElementById('button-menu');
     buttonEnter = document.getElementById('button-enter');
     buttonLeave = document.getElementById('button-leave');
+    //создала константу
+    buttonReady = document.getElementById('button-ready');
 
     if (buttonBot) {
         buttonBot.addEventListener('click', () => {
@@ -115,6 +118,7 @@ function initEventListeners() {
             })
         })
     }
+
     if (buttonLeave) {
         buttonLeave.addEventListener('click', () => {
             socket.emit('leaveRoom');
@@ -136,6 +140,20 @@ function initEventListeners() {
     if (buttonMenu) {
         buttonMenu.addEventListener('click', () => { transitionToPage("menu.html"); });
     }
+
+    // новый event listener
+    if (buttonReady) {
+        buttonReady.addEventListener('click', () => {
+            socket.emit('playerIsReady');
+
+        })
+    }
+
+    socket.on('roomIsReady', () => {
+        console.log('room is ready отработало');
+        window.location.href = "game.html";
+    })
+
 }
 
 // Initial load of the menu page
