@@ -2,7 +2,6 @@ import { ctx } from "./script";
 
 export function drawCharacters(arrayCharacters) {
 
-    console.log("в функции");
     const endAnimation = 9;
     const spriteSize = 64;
 

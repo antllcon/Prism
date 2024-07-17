@@ -39,7 +39,6 @@ function render() {
     drawScore();
     drawPoints();
     drawCharacters(activePlayers.concat(activeBots));
-    console.log(activePlayers.concat(activeBots));
 }
 
 function update(dt) {
