@@ -2,8 +2,9 @@ import {Player} from "./model";
 import {ctx} from "../../script";
 import {GREEN} from "./const";
 import {logPlugin} from "@babel/preset-env/lib/debug";
-const SIZE = {
-    x: 100,
+import {game} from "../game/model";
+export const SIZE = {
+    x: 50,
     y: 15
 }
 /*
@@ -45,6 +46,8 @@ export class ProgressBar {
         this.playerId = player.id;
         this.x = player.x;
         this.y = player.y - 60;
+        this.height = SIZE.y,
+        this.width = SIZE.x,
         this.color = GREEN;
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, 100, 20);

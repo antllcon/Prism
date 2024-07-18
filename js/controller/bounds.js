@@ -5,6 +5,7 @@ import {Player} from "../script/player/model";
 import {activePlayers, activeBots, points} from "../script";
 import {POINT_STATES, POINT_TYPES} from "../script/point/const";
 import {GAME, game} from "../script/game/model";
+import {SIZE as SIZE_PB} from "../script/player/progressBar"
 
 function checkLaserBounds() {
 
@@ -154,6 +155,20 @@ function checkBorderGameBounds() {
     } else if (player.getY() + player.getSize() > game.getHeight()) {
         player.setY(0)  ;
     }
+
+    // прогресс бар не уходит по оси x координаты становятся NaN
+    if (player.progressBar.x < 0) {
+        player.progressBar.x = game.getWidth() - player.progressBar.width ;
+    } else if (player.progressBar.x + player.progressBar.width > game.getWidth()) {
+        player.progressBar.x = 0;
+    }
+
+    if (player.progressBar.y < 0) {
+        player.progressBar.y = game.getHeight() - player.getSize();
+    } else if (player.progressBar.y + player.progressBar.height > game.getHeight()) {
+        player.progressBar.y = 0;
+    }
+
     activeBots.forEach(bot => {
         if (bot.getX() < 0) {
             bot.setX(game.getWidth() - bot.getSize());
