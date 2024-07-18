@@ -9,7 +9,7 @@ const playerImages = [
     "src/assets/img/player-img-4.svg",
 ]
 
-const nameCharacters = ["neon killer", "other name", "other name too", "name"]
+const nameCharacters = ["neon killer", "cyber viper", "nova reaper", "quantum phantom"]
 
 const cardStyles = [
     {
