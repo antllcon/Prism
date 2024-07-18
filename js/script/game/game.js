@@ -53,6 +53,9 @@ function resetLevel() {
 
 export function updateEntities(dt) {
     let player = getMyPlayer(activePlayers);
+
+    player.updateAbilityScale(dt)
+
     activeBots.forEach(bot => {
         points.forEach(point => {
             if (point.isActive()) {

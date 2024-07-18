@@ -55,7 +55,7 @@ export function resetPoint(point) {
 export function drawPoints() {
     points.forEach(point => {
         if (point.isActive()) {
-            console.log(point);
+            //console.log(point);
             // console.log(point.isTypeTrigraph());
             if (point.isTypeCross()) {
                 console.log('cross');

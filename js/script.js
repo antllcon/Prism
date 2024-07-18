@@ -17,7 +17,7 @@ const socket = io();
 
 export let activePlayers = [];
 export let points = [];
-export let requiredBots = [2, 3];
+export let requiredBots = [2];
 export let activeBots = [];
 
 const players = ['1'];

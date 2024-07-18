@@ -1,4 +1,11 @@
-import {PLAYER_STATES, DEFAULT_PLAYERS} from "./const";
+import {
+    PLAYER_STATES,
+    DEFAULT_PLAYERS,
+    ABILITY_SCALE_SPEED,
+    ABILITY_SCALE_MAX,
+    ABILITY_DURATION,
+    ABILITY_SPEED_MULTIPLAYER
+} from "./const";
 import {canvasHeight, canvasWidth} from "../game/const";
 
 
@@ -13,6 +20,8 @@ export class Player {
         this.team = DEFAULT_PLAYERS.team[i];
         this.color = DEFAULT_PLAYERS.color[i];
         this.state = DEFAULT_PLAYERS.state;
+        this.abilityScale = 0;
+        this.abilityActive = false;
     }
 
     getId() {
@@ -64,6 +73,26 @@ export class Player {
     }
     renaissance() {
         this.state = PLAYER_STATES.ACTIVE
+    }
+
+
+
+    updateAbilityScale(deltaTime) {
+        console.log("we are in update ability scale");
+        this.abilityScale += ABILITY_SCALE_SPEED * deltaTime;
+
+        if (this.abilityScale >= ABILITY_SCALE_MAX) {
+            this.activateAbility();
+            console.log("we are in update ability scale activated");
+            //this.abilityScale = 0;
+        }
+    }
+
+    activateAbility() {
+        this.abilityActive = true;
+        setTimeout(() => {
+            this.abilityActive = false;
+        }, ABILITY_DURATION * 1000);
     }
 }
 
