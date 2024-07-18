@@ -1,6 +1,8 @@
 import {Player} from "./model";
 import {DEFAULT_PLAYERS} from "./const";
 import {ctx, activePlayers} from "../../script";
+import {GREEN} from "./const";
+
 
 // export function handleInput(dt) {
 //     if (input.isDown('LEFT') || input.isDown('a')) {
@@ -35,6 +37,7 @@ export function handleInput(dt) {
 }
 
 export function drawPlayer(activePlayers) {
+    const mainPlayer = getMyPlayer(activePlayers)
     activePlayers.forEach(player => {
         if (player.isAlive()) {
             ctx.fillStyle = player.getColor();
@@ -42,22 +45,27 @@ export function drawPlayer(activePlayers) {
         }
         if (player.isDead()) {
             setTimeout(() => {
-                player.setColor(green);
+                player.setColor(GREEN);
                 player.setX(10);
                 player.setY(10);
                 player.renaissance();
             }, 1000); // Changed delay to 1000ms
         }
+        if (player.getId() === mainPlayer.getId())
+        {
+            player.renderPB()
+        }
     })
+
 }
+
+
 
 export function createPlayers(players, myId) {
     let createdPlayers = [];
     for (let i = 0; i < players.length; i++) {
         createdPlayers[i] = new Player(i, players[i], myId);
     }
-    console.log('we are in create players')
-    console.log(createdPlayers, "created players")
     return createdPlayers
 }
 

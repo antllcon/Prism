@@ -3,7 +3,7 @@
 import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots} from "./script/bot/bot";
-import {drawPlayer, handleInput, createPlayers, getMyPlayer} from "./script/player/player";
+import {drawPlayer, handleInput, createPlayers, getMyPlayer, drawProgressBar} from "./script/player/player";
 import {SCORE, score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";

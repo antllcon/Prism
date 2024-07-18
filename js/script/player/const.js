@@ -1,5 +1,7 @@
 import {canvasHeight, canvasWidth} from "../game/const";
 
+export const GREEN = '#00ff00';
+
 export const PLAYER_STATES = {
     ACTIVE: 'active',
     STUNNED: 'stunned',

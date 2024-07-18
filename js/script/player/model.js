@@ -7,6 +7,7 @@ import {
     ABILITY_SPEED_MULTIPLAYER
 } from "./const";
 import {canvasHeight, canvasWidth} from "../game/const";
+import {ProgressBar} from "./progressBar";
 
 
 export class Player {
@@ -22,6 +23,8 @@ export class Player {
         this.state = DEFAULT_PLAYERS.state;
         this.abilityScale = 0;
         this.abilityActive = false;
+        this.progressBar = new ProgressBar(this);
+        this.progressBar.render();
     }
 
     getId() {
@@ -57,6 +60,7 @@ export class Player {
     moveOn(x, y) {
         this.x += x;
         this.y += y;
+        this.progressBar.updatePosition(x, y)
     }
 
     die() {
@@ -75,7 +79,9 @@ export class Player {
         this.state = PLAYER_STATES.ACTIVE
     }
 
-
+    renderPB() {
+        this.progressBar.render();
+    }
 
     updateAbilityScale(deltaTime) {
         console.log("we are in update ability scale");
