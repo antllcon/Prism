@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "webpack | nodemon js/server.js",
+    "build": "webpack | webpack serve | nodemon -w js/server.js dist/script.js",
     "ws": "nodemon js/server.js",
     "start": "webpack serve"
   },

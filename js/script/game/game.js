@@ -38,7 +38,6 @@ function resetLevel() {
     gameState.gameTime = -4.2;
     resetAllPlayers();
     resetAllBots();
-
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
     // Сбрасываем параметры всех точек
@@ -47,15 +46,15 @@ function resetLevel() {
     //     respawnPoint(point, index);
     // });
 
-    setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
-    countdown(); // Запускаем анимацию и звук отсчёта
+    setTimeout(fadeOutScore, 6800);
+    countdown();
 }
 
 export function updateEntities(dt) {
     let player = getMyPlayer(activePlayers);
-
+    console.log(player.getSpeed());
+    console.log('getSpeed')
     player.updateAbilityScale(dt)
-    /*player.pro();*/
 
     activeBots.forEach(bot => {
         points.forEach(point => {
@@ -83,7 +82,7 @@ export function updateEntities(dt) {
                 movePoint(point, dt);
             }
         })
-        /////
+
         if (bot.isDead()) {
             if (bot.getTeam() === 'purple') {
                 score.increaseTeamYellow()
@@ -94,8 +93,8 @@ export function updateEntities(dt) {
             resetLevel();
         }
     });
-    activePlayers.forEach(player => {
 
+    activePlayers.forEach(player => {
         if (player.isDead()) {
             console.log("hey hey player is dead game js")
             console.log(activeBots, "active bots game js in player.is dead")

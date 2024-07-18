@@ -3,25 +3,8 @@ import {DEFAULT_PLAYERS} from "./const";
 import {ctx, activePlayers} from "../../script";
 import {GREEN} from "./const";
 
-
-// export function handleInput(dt) {
-//     if (input.isDown('LEFT') || input.isDown('a')) {
-//         PLAYER.x -= PLAYER.speed * dt;
-//     }
-//     if (input.isDown('RIGHT') || input.isDown('d')) {
-//         PLAYER.x += PLAYER.speed * dt;
-//     }
-//     if (input.isDown('DOWN') || input.isDown('s')) {
-//         PLAYER.y += PLAYER.speed * dt;
-//     }
-//     if (input.isDown('UP') || input.isDown('w')) {
-//         PLAYER.y -= PLAYER.speed * dt;
-//     }
-// }
-
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
-    console.log(player, 'handleInput')
     if (input.isDown('LEFT') || input.isDown('a')) {
         player.moveOn(player.getSpeed() * dt * (-1), 0)
     }
@@ -33,6 +16,10 @@ export function handleInput(dt) {
     }
     if (input.isDown('UP') || input.isDown('w')) {
         player.moveOn(0,player.getSpeed() * dt * (-1))
+    }
+    if (input.isDown('f') || (input.isDown('F')))
+    {
+        player.resetAbilityScale();
     }
 }
 
@@ -59,8 +46,6 @@ export function drawPlayer(activePlayers) {
 
 }
 
-
-
 export function createPlayers(players, myId) {
     let createdPlayers = [];
     for (let i = 0; i < players.length; i++) {
@@ -78,6 +63,8 @@ export function resetAllPlayers() {
     for (let i = 0; i < activePlayers.length; i++) {
         activePlayers[i].setX(DEFAULT_PLAYERS.x[i]);
         activePlayers[i].setY(DEFAULT_PLAYERS.y[i]);
+        activePlayers[i].progressBar.x = activePlayers[i].getX();
+        activePlayers[i].progressBar.y = activePlayers[i].getY() - 60;
         activePlayers[i].renaissance();
     }
 }

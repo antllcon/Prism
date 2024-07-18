@@ -58,7 +58,7 @@ export function drawPoints() {
             //console.log(point);
             // console.log(point.isTypeTrigraph());
             if (point.isTypeCross()) {
-                console.log('cross');
+                //console.log('cross');
                 point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
@@ -74,7 +74,7 @@ export function drawPoints() {
                 ctx.restore();
             }
             if (point.isTypeTrigraph()) {
-                console.log('trigraph');
+                //console.log('trigraph');
                 point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
@@ -120,23 +120,13 @@ export function drawPoints() {
     });
 }
 
-// export function respawnPoint(point) {
-//     if (point.id !== 0 && point.id !== 1) {
-//         point.state = POINT_STATES.INVISIBLE;
-//     }
-//     point.team = TEAM_STATES.NONE;
-//     point.activationTime = null;
-//     point.color = gray;
-//     point.height = 10;
-// }
-
 export function movePoint(point, dt) {
     if (point.getId() === 2 || point.getId() === 3) {
         if (point.getX() <= 50) {
-            point.setDirection(0); // угол 0 радиан означает движение вправо
+            point.setDirection(0);
         }
         if (point.getX() >= 1760) {
-            point.setDirection(Math.PI); // угол PI радиан означает движение влево
+            point.setDirection(Math.PI);
         }
     }
     point.moveOn(Math.cos(point.getDirection()) * point.getSpeed() * dt, 0);

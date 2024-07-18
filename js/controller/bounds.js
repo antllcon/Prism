@@ -166,7 +166,7 @@ function checkBorderGameBounds() {
     if (player.progressBar.y < 0) {
         player.progressBar.y = game.getHeight() - player.getSize();
     } else if (player.progressBar.y + player.progressBar.height > game.getHeight()) {
-        player.progressBar.y = 0;
+        player.progressBar.y = player.progressBar.height;
     }
 
     activeBots.forEach(bot => {
@@ -186,7 +186,6 @@ function checkBorderGameBounds() {
 
 function checkPlayerBotCollisions() {
     const player = getMyPlayer(activePlayers);
-
     if (!player.abilityActive) {
         return;
     }
@@ -207,11 +206,10 @@ function checkPlayerBotCollisions() {
         };
 
         if (checkRectCollision(playerRect, botRect)) {
-            // Вычислить направление толкания
             const dx = player.getX() - bot.getX();
             const dy = player.getY() - bot.getY();
             const distance = Math.sqrt(dx * dx + dy * dy);
-            const pushForce = 30; // Регулируйте силу толкания
+            const pushForce = 30;
             bot.moveOn(-dx / distance * pushForce, -dy / distance * pushForce);
         }
     });
