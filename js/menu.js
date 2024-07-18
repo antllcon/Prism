@@ -2,6 +2,102 @@ import {playMenuTheme} from "./sound/menuThemeAudio";
 
 const socket = io();
 
+const playerImages = [
+    "src/assets/img/kandinsky-download-1719222086261%201.svg",
+    "src/assets/img/player-img-2.svg",
+    "src/assets/img/player-img-3.svg",
+    "src/assets/img/player-img-4.svg",
+]
+
+const nameCharacters = ["neon killer", "other name", "other name too", "name"]
+
+const cardStyles = [
+    {
+        backgroundColor: "#6000C1",
+        namePlayerColor: "#E9D3FF",
+        nameCharacter: {
+            get value() {
+                return nameCharacters[this.character]
+            },
+            color: "#E9D3FF",
+            borderRight: "12px solid #E9D3FF",
+            borderLeft: "12px solid #E9D3FF",
+            get src() {
+                return playerImages[this.character]
+            },
+            character: 0,
+        },
+        buttonPickBot: {
+            backgroundColor: "#3A0272",
+            color: "#EFCEFF",
+            playerPictureSrc: "src/assets/img/card-background-dark-purple.png",
+        }
+    },
+    {
+        backgroundColor: "#B22DF1",
+        namePlayerColor: "#EFCEFF",
+        nameCharacter: {
+            get value() {
+                return nameCharacters[this.character]
+            },
+            color: "#EFCEFF",
+            borderRight: "12px solid #EFCEFF",
+            borderLeft: "12px solid #EFCEFF",
+            get src() {
+                return playerImages[this.character]
+            },
+            character: 0,
+        },
+        buttonPickBot: {
+            backgroundColor: "#8323B0",
+            color: "#EFCEFF",
+            playerPictureSrc: "src/assets/img/card-background-purple.png",
+        }
+    },
+    {
+        backgroundColor: "#FBFF35",
+        namePlayerColor: "#818414",
+        nameCharacter: {
+            get value() {
+                return nameCharacters[this.character]
+            },
+            color: "#818414",
+            borderRight: "12px solid #818414",
+            borderLeft: "12px solid #818414",
+            get src() {
+                return playerImages[this.character]
+            },
+            character: 0,
+        },
+        buttonPickBot: {
+            backgroundColor: "#FDFFA3",
+            color: "#AAAC1D",
+            playerPictureSrc: "src/assets/img/card-background-yellow.png",
+        }
+    },
+    {
+        backgroundColor: "#FFC635",
+        namePlayerColor: "#A18122",
+        nameCharacter: {
+            get value() {
+                return nameCharacters[this.character]
+            },
+            color: "#A18122",
+            borderRight: "12px solid #A18122",
+            borderLeft: "12px solid #A18122",
+            get src() {
+                return playerImages[this.character]
+            },
+            character: 0,
+        },
+        buttonPickBot: {
+            backgroundColor: "#FFDA7B",
+            color: "#CFA333",
+            playerPictureSrc: "src/assets/img/card-background-dark-yellow.png",
+        }
+    },
+];
+
 let globalRoomId;
 
 let centralPartMenu;
@@ -12,7 +108,6 @@ let button2vs2;
 let buttonLobby;
 let buttonConnect;
 let cardBox;
-let buttonGetBot;
 let buttonPlay;
 let buttonMenu;
 let buttonLeave;
@@ -59,91 +154,33 @@ function loadCard(templateId) {
 
 function setStyleCard(index) {
     let cardBackgrounds = document.getElementsByClassName('player');
-    let namePlayers = document.getElementsByClassName('player-count');
-    let nameCharacters =  document.getElementsByClassName('player-name');
-    let navigationArrowsLeft = document.getElementsByClassName('arrow-left');
-    let navigationArrowsRight = document.getElementsByClassName('arrow-right');
-    let buttonsPickBot = document.getElementsByClassName('player-get-bot');
-    let playersPicture = document.getElementsByClassName('player-img');
 
     if (index < cardBackgrounds.length) {
         let cardBackground = cardBackgrounds[index];
-        let namePlayer = namePlayers[index];
-        let nameCharacter = nameCharacters[index];
-        let navigationArrowLeft = navigationArrowsLeft[index];
-        let navigationArrowRight = navigationArrowsRight[index];
-        let buttonPickBot = buttonsPickBot[index-1];
-        let playerPicture = playersPicture[index];
 
-        if (index === 0) {
-            cardBackground.style.backgroundColor = "#6000C1";
-            namePlayer.style.color = "#E9D3FF";
-            if (nameCharacter) {
-                nameCharacter.style.color = "#E9D3FF";
-                navigationArrowLeft.style.borderRight = "12px solid #E9D3FF";
-                navigationArrowRight.style.borderLeft = "12px solid #E9D3FF";
-                playerPicture.src = "src/assets/img/kandinsky-download-1719222086261%201.svg";
-            }
-            if (buttonPickBot) {
-                buttonPickBot.style.backgroundColor = "#3A0272";
-                buttonPickBot.style.color = "#EFCEFF";
-                playerPicture.style.backgroundColor = "#3A0272";
-                playerPicture.src = "src/assets/img/card-background-dark-purple.png";
-            }
+        let namePlayer = cardBackground.querySelector('.player-count');
+        let nameCharacter =  cardBackground.querySelector('.player-name');
+        let navigationArrowLeft = cardBackground.querySelector('.arrow-left');
+        let navigationArrowRight = cardBackground.querySelector('.arrow-right');
+        let buttonPickBot = cardBackground.querySelector('.player-get-bot');
+        let playerPicture = cardBackground.querySelector('.player-img');
+
+        let styles = cardStyles[index];
+
+        cardBackground.style.backgroundColor = styles.backgroundColor;
+        namePlayer.style.color = styles.namePlayerColor;
+        if (nameCharacter) {
+            nameCharacter.textContent = styles.nameCharacter.value;
+            nameCharacter.style.color = styles.nameCharacter.color;
+            navigationArrowLeft.style.borderRight = styles.nameCharacter.borderRight;
+            navigationArrowRight.style.borderLeft = styles.nameCharacter.borderLeft;
+            playerPicture.src = styles.nameCharacter.src;
         }
-
-        if (index === 1) {
-            namePlayer.style.color = "#EFCEFF";
-            if (nameCharacter) {
-                nameCharacter.style.color = "#EFCEFF";
-                navigationArrowLeft.style.borderRight = "12px solid #EFCEFF";
-                navigationArrowRight.style.borderLeft = "12px solid #EFCEFF";
-                playerPicture.src = "src/assets/img/kandinsky-download-1719222086261%201.svg";
-            }
-            if (buttonPickBot) {
-                buttonPickBot.style.backgroundColor = "#8323B0";
-                buttonPickBot.style.color = "#EFCEFF";
-                playerPicture.style.backgroundColor = "#8323B0";
-                playerPicture.src = "src/assets/img/card-background-purple.png";
-            }
+        if (buttonPickBot) {
+            buttonPickBot.style.backgroundColor = styles.buttonPickBot.backgroundColor;
+            buttonPickBot.style.color = styles.buttonPickBot.color;
+            playerPicture.src = styles.buttonPickBot.playerPictureSrc;
         }
-
-        if (index === 2) {
-            cardBackground.style.backgroundColor = "#FBFF35";
-            namePlayer.style.color = "#818414";
-            if (nameCharacter) {
-                nameCharacter.style.color = "#818414";
-                navigationArrowLeft.style.borderRight  = "12px solid #818414";
-                navigationArrowRight.style.borderLeft = "12px solid #818414";
-                playerPicture.src = "src/assets/img/kandinsky-download-1719222086261%201.svg";
-            }
-            if (buttonPickBot) {
-                buttonPickBot.style.backgroundColor = "#FDFFA3";
-                buttonPickBot.style.color = "#AAAC1D";
-                playerPicture.style.backgroundColor = "#FDFFA3";
-                playerPicture.src = "src/assets/img/card-background-yellow.png";
-            }
-        }
-
-        if (index === 3) {
-            cardBackground.style.backgroundColor = "#FFC635";
-            namePlayer.style.color = "#a18122";
-            if (nameCharacter) {
-                nameCharacter.style.color = "#a18122";
-                navigationArrowLeft.style.borderRight = "12px solid #a18122";
-                navigationArrowRight.style.borderLeft = "12px solid #a18122";
-                playerPicture.src = "src/assets/img/kandinsky-download-1719222086261%201.svg";
-            }
-            if (buttonPickBot) {
-                buttonPickBot.style.backgroundColor = "#FFDA7B"
-                buttonPickBot.style.color = "#CFA333";
-                playerPicture.style.backgroundColor = "#FFDA7B";
-                playerPicture.src = "src/assets/img/card-background-dark-yellow.png";
-            }
-        }
-
-    } else {
-        console.error('Invalid index:', index);
     }
 }
 
@@ -152,15 +189,19 @@ function addBot(button) {
     const botTemplate = document.getElementById('bot-template');
     if (botTemplate && waitingCard) {
         const botCard = botTemplate.content.cloneNode(true);
-        waitingCard.replaceWith(botCard);
-    }
 
-    setTimeout(() => {
-        setStyleCard(0);
-        setStyleCard(1);
-        setStyleCard(2);
-        setStyleCard(3);
-    }, 0);
+        let card = botCard.querySelector(".player")
+        waitingCard.replaceWith(botCard);
+
+        setTimeout(() => {
+            setStyleCard(0);
+            setStyleCard(1);
+            setStyleCard(2);
+            setStyleCard(3);
+        }, 0);
+
+        return card;
+    }
 }
 
 function loadToMainPageLink() {
@@ -174,13 +215,40 @@ function loadToMainPageLink() {
 }
 
 function initCardEventListeners() {
-    buttonGetBot = document.querySelectorAll('.player-get-bot'); // выбираем все кнопки
+    let buttonGetBot = document.querySelectorAll('.player-get-bot');
+    let playerCards = document.querySelectorAll('.player');
 
-    buttonGetBot.forEach(function(button) {
+    buttonGetBot.forEach(function(button, i) {
         button.addEventListener('click', function() {
-            addBot(button);
+            let botCard = addBot(button);
+
+            if (botCard) {
+                initCardEventListener(botCard, i+1);
+            }
         });
     });
+
+    playerCards.forEach(initCardEventListener);
+}
+
+function initCardEventListener(card, indexCount) {
+    let navigationArrowLeft = card.querySelector('.button-left');
+    let navigationArrowRight = card.querySelector('.button-right');
+
+    navigationArrowLeft.addEventListener('click', () => {
+        cardStyles[indexCount].nameCharacter.character--;
+        if (cardStyles[indexCount].nameCharacter.character < 0) {
+            cardStyles[indexCount].nameCharacter.character = playerImages.length-1;
+        }
+        setStyleCard(indexCount);
+    })
+    navigationArrowRight.addEventListener('click', () => {
+        cardStyles[indexCount].nameCharacter.character++;
+        if (cardStyles[indexCount].nameCharacter.character > playerImages.length-1) {
+            cardStyles[indexCount].nameCharacter.character = 0;
+        }
+        setStyleCard(indexCount);
+    })
 }
 
 function initEventListeners() {
