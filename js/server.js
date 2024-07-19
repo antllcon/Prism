@@ -6,7 +6,7 @@ const io = require('socket.io')(http);
 
 //нам нужно иметь на стороне сервера
 // сущность с такими полями:
-// команда, увет, координаты, состояния (живой мертвый)
+// команда, цвет, координаты, состояния (живой мертвый)
 
 // Маршрут для статического контента (например, HTML-страницы)
 app.use(express.static(path.dirname(__dirname) + '/dist'));
@@ -25,8 +25,7 @@ io.on('connection', (socket) => {
         roomId = generateRoomId();
         // Проверка id на уникальность сравнением со списком ids !!!!!!!! РЕАЛИЗОВАТЬ
         if (!rooms[roomId]) {
-            // readyClients
-            rooms[roomId] = { clients: [], messages: [], readyClients: 0 };
+            // readyClientsrooms[roomId] = {clients: [], messages: [], readyClients: 0 };
             console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
         }
@@ -120,6 +119,7 @@ function findRoomBySocketId(id) {
         return false;
     }
 }
+
 function joinRoom(roomId, socket) {
     if (rooms[roomId]) {
         rooms[roomId].clients.push(socket.id);

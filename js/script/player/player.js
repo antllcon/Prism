@@ -1,54 +1,54 @@
 import {Player} from "./model";
 import {DEFAULT_PLAYERS} from "./const";
-import {ctx, activePlayers} from "../../script";
-
-// export function handleInput(dt) {
-//     if (input.isDown('LEFT') || input.isDown('a')) {
-//         PLAYER.x -= PLAYER.speed * dt;
-//     }
-//     if (input.isDown('RIGHT') || input.isDown('d')) {
-//         PLAYER.x += PLAYER.speed * dt;
-//     }
-//     if (input.isDown('DOWN') || input.isDown('s')) {
-//         PLAYER.y += PLAYER.speed * dt;
-//     }
-//     if (input.isDown('UP') || input.isDown('w')) {
-//         PLAYER.y -= PLAYER.speed * dt;
-//     }
-// }
+import {activePlayers} from "../../script";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
     if (input.isDown('LEFT') || input.isDown('a')) {
-        player.moveOn(player.getSpeed() * dt * (-1), 0)
+        player.moveOn(player.getSpeed() * dt * (-1), 0);
+        player.setDirection("left");
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
-        player.moveOn(player.getSpeed() * dt, 0)
+        player.moveOn(player.getSpeed() * dt, 0);
+        player.setDirection("right");
     }
     if (input.isDown('DOWN') || input.isDown('s')) {
-        player.moveOn(0,player.getSpeed() * dt )
+        player.moveOn(0, player.getSpeed() * dt);
+        player.setDirection("down");
     }
     if (input.isDown('UP') || input.isDown('w')) {
-        player.moveOn(0,player.getSpeed() * dt * (-1))
+        player.moveOn(0, player.getSpeed() * dt * (-1));
+        player.setDirection("up");
     }
 }
 
-export function drawPlayer(activePlayers) {
-    activePlayers.forEach(player => {
-        if (player.isAlive()) {
-            ctx.fillStyle = player.getColor();
-            ctx.fillRect(player.getX(), player.getY(), player.getSize(), player.getSize());
-        }
-        if (player.isDead()) {
-            setTimeout(() => {
-                player.setColor(green);
-                player.setX(10);
-                player.setY(10);
-                player.renaissance();
-            }, 1000); // Changed delay to 1000ms
-        }
-    })
-}
+export async function initPlayerAnimation() {
+    const promises = activePlayers.map(player => {
+        return new Promise((resolve) => {
+            player.setImage("./src/assets/sprites/player/right.png");
+            player.getImage().onload = () => {
+                player.setLoad(true);
+                resolve();
+            };
+        });
+    });
+    await Promise.all(promises);
+}//
+// export function drawPlayer(activePlayers) {
+//     const spriteSize = 64;
+//     const endAnimation = 9;
+//
+//     activePlayers.forEach(player => {
+//
+//         if (player.isDead()) {
+//             setTimeout(() => {
+//                 player.setX(10);
+//                 player.setY(10);
+//                 player.renaissance();
+//             }, 1000);
+//         }
+//     });
+// }
 
 export function createPlayers(players, myId) {
     let createdPlayers = [];
