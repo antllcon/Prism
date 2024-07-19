@@ -1,10 +1,9 @@
-import {BOT_STATES, DEFAULT_BOTS} from './const'
+import {DEFAULT_BOTS} from './const'
 import {Bot} from './model'
 import {GAME} from "../game/model";
-import {Point} from "../point/model";
-import {POINT_STATES} from "../point/const";
+
 import {ctx, activeBots, requiredBots, points} from "../../script"
-import {yellow} from "../game/const";
+
 
 export function createBots() {
     //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов
@@ -17,17 +16,64 @@ export function createBots() {
     return createdBots;
 }
 
+export function initBotAnimation() {
+    activeBots.forEach(bot => {
+        bot.setImage("./src/assets/sprites/bot/left.png");
+        bot.getImage().onload = () => {
+            bot.setLoad(true);
+        }
+    })
+}
+
 export function drawBot() {
+
+    const endAnimation = 9;
+    const spriteSize = 64;
+
     activeBots.forEach(bot => {
         if (bot.isAlive()) {
             ctx.fillStyle = bot.getColor();
             ctx.fillRect(bot.getX(), bot.getY(), bot.getSize(), bot.getSize());
+            console.log(bot.getCount());
+            if (bot.getLoad() === true) {
+                switch (bot.getDirection()) {
+                    case "up":
+                        bot.setImage("./src/assets/sprites/bot/up.png");
+                        break;
+                    case "down":
+                        bot.setImage("./src/assets/sprites/bot/down.png");
+                        break;
+                    case "left":
+                        bot.setImage("./src/assets/sprites/bot/left.png");
+                        break;
+                    case "right":
+                        bot.setImage("./src/assets/sprites/bot/right.png");
+                        break;
+                }
+                ctx.drawImage(
+                    bot.getImage(),
+                    spriteSize * bot.getCount(),
+                    0,
+                    spriteSize,
+                    spriteSize,
+                    bot.getX() - (spriteSize / 2 - bot.getSize() / 2),
+                    bot.getY() - (spriteSize / 2 - bot.getSize() / 2),
+                    spriteSize,
+                    spriteSize
+                );
+                bot.setTick(bot.getTick() + 1);
+                if (bot.getTick() >= 2) {
+                    bot.setCount(bot.getCount() + 1);
+                    bot.setTick(0);
+                }
+            }
+            if (bot.getCount() === endAnimation) {
+                bot.setCount(0);
+            }
         }
-        // if (bot.isDead()) {
-        //     // bot.setState(BOT_STATES.ACTIVE);
-        // }
     });
 }
+
 export function resetAllBots() {
     for (let i = 0; i < activeBots.length; i++) {
         activeBots[i].setX(DEFAULT_BOTS.x[requiredBots[i]]);
@@ -57,11 +103,10 @@ export function botMovement(dt) {
         let dyActive;
         findNearestPoint();
         if (inRangeOfLaser) {
-            moveBotOutOfLaserSpiral(); // заносит в dxActive и dyActive приращение для убегания по спирали
+            moveBotOutOfLaserSpiral();
         }
-        moveBotToLaser(); // заносит в dxInactive и dyInactive приращение для движения к цели
-        getRightDirection(); // дает приоритет убеганию, контролирует предельную скорость
-
+        moveBotToLaser();
+        getRightDirection();
 
         function findNearestPoint() {
             points.forEach(point => {
@@ -103,7 +148,6 @@ export function botMovement(dt) {
         }
 
         function findActivePointInArea(point) {
-
             if (point.isActive()) {
                 if (loopIndexActive === 0) {
                     idInactive = 0;
@@ -131,15 +175,10 @@ export function botMovement(dt) {
         }
 
         function moveBotOutOfLaserSpiral() {
-            // Определяем угол между ботом и точкой
             const angle = Math.atan2(dyMinActive, dxMinActive);
-
-            // Радиальная скорость (от центра прочь)
             const radialSpeed = bot.getSpeed() * dt;
-
-            // Угловая скорость (по окружности)
             const angularSpeed = bot.getSpeed() * dt / hypMinActive;
-            // Обновляем координаты бота
+
             dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
             dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
         }
@@ -148,58 +187,57 @@ export function botMovement(dt) {
             if (inRangeOfLaser) {
                 if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
                     if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
-                        bot.moveOn(dxActive + dxInactive, 
-                            dyActive + dyInactive
-                        );
+                        bot.moveOn(dxActive + dxInactive, dyActive + dyInactive);
                     } else {
                         const angle = Math.atan2(dyActive + dyInactive, dxActive + dxInactive);
-                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), 
-                            bot.getSpeed() * dt * Math.sin(angle)
-                        );
+                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                     }
                 }
                 if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
                     if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive) ** 2) < bot.getSpeed() * dt) {
-                        bot.moveOn(dxActive + dxInactive, 
-                            dyActive
-                        );
+                        bot.moveOn(dxActive + dxInactive, dyActive);
                     } else {
                         const angle = Math.atan2(dyActive, dxActive + dxInactive);
-                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), 
-                            bot.getSpeed() * dt * Math.sin(angle)
-                        );
+                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                     }
                 }
                 if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
                     if (Math.sqrt((dxActive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
-                        bot.moveOn(dxActive, 
-                            dyActive + dyInactive
-                        );
+                        bot.moveOn(dxActive, dyActive + dyInactive);
                     } else {
                         const angle = Math.atan2(dyActive + dyInactive, dxActive);
-                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), 
-                            bot.getSpeed() * dt * Math.sin(angle)
-                        );
+                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                     }
                 }
                 if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
                     if (Math.sqrt((dxActive) ** 2 + (dyActive) ** 2) < bot.getSpeed() * dt) {
-                        bot.moveOn(dxActive, 
-                            dyActive
-                        );
+                        bot.moveOn(dxActive, dyActive);
                     } else {
                         const angle = Math.atan2(dyActive, dxActive);
-                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), 
-                            bot.getSpeed() * dt * Math.sin(angle)
-                        );
+                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                     }
                 }
             } else {
-                bot.moveOn(dxInactive, 
-                    dyInactive
-                );
+                bot.moveOn(dxInactive, dyInactive);
             }
+            updateBotDirection(bot, dxInactive, dyInactive); // Добавляем обновление направления
+        }
+
+        function updateBotDirection(bot, dx, dy) {
+            if (Math.abs(dx) > Math.abs(dy)) {
+                if (dx > 0) {
+                    bot.setDirection("right");
+                } else {
+                    bot.setDirection("left");
+                }
+            } else {
+                if (dy > 0) {
+                    bot.setDirection("down");
+                } else {
+                    bot.setDirection("up");
+                }
+            }
+            console.log(`Bot direction updated to: ${bot.getDirection()}`); // Добавлено логирование
         }
     });
-    
 }

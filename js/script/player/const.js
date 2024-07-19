@@ -13,5 +13,9 @@ export const DEFAULT_PLAYERS = {
     speed: 300,
     team: ['purple', 'purple', 'yellow', 'yellow'],
     color: ['purple', 'purple', 'yellow', 'yellow'],
-    state: PLAYER_STATES.ACTIVE
+    state: PLAYER_STATES.ACTIVE,
+    load: false,
+    count: 0,
+    tick: 0,
+    direction: "right"
 }
