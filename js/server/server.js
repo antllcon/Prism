@@ -113,10 +113,10 @@ io.on('connection', (socket) => {
         socket.emit('requestForCookie');
         socket.on('sentCookie', (userId) => {
             const roomId = findRoomByUserId(userId);
-            rooms[roomId].push(new Client(socket.id, userId));
+            // rooms[roomId].push(new Client(socket.id, userId));
 
-            // const client = findClientByUserId(roomId, userId);
-            // client.setSocketId(socket.id);
+            const client = findClientByUserId(roomId, userId);
+            client.setSocketId(socket.id);
             joinBack(socket);
         })
     })
