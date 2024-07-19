@@ -117,12 +117,12 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
 };
 
 function initEventListeners() {
-    window.addEventListener('beforeunload', function(e) {
-        e.preventDefault(); // Предотвращаем стандартное поведение
-        e.returnValue = ''; // Убираем сообщение о подтверждении
-        // Здесь вы можете вызвать функцию для отправки уведомления на сервер
-        socket.emit('pageRefreshed');
-    });
+    // window.addEventListener('beforeunload', function(e) {
+    //     e.preventDefault(); // Предотвращаем стандартное поведение
+    //     e.returnValue = ''; // Убираем сообщение о подтверждении
+    //     // Здесь вы можете вызвать функцию для отправки уведомления на сервер
+    //     socket.emit('pageRefreshed');
+    // });
 }
 function sendCookie() {
     const cookieValue = document.cookie.split('; ')
