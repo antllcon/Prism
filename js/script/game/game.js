@@ -1,7 +1,7 @@
 // import {TEAM_STATES} from "./const";
 import {game, lastState, gameState} from "./model";
 import {Point} from "../point/model";
-import {POINT_STATES} from "../point/const";
+import {DEFAULT_POINTS, POINT_STATES} from "../point/const";
 import {movePoint, resetPoint, resetPoints, respawnPoint, updateVisibilityPoints} from "../point/point"
 import {getMyPlayer, resetAllPlayers} from "../player/player"
 import {resetAllBots} from "../bot/bot"
@@ -53,24 +53,28 @@ function resetLevel() {
 
 export function updateEntities(dt) {
     let player = getMyPlayer(activePlayers);
+    const lazerSize = 5;
     activeBots.forEach(bot => {
         points.forEach(point => {
             if (point.isActive()) {
                 if (Date.now() - point.getActivationTime() < point.getExistTime()) {
+                    console.log(point.getHeight());
+                    point.setHeight(lazerSize); // добавить константу
                     if (point.getTeam() === player.getTeam()) {
                         point.setColor(player.getColor());
                     }
                     if (point.getTeam() === bot.getTeam()) {
                         point.setColor(bot.getColor());
                     }
-                    point.setHeight(5);
                 } else {
                     point.setInactive();
-                    resetPoint(point);
+                    // resetPoint(point);
                 }
             }
             if (point.isInactive()) {
-    
+                point.setColor(DEFAULT_POINTS.color);
+                point.setTeam(DEFAULT_POINTS.team);
+                point.setHeight(DEFAULT_POINTS.height);
             }
             if (point.isInvisible()) {
                 updateVisibilityPoints(point);
