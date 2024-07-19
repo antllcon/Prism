@@ -73,6 +73,7 @@ function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
         socket.emit('redirected');
+        sendCookie();
         initPlayers();
         // activePlayers = createPlayers(players, socket_id);
     });
@@ -123,7 +124,14 @@ function initEventListeners() {
         socket.emit('pageRefreshed');
     });
 }
-
+function sendCookie() {
+    const cookieValue = document.cookie.split('; ')
+        .find(row => row.startsWith('userId='))
+        ?.split('=')[1];
+    console.log(document.cookie, 'document.cookie');
+    // Отправляем куки на сервер
+    socket.emit('sentCookie', cookieValue);
+}
 
 setTimeout(fadeOutScore, 6800);
 init();
