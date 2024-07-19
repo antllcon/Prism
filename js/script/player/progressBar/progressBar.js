@@ -1,8 +1,8 @@
-import {Player} from "./model";
-import {ctx} from "../../script";
-import {GREEN} from "./const";
+import {Player} from "../model";
+import {ctx} from "../../../script";
+import {GREEN} from "../const";
 import {logPlugin} from "@babel/preset-env/lib/debug";
-import {game} from "../game/model";
+import {game} from "../../game/model";
 import {
     PLAYER_STATES,
     DEFAULT_PLAYERS,
@@ -10,7 +10,7 @@ import {
     ABILITY_SCALE_MAX,
     ABILITY_DURATION,
     ABILITY_SPEED_MULTIPLAYER
-} from "./const";
+} from "../const";
 
 export const SIZE = {
     x: 50,
@@ -18,7 +18,6 @@ export const SIZE = {
 }
 
 export const GRAY = '#808080';
-
 
 export class ProgressBar {
     constructor(player)
@@ -34,8 +33,12 @@ export class ProgressBar {
         this.progressFillColor = GREEN;
         this.progressEmptyColor = GRAY;
         this.progress = 0;
-        this.maxProgress = ABILITY_SCALE_MAX;
     }
+
+    setX(x){this.x = x}
+    setY(y){this.y = y}
+    getX(){return this.x}
+    getY(){return this.y}
 
     updatePosition(x, y) {
         this.x += x;
@@ -44,15 +47,14 @@ export class ProgressBar {
 
     update(scaleValue) {
         this.progress = scaleValue;
-        if (this.progress === this.maxProgress) {
-            this.progress = 0;
-        }
     }
     render() {
-        ctx.fillStyle = this.progressEmptyColor;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        console.log(this.progress, 'this progress')
+        ctx.strokeStyle = this.progressEmptyColor;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
 
         ctx.fillStyle = this.progressFillColor;
-        ctx.fillRect(this.x, this.y, (this.width * this.progress) / this.maxProgress, this.height);
+        ctx.fillRect(this.x, this.y, (this.width * this.progress) / ABILITY_SCALE_MAX, this.height);
     }
 }

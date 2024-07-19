@@ -5,7 +5,7 @@ import {Player} from "../script/player/model";
 import {activePlayers, activeBots, points} from "../script";
 import {POINT_STATES, POINT_TYPES} from "../script/point/const";
 import {GAME, game} from "../script/game/model";
-import {SIZE as SIZE_PB} from "../script/player/progressBar"
+import {SIZE as SIZE_PB} from "../script/player/progressBar/progressBar"
 
 function checkLaserBounds() {
 
@@ -24,18 +24,11 @@ function checkLaserBounds() {
 
 
         for (const corner of playerCorners) {
-            // расчитываем удаленность угловой точки игрока от центра лазера
             const dx = corner.x - point.getX();
             const dy = corner.y - point.getY();
 
             const rotatedX = cos * dx + sin * dy;
             const rotatedY = -sin * dx + cos * dy;
-
-            // смотрим на положение, делаем выводы относительно каждого состояния лазера
-            // и так ищем коллизию игрока с лазером
-
-            // Если точка принимает неактивное состояние
-            // Активация лазера
             if (point.isInactive() &&
                 rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
                 rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
@@ -87,18 +80,12 @@ function checkLaserBounds() {
             ];
 
             for (const corner of botCorners) {
-                // расчитываем удаленность угловой точки игрока от центра лазера
                 const dx = corner.x - point.getX();
                 const dy = corner.y - point.getY();
 
-                // переводим удаленность в систему координат вращения лазера
                 const rotatedX = cos * dx + sin * dy;
                 const rotatedY = -sin * dx + cos * dy;
 
-                // смотрим на положение, делаем выводы относительно каждого состояния лазера
-                // и так ищем коллизию игрока с лазером
-
-                // Если точка принимает неактивное состояние
                 if (point.isInactive() &&
                     rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
                     rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
@@ -156,7 +143,6 @@ function checkBorderGameBounds() {
         player.setY(0)  ;
     }
 
-    // прогресс бар не уходит по оси x координаты становятся NaN
     if (player.progressBar.x < 0) {
         player.progressBar.x = game.getWidth() - player.progressBar.width ;
     } else if (player.progressBar.x + player.progressBar.width > game.getWidth()) {

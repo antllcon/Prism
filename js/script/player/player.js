@@ -63,8 +63,10 @@ export function resetAllPlayers() {
     for (let i = 0; i < activePlayers.length; i++) {
         activePlayers[i].setX(DEFAULT_PLAYERS.x[i]);
         activePlayers[i].setY(DEFAULT_PLAYERS.y[i]);
-        activePlayers[i].progressBar.x = activePlayers[i].getX();
-        activePlayers[i].progressBar.y = activePlayers[i].getY() - 60;
+        activePlayers[i].progressBar.setX(activePlayers[i].getX());
+        activePlayers[i].progressBar.setY(activePlayers[i].getY() - 60);
+        activePlayers[i].setAbilityScale(0);
+        activePlayers[i].progressBar.update(activePlayers[i].getAbilityScale())
         activePlayers[i].renaissance();
     }
 }
