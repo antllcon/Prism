@@ -3,11 +3,13 @@
 import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots} from "./script/bot/bot";
-import {drawPlayer, handleInput, createPlayers, getMyPlayer, drawProgressBar} from "./script/player/player";
+import {drawPlayer, handleInput, createPlayers, getMyPlayer} from "./script/player/player";
 import {SCORE, score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
+import {initBonuses, drawBonuses} from "./script/bonuses/bonus";
+
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -19,6 +21,7 @@ export let activePlayers = [];
 export let points = [];
 export let requiredBots = [2];
 export let activeBots = [];
+export let bonuses = [];
 
 const players = ['1'];
 
@@ -26,7 +29,6 @@ const socket_id = '1';
 
 function init() {
     connect();
-    // initPlayers();
     activeBots = createBots();
     createPoints();
     drawBackground();
@@ -34,6 +36,8 @@ function init() {
     drawPoints();
     drawPlayer(activePlayers);
     drawBot();
+    bonuses = initBonuses();
+    drawBonuses();
     countdown();
 }
 
@@ -44,13 +48,14 @@ function render() {
     drawPoints();
     drawPlayer(activePlayers);
     drawBot();
+    drawBonuses();
 }
 
 function update(dt) {
     gameState.gameTime += dt;
     botMovement(dt);
     handleInput(dt);
-    checkCollisions();
+    checkCollisions(bonuses);
     updateEntities(dt);
 }
 

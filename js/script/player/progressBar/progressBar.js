@@ -49,7 +49,6 @@ export class ProgressBar {
         this.progress = scaleValue;
     }
     render() {
-        console.log(this.progress, 'this progress')
         ctx.strokeStyle = this.progressEmptyColor;
         ctx.lineWidth = 2;
         ctx.strokeRect(this.x, this.y, this.width, this.height);

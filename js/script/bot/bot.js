@@ -19,9 +19,12 @@ export function createBots() {
 
 export function drawBot() {
     activeBots.forEach(bot => {
-        if (bot.isAlive()) {
+        if (bot.isAlive() || bot.isStunned()) {
             ctx.fillStyle = bot.getColor();
             ctx.fillRect(bot.getX(), bot.getY(), bot.getSize(), bot.getSize());
+        }
+        if (bot.getState() === BOT_STATES.STUNNED && bot.stunnedUntil < Date.now()) {
+            bot.recoverFromStunned();
         }
         // if (bot.isDead()) {
         //     // bot.setState(BOT_STATES.ACTIVE);

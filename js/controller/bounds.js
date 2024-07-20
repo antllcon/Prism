@@ -210,8 +210,22 @@ function checkRectCollision(rect1, rect2) {
     );
 }
 
-export function checkCollisions() {
+export function checkPlayerBonusCollision(bonuses) {
+    const player = getMyPlayer(activePlayers);
+    bonuses.forEach(bonus => {
+        const dx = player.x - bonus.getX();
+        const dy = player.y - bonus.getY();
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < (player.size + bonus.getSize())) {
+            bonus.catch(player, activeBots);
+        }
+    });
+}
+
+export function checkCollisions(bonuses) {
     checkBorderGameBounds();
     checkLaserBounds();
     checkPlayerBotCollisions();
+    checkPlayerBonusCollision(bonuses);
 }

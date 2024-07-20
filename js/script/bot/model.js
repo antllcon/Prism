@@ -1,4 +1,4 @@
-import {BOT_STATES, DEFAULT_BOTS} from "./const";
+import {BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY} from "./const";
 import {yellow, TEAM_STATES} from "../game/const";
 
 export class Bot {
@@ -10,6 +10,7 @@ export class Bot {
         this.team = DEFAULT_BOTS.team[i];
         this.color = DEFAULT_BOTS.color[i];
         this.state = DEFAULT_BOTS.state;
+        this.stunnedUntil = 0;
     }
     getX() {return this.x;}
     getY() {return this.y;}
@@ -19,6 +20,7 @@ export class Bot {
     getColor() {return this.color;}
     getState() {return this.state;}
     isAlive() { return this.state === BOT_STATES.ACTIVE}
+    isStunned(){ return this.state === BOT_STATES.STUNNED}
     isDead() {return this.state === BOT_STATES.DEAD}
     moveOn(x, y) {
         this.x += x;
@@ -30,4 +32,24 @@ export class Bot {
     setY(y) {this.y = y;}
     renaissance() {this.state = BOT_STATES.ACTIVE}
     setState(state) {this.state = state}
+    makeStunned() {
+        this.stunnedUntil = Date.now() + DURATION_DISABILITY;
+        this.setSpeed(0);
+        this.setState(BOT_STATES.STUNNED);
+    }
+    setSpeed(value){
+        this.speed = value;
+    }
+
+
+    recoverFromStunned() {
+        this.stunnedUntil = 0;
+        this.setSpeed(DEFAULT_BOTS.speed);
+
+        if (this.isDead()) {
+            this.renaissance();
+        } else {
+            this.setState(BOT_STATES.ACTIVE);
+        }
+    }
 }

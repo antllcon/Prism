@@ -6,6 +6,8 @@ export const BOT_STATES = {
     DEAD: 'dead'
 }
 
+export const DURATION_DISABILITY = 5000;
+
 export const DEFAULT_BOTS = {
     x: [50, 50, canvasWidth-50, canvasWidth-50],
     y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
