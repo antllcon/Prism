@@ -37,7 +37,6 @@ export class Bot {
         return this.size;
     }
 
-    getSpeed() {
 
     getSpeed() {
         return this.speed;

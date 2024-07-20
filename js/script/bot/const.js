@@ -18,7 +18,7 @@ export const DEFAULT_BOTS = {
     load: false,
     count: 0,
     tick: 0,
-    direction: "left"
+    direction: "left",
     state: BOT_STATES.ACTIVE,
     load: false,
     count: 0,

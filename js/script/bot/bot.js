@@ -1,5 +1,4 @@
 import {DEFAULT_BOTS} from './const'
-import {DEFAULT_BOTS} from './const'
 import {Bot} from './model'
 import {GAME} from "../game/model";
 
@@ -15,15 +14,6 @@ export function createBots() {
         i++;
     });
     return createdBots;
-}
-
-export function initBotAnimation() {
-    activeBots.forEach(bot => {
-        bot.setImage("./src/assets/sprites/bot/left.png");
-        bot.getImage().onload = () => {
-            bot.setLoad(true);
-        }
-    })
 }
 
 export function initBotAnimation() {
