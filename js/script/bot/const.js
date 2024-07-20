@@ -19,6 +19,11 @@ export const DEFAULT_BOTS = {
     count: 0,
     tick: 0,
     direction: "left"
+    state: BOT_STATES.ACTIVE,
+    load: false,
+    count: 0,
+    tick: 0,
+    direction: "left"
 }
 // export const botStartX = canvasWidth - 50;
 // export const botStartY = canvasHeight / 2;

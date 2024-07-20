@@ -17,6 +17,11 @@ export class Player {
         this.count = DEFAULT_PLAYERS.count;
         this.tick = DEFAULT_PLAYERS.tick;
         this.direction = DEFAULT_PLAYERS.direction;
+        this.image = new Image();
+        this.load = DEFAULT_PLAYERS.load;
+        this.count = DEFAULT_PLAYERS.count;
+        this.tick = DEFAULT_PLAYERS.tick;
+        this.direction = DEFAULT_PLAYERS.direction;
     }
 
     // Геттеры и сеттеры

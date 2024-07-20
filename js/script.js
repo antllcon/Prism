@@ -24,12 +24,17 @@ export let activeBots = [];
 const players = ['1'];
 const socket_id = '1';
 
-async function init() {
-    await connect();
-    await initPlayerAnimation();
+function init() {
+    connect();
     activeBots = createBots();
     createPoints();
+    drawBackground();
+    drawScore();
+    drawPoints();
+    initPlayerAnimation();
+    drawPlayer(activePlayers);
     initBotAnimation();
+    drawBot();
     countdown();
 }
 
@@ -38,6 +43,9 @@ function render() {
     drawBackground();
     drawScore();
     drawPoints();
+    initPlayerAnimation();
+    drawPlayer(activePlayers);
+    drawBot();
     drawCharacters(activePlayers.concat(activeBots));
 }
 
@@ -66,26 +74,23 @@ export function main() {
     requestAnimFrame(main);
 }
 function connect() {
-    return new Promise((resolve) => {
-        socket.on('connect', () => {
-            activePlayers = createPlayers(players, socket_id);
-            resolve();
-        });
+    socket.on('connect', () => {
+        activePlayers = createPlayers(players, socket_id);
+        // console.log('Connected to server with id:', socket.id);
     });
 }
 
+function initPlayers() {
+    socket.on('roomIsReady', (players) => {
+        activePlayers = createPlayers(players, socket.id);
+    })
+}
 
-// function initPlayers() {
-//     socket.on('roomIsReady', (players) => {
-//         activePlayers = createPlayers(players, socket.id);
-//     })
-// }
-//
-// function sendDataToServer() {
-//     let playerAsEntity = getMyPlayer(activePlayers);
-//     let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
-//     socket.emit('sendDataToServer', transmittedPlayer);
-// }
+function sendDataToServer() {
+    let playerAsEntity = getMyPlayer(activePlayers);
+    let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
+    socket.emit('sendDataToServer', transmittedPlayer);
+}
 
 // function prepTransmittedPlayer(playerAsEntity) {
 //     return {

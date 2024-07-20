@@ -22,25 +22,32 @@ export class Bot {
         return this.type;
     }
 
+    // Геттеры
     getX() {
         return this.x;
     }
 
+
     getY() {
         return this.y;
     }
+
 
     getSize() {
         return this.size;
     }
 
     getSpeed() {
+
+    getSpeed() {
         return this.speed;
     }
+
 
     getTeam() {
         return this.team;
     }
+
 
     getColor() {
         return this.color;
@@ -110,22 +117,30 @@ export class Bot {
     // Методы
     isAlive() {
         return this.state === BOT_STATES.ACTIVE;
+        return this.state === BOT_STATES.ACTIVE;
     }
+
 
     isDead() {
         return this.state === BOT_STATES.DEAD;
+        return this.state === BOT_STATES.DEAD;
     }
+
 
     moveOn(x, y) {
         this.x += x;
         this.y += y;
     }
 
+
     die() {
         this.state = BOT_STATES.DEAD;
     }
 
+
     renaissance() {
+        this.state = BOT_STATES.ACTIVE;
         this.state = BOT_STATES.ACTIVE;
     }
 }
+

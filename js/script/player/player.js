@@ -7,19 +7,36 @@ export function handleInput(dt) {
     if (input.isDown('LEFT') || input.isDown('a')) {
         player.moveOn(player.getSpeed() * dt * (-1), 0);
         player.setDirection("left");
+        player.moveOn(player.getSpeed() * dt * (-1), 0);
+        player.setDirection("left");
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
+        player.moveOn(player.getSpeed() * dt, 0);
+        player.setDirection("right");
         player.moveOn(player.getSpeed() * dt, 0);
         player.setDirection("right");
     }
     if (input.isDown('DOWN') || input.isDown('s')) {
         player.moveOn(0, player.getSpeed() * dt);
         player.setDirection("down");
+        player.moveOn(0, player.getSpeed() * dt);
+        player.setDirection("down");
     }
     if (input.isDown('UP') || input.isDown('w')) {
         player.moveOn(0, player.getSpeed() * dt * (-1));
         player.setDirection("up");
+        player.moveOn(0, player.getSpeed() * dt * (-1));
+        player.setDirection("up");
     }
+}
+
+export function initPlayerAnimation() {
+    activePlayers.forEach(player => {
+        player.setImage("./src/assets/sprites/player/right.png");
+        player.getImage().onload = () => {
+            player.setLoad(true);
+        }
+    })
 }
 
 export async function initPlayerAnimation() {
