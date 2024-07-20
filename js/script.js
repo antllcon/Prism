@@ -16,7 +16,7 @@ const socket = io();
 
 export let activePlayers = [];
 export let points = [];
-export let requiredBots = [2, 3];
+export let requiredBots = [];
 export let activeBots = [];
 
 const players = ['1'];
@@ -116,12 +116,14 @@ function getDataFromServer() {
     // Получили массив данных по игрокам
     // нужно обновить всех игроков, которые не наш
     socket.on('dataFromServer', (playersFromServer) => {
-        console.log('dataFromServer on', playersFromServer);
+        // console.log('dataFromServer on', playersFromServer);
+        // console.log(socket.id, 'socket.id');
         playersFromServer.forEach(playerFromServer => {
             if (playerFromServer.id !== socket.id) {
-                const player = findPlayerBySocketId(socket.id);
-                updatePlayer(player, playerFromServer);
-                console.log('data set', playerFromServer);
+                const player = findPlayerBySocketId(playerFromServer.id);
+                if (player) {
+                    updatePlayer(player, playerFromServer);
+                }
             }
         });
     })

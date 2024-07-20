@@ -53,14 +53,30 @@ export class Player {
     die() {
         this.state = PLAYER_STATES.DEAD;
     }
-    setColor(color) {
-        this.color = color;
+    
+    setId(id) {
+        this.id = id;
     }
     setX(x) {
         this.x = x;
     }
     setY(y) {
         this.y = y;
+    }
+    settSize(size) {
+        this.size = size;
+    }
+    setSpeed(speed){
+        this.speed = speed;
+    }
+    setTeam(team) {
+        this.team = team;
+    }
+    setColor(color) {
+        this.color = color;
+    }
+    setState(state) {
+        this.state = state;
     }
     renaissance() {
         this.state = PLAYER_STATES.ACTIVE

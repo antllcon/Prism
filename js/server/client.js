@@ -4,6 +4,7 @@ module.exports = class Client {
         this.userId = userId;
         this.lastSeen = Date.now();
         this.isReady = false;
+        this.inGame = false;
     }
 
     getSocketId() {
@@ -15,8 +16,11 @@ module.exports = class Client {
     getLastSeen() {
         return this.lastSeen;
     }
-    getReady() {
+    getIsReady() {
         return this.isReady;
+    }
+    getInGame() {
+        return this.inGame;
     }
     
     setSocketId(socketId) {
@@ -33,6 +37,9 @@ module.exports = class Client {
     }
     setNotReady() {
         this.isReady = false;
+    }
+    setInGame(value) {
+        this.inGame = value;
     }
 };
 

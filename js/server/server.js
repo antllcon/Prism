@@ -77,7 +77,7 @@ io.on('connection', (socket) => {
         client.setReady();
         let amountReadyClients = 0;
         rooms[roomId].forEach(client => {
-            if (client.getReady()) {
+            if (client.getIsReady()) {
                 amountReadyClients++;
             }
         })
@@ -89,10 +89,15 @@ io.on('connection', (socket) => {
     socket.on('requestForClients', () => {
         const roomId = findRoomBySocketId(socket.id);
         if (rooms[roomId]) {
+            const client = findClientBySocketId(roomId, socket.id);
+            client.setInGame(true);
             let clientsSockets = []
             clientsSockets = getAllSocketsFromRoom(roomId);
-            initPlayers(clientsSockets);
-            socket.emit('sendClients', clientsSockets)
+            initPlayers(socket.id);
+            const areAllInGame = findOutAreAllInGame(roomId, clientsSockets.length);
+            if (areAllInGame) {
+                io.to(roomId).emit('sendClients', clientsSockets)
+            }
         }
     })
 
@@ -144,13 +149,13 @@ io.on('connection', (socket) => {
 
     socket.on('sendDataToServer', (transPlayer) => {
         const roomId = findRoomBySocketId(socket.id);
+        console.log(players, 'players');
         players.forEach(player => {
             if (player.id === transPlayer.id) {
                 updatePlayer(player, transPlayer);
-                console.log('players updated');
             }
         });
-        socket.to(roomId).emit('dataFromServer', players);
+        io.to(roomId).emit('dataFromServer', players);
     });
 });
 
@@ -255,8 +260,21 @@ function saveSocketIdIntoClient(roomId, userId) {
     const client = findClientByUserId(roomId, userId);
     client.setSocketId(socket.id);
 }
-function initPlayers(clientsSockets) {
-    clientsSockets.forEach(socketId => {
+function findOutAreAllInGame(roomId, length) {
+    let amount = 0;
+    rooms[roomId].forEach(client => {
+        if (client.getInGame()) {
+            amount++;
+        }
+    });
+    if (amount === length) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function initPlayers(socketId) {
+    // clientsSockets.forEach(socketId => {
         players.push({
             id: socketId,
             x: null,
@@ -264,8 +282,8 @@ function initPlayers(clientsSockets) {
             team: null,
             color: null,
             state: null
-        })
-    });
+        });
+    // });
 }
 
 
