@@ -1,7 +1,7 @@
 import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots} from "./script/bot/bot";
-import {drawPlayer, handleInput, createPlayers, getMyPlayer} from "./script/player/player";
+import {drawPlayer, handleInput, createPlayers, getMyPlayer, findPlayerBySocketId, updatePlayer} from "./script/player/player";
 import {SCORE, score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
@@ -113,9 +113,17 @@ function prepTransmittedPlayer(playerAsEntity) {
     }
 }
 function getDataFromServer() {
-    socket.on('dataFromServer', (players) => {
-        // Получили массив данных по игрокам
-        // нужно обновить всех игроков, которые не наш
+    // Получили массив данных по игрокам
+    // нужно обновить всех игроков, которые не наш
+    socket.on('dataFromServer', (playersFromServer) => {
+        console.log('dataFromServer on', playersFromServer);
+        playersFromServer.forEach(playerFromServer => {
+            if (playerFromServer.id !== socket.id) {
+                const player = findPlayerBySocketId(socket.id);
+                updatePlayer(player, playerFromServer);
+                console.log('data set', playerFromServer);
+            }
+        });
     })
 }
 

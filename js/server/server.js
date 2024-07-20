@@ -91,6 +91,7 @@ io.on('connection', (socket) => {
         if (rooms[roomId]) {
             let clientsSockets = []
             clientsSockets = getAllSocketsFromRoom(roomId);
+            initPlayers(clientsSockets);
             socket.emit('sendClients', clientsSockets)
         }
     })
@@ -146,9 +147,10 @@ io.on('connection', (socket) => {
         players.forEach(player => {
             if (player.id === transPlayer.id) {
                 updatePlayer(player, transPlayer);
-                socket.to(roomId).emit('dataFromServer', players);
+                console.log('players updated');
             }
         });
+        socket.to(roomId).emit('dataFromServer', players);
     });
 });
 
@@ -252,6 +254,18 @@ function getAllSocketsFromRoom(roomId) {
 function saveSocketIdIntoClient(roomId, userId) {
     const client = findClientByUserId(roomId, userId);
     client.setSocketId(socket.id);
+}
+function initPlayers(clientsSockets) {
+    clientsSockets.forEach(socketId => {
+        players.push({
+            id: socketId,
+            x: null,
+            y: null,
+            team: null,
+            color: null,
+            state: null
+        })
+    });
 }
 
 

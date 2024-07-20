@@ -70,3 +70,21 @@ export function resetAllPlayers() {
         activePlayers[i].renaissance();
     }
 }
+
+export function findPlayerBySocketId(socketId) {
+    let foundPlayer;
+    activePlayers.forEach(player => {
+        if (player.getId() === socketId) {
+            foundPlayer = player;
+        }
+    });
+    return foundPlayer;
+}
+
+export function updatePlayer(player, playerFromServer) {
+    playerFromServer.x ? player.setX(playerFromServer.x) : null;
+    playerFromServer.y ? player.setY(playerFromServer.y) : null;
+    playerFromServer.team ? player.setTeam(playerFromServer.team) : null;
+    playerFromServer.color ? player.setColor(playerFromServer.color) : null;
+    playerFromServer.state ? player.setState(playerFromServer.state) : null;
+}
