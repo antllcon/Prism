@@ -114,7 +114,9 @@ io.on('connection', (socket) => {
         socket.on('sentCookie', (userId) => {
             const roomId = findRoomByUserId(userId);
             const client = findClientByUserId(roomId, userId);
-            client.setSocketId(socket.id);
+            if (client) {
+                client.setSocketId(socket.id);
+            }
             joinBack(socket);
         })
     })
@@ -166,23 +168,22 @@ io.on('connection', (socket) => {
 // }
 
 // Запуск сервера
+
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
+
+
 
 function generateId() {
     let uniqueId = Math.random().toString().slice(-6);
     uniqueId = parseInt(uniqueId);
     return uniqueId;
 }
-function leaveRoom(roomId, socket) {
-    if (rooms[roomId]) {
-        socket.leave(roomId);
-        console.log(socket.id, ' left the room with id: ', roomId);
-        // broadcastRoomUpdate(roomId);
-    }
-}
+
+// Получение
+
 function findRoomBySocketId(id) {
     let foundId;
     Object.keys(rooms).forEach(roomId => {
@@ -222,31 +223,6 @@ function getUserIdFromCookie(socket) {
         return result;
     })
 }
-function saveSocketIdIntoClient(roomId, userId) {
-    const client = findClientByUserId(roomId, userId);
-    client.setSocketId(socket.id);
-}
-function joinRoom(roomId, socket) {
-    socket.emit('requestForCookie');
-    socket.on('sentCookie', (userId) => {
-        if (rooms[roomId]) {
-            rooms[roomId].push(new Client(socket.id, userId));
-            socket.join(parseInt(roomId));
-            socket.emit('joinedRoom', roomId);
-            console.log(socket.id, ' joined the room ', roomId);
-            // broadcastRoomUpdate(roomId);
-        } else {
-            socket.emit('wrongId');
-        }
-    })
-    
-}
-function joinBack(socket) {
-    const roomId = findRoomBySocketId(socket.id);
-    if (rooms[roomId]) {
-        socket.join(roomId);
-    }
-}
 function findClientByUserId(roomId, userId) {
     let foundClient = null;
     if (rooms[roomId]) {
@@ -275,4 +251,39 @@ function getAllSocketsFromRoom(roomId) {
         sockets.push(client.getSocketId())
     })
     return sockets;
+}
+function saveSocketIdIntoClient(roomId, userId) {
+    const client = findClientByUserId(roomId, userId);
+    client.setSocketId(socket.id);
+}
+
+
+
+function joinRoom(roomId, socket) {
+    socket.emit('requestForCookie');
+    socket.on('sentCookie', (userId) => {
+        if (rooms[roomId]) {
+            rooms[roomId].push(new Client(socket.id, userId));
+            socket.join(parseInt(roomId));
+            socket.emit('joinedRoom', roomId);
+            console.log(socket.id, ' joined the room ', roomId);
+            // broadcastRoomUpdate(roomId);
+        } else {
+            socket.emit('wrongId');
+        }
+    })
+    
+}
+function leaveRoom(roomId, socket) {
+    if (rooms[roomId]) {
+        socket.leave(roomId);
+        console.log(socket.id, ' left the room with id: ', roomId);
+        // broadcastRoomUpdate(roomId);
+    }
+}
+function joinBack(socket) {
+    const roomId = findRoomBySocketId(socket.id);
+    if (rooms[roomId]) {
+        socket.join(roomId);
+    }
 }

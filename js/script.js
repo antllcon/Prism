@@ -49,6 +49,8 @@ function update(dt) {
     gameState.gameTime += dt;
     botMovement(dt);
     handleInput(dt);
+    // отправляем на сервер и получаем с сервера
+    dataExchange();
     checkCollisions();
     updateEntities(dt);
 }
@@ -82,7 +84,6 @@ function connect() {
 function initPlayers() {
     socket.emit('requestForClients');
     socket.on('sendClients', (clients) => {
-
         console.log('sendClients вызван')
         console.log(clients);
         activePlayers = createPlayers(clients, socket.id);
@@ -90,12 +91,17 @@ function initPlayers() {
     })
 }
 
+// Обмен с сервером
+
+function dataExchange() {
+    sendDataToServer();
+    getDataFromServer();
+}
 function sendDataToServer() {
     let playerAsEntity = getMyPlayer(activePlayers);
     let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
     socket.emit('sendDataToServer', transmittedPlayer);
 }
-
 function prepTransmittedPlayer(playerAsEntity) {
     return {
         id: playerAsEntity.getId(),
@@ -106,11 +112,12 @@ function prepTransmittedPlayer(playerAsEntity) {
         state: playerAsEntity.getState()
     }
 }
-
 function getDataFromServer() {
     socket.on('dataChanged', () => {
     })
 }
+
+
 
 window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
