@@ -6,6 +6,7 @@ const io = require('socket.io')(http);
 
 
 const Client = require('./client.js');
+const Player = require('./player.js');
 const RECONNECT_TIMEOUT = 60 * 1000; // 60 секунд
 const staticDistPath = path.resolve(path.dirname(__dirname), '../dist');
 app.use(express.static(staticDistPath));
@@ -36,20 +37,10 @@ io.on('connection', (socket) => {
 
     socket.on('leaveRoom', () => {
         const roomId = findRoomBySocketId(socket.id);
-        // let roomId = findRoomBySocketId(socket.id);
         leaveRoom(roomId, socket);
     });
 
-    // socket.on('sendDataToServer', (transPlayer) => {
-    //     //внутри data находятся данные о плеере текущего клиента
-    //     let roomId = findRoomBySocketId(socket.id);
-    //     players.forEach(player => {
-    //         if (player.id === transPlayer.id) {
-    //             updatePlayer(player, transPlayer);
-    //             socket.to(rooms[roomId]).emit('dataFromServer', player);
-    //         }
-    //     });
-    // });
+    
 
     // socket.on('requestOnDataFromServer', () => {
     //     socket.emit('dataFromServer', players);
@@ -83,9 +74,6 @@ io.on('connection', (socket) => {
     socket.on('playerIsReady', () => {
         const roomId  = findRoomBySocketId(socket.id);
         const client = findClientBySocketId(roomId, socket.id);
-        console.log(rooms, 'rooms');
-        console.log(socket.id, 'socket.id');
-        console.log(client, 'client');
         client.setReady();
         let amountReadyClients = 0;
         rooms[roomId].forEach(client => {
@@ -93,7 +81,6 @@ io.on('connection', (socket) => {
                 amountReadyClients++;
             }
         })
-        console.log(amountReadyClients, 'amountReadyClients.   ', rooms[roomId].length, ' length');
         if (amountReadyClients === rooms[roomId].length) {
             io.to(parseInt(roomId)).emit('roomIsReady')
         }
@@ -139,8 +126,8 @@ io.on('connection', (socket) => {
                 }
             }
         })
-        
     });
+
     socket.on('pageRefreshed', () => {
         console.log('произошел refresh');
         socket.emit('requestForCookie');
@@ -153,15 +140,25 @@ io.on('connection', (socket) => {
             joinBack(socket);
         })
     });
+
+    socket.on('sendDataToServer', (transPlayer) => {
+        const roomId = findRoomBySocketId(socket.id);
+        players.forEach(player => {
+            if (player.id === transPlayer.id) {
+                updatePlayer(player, transPlayer);
+                socket.to(roomId).emit('dataFromServer', players);
+            }
+        });
+    });
 });
 
-// function updatePlayer(player, transPlayer) {
-//     player.x = transPlayer.x;
-//     player.y = transPlayer.y;
-//     player.team = transPlayer.team;
-//     player.color = transPlayer.color;
-//     player.state = transPlayer.state;
-// }
+function updatePlayer(player, transPlayer) {
+    player.x = transPlayer.x;
+    player.y = transPlayer.y;
+    player.team = transPlayer.team;
+    player.color = transPlayer.color;
+    player.state = transPlayer.state;
+}
 
 // function broadcastRoomUpdate(roomId) {
 //     io.to(roomId).emit('roomUpdate', rooms[roomId]);

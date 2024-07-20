@@ -113,7 +113,9 @@ function prepTransmittedPlayer(playerAsEntity) {
     }
 }
 function getDataFromServer() {
-    socket.on('dataChanged', () => {
+    socket.on('dataFromServer', (players) => {
+        // Получили массив данных по игрокам
+        // нужно обновить всех игроков, которые не наш
     })
 }
 
