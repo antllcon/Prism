@@ -24,8 +24,7 @@ const players = ['1'];
 const socket_id = '1';
 
 async function init() {
-    await connect();
-    await initPlayerAnimation();
+    connect();
     activeBots = createBots();
     createPoints();
     initBotAnimation();
@@ -82,6 +81,7 @@ function initPlayers() {
         console.log(clients);
         activePlayers = createPlayers(clients, socket.id);
         console.log(activePlayers, 'active players')
+        initPlayerAnimation()
     })
 }
 
