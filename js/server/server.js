@@ -114,7 +114,9 @@ io.on('connection', (socket) => {
         socket.on('sentCookie', (userId) => {
             const roomId = findRoomByUserId(userId);
             const client = findClientByUserId(roomId, userId);
-            client.setSocketId(socket.id);
+            if (client) {
+                client.setSocketId(socket.id);
+            }
             joinBack(socket);
         })
     })
