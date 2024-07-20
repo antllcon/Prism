@@ -81,7 +81,13 @@ function initEventListeners() {
     }
 
     if (buttonPlayer) {
-        buttonPlayer.addEventListener('click', () => { transitionToPage("with-player.html"); });
+        buttonPlayer.addEventListener('click', () => { 
+            if (!(document.cookie.indexOf('userId') > -1)) {
+                setCookie();
+                sendCookie();
+            }
+            transitionToPage("with-player.html"); 
+        });
     }
 
     if (button1vs1) {
@@ -95,6 +101,9 @@ function initEventListeners() {
     if (buttonLobby) {
         buttonLobby.addEventListener('click', () => {
             socket.emit('createRoom');
+            socket.on('requestForCookie', () => {
+                sendCookie();
+            })
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
                 transitionToPage("lobby.html"); 
@@ -109,6 +118,9 @@ function initEventListeners() {
         buttonEnter.addEventListener('click', () => {
             let inputRoomId = document.getElementById('input-code').value;
             socket.emit('joinRoom', inputRoomId);
+            socket.on('requestForCookie', () => {
+                sendCookie();
+            })
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
                 transitionToPage("lobby.html"); 
@@ -145,23 +157,48 @@ function initEventListeners() {
     if (buttonReady) {
         buttonReady.addEventListener('click', () => {
             socket.emit('playerIsReady');
-
+            socket.on('roomIsReady', () => {
+                console.log('room is ready отработало');
+                window.location.href = "game.html";
+            })
         })
     }
-
-    socket.on('roomIsReady', () => {
-        console.log('room is ready отработало');
-        window.location.href = "game.html";
-    })
+    // window.addEventListener('beforeunload', function(e) {
+    //     e.preventDefault(); // Предотвращаем стандартное поведение
+    //     e.returnValue = ''; // Убираем сообщение о подтверждении
+    //     // Здесь вы можете вызвать функцию для отправки уведомления на сервер
+    //     socket.emit('pageRefreshed');
+    // })
 
 }
 
-// Initial load of the menu page
+function sendCookie() {
+    const cookieValue = document.cookie.split('; ')
+        .find(row => row.startsWith('userId='))
+        ?.split('=')[1];
+    console.log(document.cookie, 'document.cookie');
+    // Отправляем куки на сервер
+    socket.emit('sentCookie', cookieValue);
+}
+function setCookie() {
+    let now = new Date();
+    now.setHours(now.getHours() + 2);
+    const cookieValue = generateId();
+    document.cookie = 'userId=' + cookieValue + '; expires=' + now.toUTCString() + '; path=/';
+    console.log(document.cookie, '   cookie set');
+}
+function generateId() {
+    let uniqueId = Math.random().toString().slice(-6);
+    uniqueId = parseInt(uniqueId);
+    return uniqueId;
+}
+
 loadHTML('menu.html', (html) => {
     callback(html);
     playMenuTheme();
     loadToMainPageLink();
     initEventListeners();
+
 });
 
 

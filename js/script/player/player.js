@@ -31,26 +31,16 @@ export function handleInput(dt) {
 }
 
 export function initPlayerAnimation() {
+    console.log('зашли в инит плеерс анимейшн');
+
     activePlayers.forEach(player => {
         player.setImage("./src/assets/sprites/player/right.png");
         player.getImage().onload = () => {
             player.setLoad(true);
-        }
-    })
-}
-
-export async function initPlayerAnimation() {
-    const promises = activePlayers.map(player => {
-        return new Promise((resolve) => {
-            player.setImage("./src/assets/sprites/player/right.png");
-            player.getImage().onload = () => {
-                player.setLoad(true);
-                resolve();
-            };
-        });
+        };
     });
-    await Promise.all(promises);
-}//
+}
+//
 // export function drawPlayer(activePlayers) {
 //     const spriteSize = 64;
 //     const endAnimation = 9;
@@ -67,10 +57,10 @@ export async function initPlayerAnimation() {
 //     });
 // }
 
-export function createPlayers(players, myId) {
+export function createPlayers(clients, myId) {
     let createdPlayers = [];
-    for (let i = 0; i < players.length; i++) {
-        createdPlayers[i] = new Player(i, players[i], myId);
+    for (let i = 0; i < clients.length; i++) {
+        createdPlayers[i] = new Player(i, clients[i], myId);
     }
     return createdPlayers
 }

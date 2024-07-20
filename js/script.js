@@ -1,5 +1,3 @@
-// в константе socket должен лежать айди игрока
-// и по каждому айди мы должны его рисовать
 import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, createBots, initBotAnimation} from "./script/bot/bot";
@@ -9,6 +7,7 @@ import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
 import {drawCharacters} from "./view";
+import {io} from "socket.io-client";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -24,17 +23,11 @@ export let activeBots = [];
 const players = ['1'];
 const socket_id = '1';
 
-function init() {
+async function init() {
     connect();
     activeBots = createBots();
     createPoints();
-    drawBackground();
-    drawScore();
-    drawPoints();
-    initPlayerAnimation();
-    drawPlayer(activePlayers);
     initBotAnimation();
-    drawBot();
     countdown();
 }
 
@@ -43,9 +36,6 @@ function render() {
     drawBackground();
     drawScore();
     drawPoints();
-    initPlayerAnimation();
-    drawPlayer(activePlayers);
-    drawBot();
     drawCharacters(activePlayers.concat(activeBots));
 }
 
@@ -75,14 +65,23 @@ export function main() {
 }
 function connect() {
     socket.on('connect', () => {
-        activePlayers = createPlayers(players, socket_id);
-        // console.log('Connected to server with id:', socket.id);
+        console.log('Connected to server with id:', socket.id);
+        socket.emit('redirected');
+        sendCookie();
+        initPlayers();
+        // activePlayers = createPlayers(players, socket_id);
     });
 }
 
 function initPlayers() {
-    socket.on('roomIsReady', (players) => {
-        activePlayers = createPlayers(players, socket.id);
+    socket.emit('requestForClients');
+    socket.on('sendClients', (clients) => {
+
+        console.log('sendClients вызван')
+        console.log(clients);
+        activePlayers = createPlayers(clients, socket.id);
+        console.log(activePlayers, 'active players')
+        initPlayerAnimation()
     })
 }
 
@@ -112,6 +111,24 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
 };
 
+function initEventListeners() {
+    // window.addEventListener('beforeunload', function(e) {
+    //     e.preventDefault(); // Предотвращаем стандартное поведение
+    //     e.returnValue = ''; // Убираем сообщение о подтверждении
+    //     // Здесь вы можете вызвать функцию для отправки уведомления на сервер
+    //     socket.emit('pageRefreshed');
+    // });
+}
+function sendCookie() {
+    const cookieValue = document.cookie.split('; ')
+        .find(row => row.startsWith('userId='))
+        ?.split('=')[1];
+    console.log(document.cookie, 'document.cookie');
+    // Отправляем куки на сервер
+    socket.emit('sentCookie', cookieValue);
+}
+
 setTimeout(fadeOutScore, 6800);
 
 init();
+
