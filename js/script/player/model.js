@@ -1,5 +1,6 @@
 import {PLAYER_STATES, DEFAULT_PLAYERS} from "./const";
 
+
 export class Player {
     constructor(i, id, socket_id) {
         this.type = DEFAULT_PLAYERS.type;
@@ -17,6 +18,11 @@ export class Player {
         this.count = DEFAULT_PLAYERS.count;
         this.tick = DEFAULT_PLAYERS.tick;
         this.direction = DEFAULT_PLAYERS.direction;
+        this.image = new Image();
+        this.load = DEFAULT_PLAYERS.load;
+        this.count = DEFAULT_PLAYERS.count;
+        this.tick = DEFAULT_PLAYERS.tick;
+        this.direction = DEFAULT_PLAYERS.direction;
     }
 
     // Геттеры и сеттеры
@@ -28,6 +34,7 @@ export class Player {
     getSpeed() { return this.speed; }
     getTeam() { return this.team; }
     getColor() { return this.color; }
+    getState() { return this.state; }
     getImage() { return this.image; }
     getLoad() { return this.load; }
     getCount() { return this.count; }
@@ -48,4 +55,20 @@ export class Player {
     die() { this.state = PLAYER_STATES.DEAD; }
     setColor(color) { this.color = color; }
     renaissance() { this.state = PLAYER_STATES.ACTIVE; }
+    
+    setId(id) {
+        this.id = id;
+    }
+    settSize(size) {
+        this.size = size;
+    }
+    setSpeed(speed){
+        this.speed = speed;
+    }
+    setTeam(team) {
+        this.team = team;
+    }
+    setState(state) {
+        this.state = state;
+    }
 }

@@ -7,33 +7,40 @@ export function handleInput(dt) {
     if (input.isDown('LEFT') || input.isDown('a')) {
         player.moveOn(player.getSpeed() * dt * (-1), 0);
         player.setDirection("left");
+        player.moveOn(player.getSpeed() * dt * (-1), 0);
+        player.setDirection("left");
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
+        player.moveOn(player.getSpeed() * dt, 0);
+        player.setDirection("right");
         player.moveOn(player.getSpeed() * dt, 0);
         player.setDirection("right");
     }
     if (input.isDown('DOWN') || input.isDown('s')) {
         player.moveOn(0, player.getSpeed() * dt);
         player.setDirection("down");
+        player.moveOn(0, player.getSpeed() * dt);
+        player.setDirection("down");
     }
     if (input.isDown('UP') || input.isDown('w')) {
+        player.moveOn(0, player.getSpeed() * dt * (-1));
+        player.setDirection("up");
         player.moveOn(0, player.getSpeed() * dt * (-1));
         player.setDirection("up");
     }
 }
 
-export async function initPlayerAnimation() {
-    const promises = activePlayers.map(player => {
-        return new Promise((resolve) => {
-            player.setImage("./src/assets/sprites/player/right.png");
-            player.getImage().onload = () => {
-                player.setLoad(true);
-                resolve();
-            };
-        });
+export function initPlayerAnimation() {
+    console.log('зашли в инит плеерс анимейшн');
+
+    activePlayers.forEach(player => {
+        player.setImage("./src/assets/sprites/player/right.png");
+        player.getImage().onload = () => {
+            player.setLoad(true);
+        };
     });
-    await Promise.all(promises);
-}//
+}
+//
 // export function drawPlayer(activePlayers) {
 //     const spriteSize = 64;
 //     const endAnimation = 9;
@@ -50,10 +57,10 @@ export async function initPlayerAnimation() {
 //     });
 // }
 
-export function createPlayers(players, myId) {
+export function createPlayers(clients, myId) {
     let createdPlayers = [];
-    for (let i = 0; i < players.length; i++) {
-        createdPlayers[i] = new Player(i, players[i], myId);
+    for (let i = 0; i < clients.length; i++) {
+        createdPlayers[i] = new Player(i, clients[i], myId);
     }
     return createdPlayers
 }
@@ -69,4 +76,22 @@ export function resetAllPlayers() {
         activePlayers[i].setY(DEFAULT_PLAYERS.y[i]);
         activePlayers[i].renaissance();
     }
+}
+
+export function findPlayerBySocketId(socketId) {
+    let foundPlayer;
+    activePlayers.forEach(player => {
+        if (player.getId() === socketId) {
+            foundPlayer = player;
+        }
+    });
+    return foundPlayer;
+}
+
+export function updatePlayer(player, playerFromServer) {
+    playerFromServer.x ? player.setX(playerFromServer.x) : null;
+    playerFromServer.y ? player.setY(playerFromServer.y) : null;
+    playerFromServer.team ? player.setTeam(playerFromServer.team) : null;
+    playerFromServer.color ? player.setColor(playerFromServer.color) : null;
+    playerFromServer.state ? player.setState(playerFromServer.state) : null;
 }

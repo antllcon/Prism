@@ -19,3 +19,12 @@ export const TEAM_STATES = {
     PURPLE: "purple",
     YELLOW: "yellow"
 }
+
+export const COLORS = {
+    YELLOW: "#f8df5c",
+    PURPLE: "#8f23dc",
+    GRAY: "#666",
+    DARK: "#333",
+    BLACK: "#111",
+    WHITE: "#FFF",
+}

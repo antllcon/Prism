@@ -1,4 +1,4 @@
-import {canvasHeight, canvasWidth, dark, GAME_STATES} from "./const";
+import {canvasHeight, canvasWidth, COLORS, GAME_STATES} from "./const";
 
 export const lastState = {
     lastTime: 0
@@ -15,7 +15,7 @@ export class Game {
     {
         this.width = canvasWidth;
         this.height = canvasHeight;
-        this.background = dark;
+        this.background = COLORS.DARK;
         this.state = GAME_STATES.PLAY;
     }
 
@@ -43,6 +43,6 @@ export let game = new Game();
 export let GAME = {
     width: canvasWidth,
     height: canvasHeight,
-    background: dark,
+    background: COLORS.DARK,
     state: GAME_STATES.PLAY
 };

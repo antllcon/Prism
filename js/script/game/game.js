@@ -2,6 +2,7 @@
 import {game, lastState, gameState} from "./model";
 import {Point} from "../point/model";
 import {POINT_STATES} from "../point/const";
+import {COLORS, TEAM_STATES} from "./const";
 import {movePoint, resetPoint, resetPoints, respawnPoint, updateVisibilityPoints} from "../point/point"
 import {getMyPlayer, resetAllPlayers} from "../player/player"
 import {resetAllBots} from "../bot/bot"
@@ -84,57 +85,53 @@ function resetLevel() {
 }
 
 export function updateEntities(dt) {
-    let player = getMyPlayer(activePlayers);
+    // let player = getMyPlayer(activePlayers);
     activeBots.forEach(bot => {
-        points.forEach(point => {
-            if (point.isActive()) {
-                if (Date.now() - point.getActivationTime() < point.getExistTime()) {
-                    if (point.getTeam() === player.getTeam()) {
-                        point.setColor(player.getColor());
-                    }
-                    if (point.getTeam() === bot.getTeam()) {
-                        point.setColor(bot.getColor());
-                    }
-                    point.setHeight(5);
-                } else {
-                    point.setInactive();
-                    resetPoint(point);
-                }
-            }
-            if (point.isInactive()) {
-    
-            }
-            if (point.isInvisible()) {
-                updateVisibilityPoints(point);
-            }
-            if (point.isActive() || point.isInactive()) {
-                movePoint(point, dt);
-            }
-        })
-        /////
         if (bot.isDead()) {
-            if (bot.getTeam() === 'purple') {
+            if (bot.getTeam() === TEAM_STATES.PURPLE) {
                 score.increaseTeamYellow()
             }
-            if (bot.getTeam() === 'yellow') {
+            if (bot.getTeam() === TEAM_STATES.YELLOW) {
                 score.increaseTeamPurple()
             }
-            playDeathPlayer();
             resetLevel();
         }
     });
     activePlayers.forEach(player => {
         if (player.isDead()) {
-            // console.log("hey hey player is dead game js")
-            // console.log(activeBots, "active bots game js in player.is dead")
-            if (player.getTeam() === 'purple') {
+            if (player.getTeam() === TEAM_STATES.PURPLE) {
                 score.increaseTeamYellow()
             }
-            if (player.getTeam() === 'yellow') {
+            if (player.getTeam() === TEAM_STATES.YELLOW) {
                 score.increaseTeamPurple()
             }
-            playDeathPlayer();
             resetLevel();
         }
     });
+    points.forEach(point => {
+        if (point.isActive()) {
+            if (Date.now() - point.getActivationTime() < point.getExistTime()) {
+                if (point.getTeam() === TEAM_STATES.PURPLE) {
+                    point.setColor(COLORS.PURPLE);
+                }
+                if (point.getTeam() === TEAM_STATES.YELLOW) {
+                    point.setColor(COLORS.YELLOW);
+                }
+                point.setHeight(5);
+            } else {
+                point.setInactive();
+                point.setColor(COLORS.GRAY)
+                resetPoint(point);
+            }
+        }
+        if (point.isInactive()) {
+
+        }
+        if (point.isInvisible()) {
+            updateVisibilityPoints(point);
+        }
+        if (point.isActive() || point.isInactive()) {
+            movePoint(point, dt);
+        }
+    })
 }

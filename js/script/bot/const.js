@@ -1,4 +1,4 @@
-import {canvasHeight, canvasWidth} from "../game/const";
+import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const";
 
 export const BOT_STATES = {
     ACTIVE: 'active',
@@ -12,13 +12,14 @@ export const DEFAULT_BOTS = {
     y: [canvasHeight / 3, canvasHeight * 2 / 3, canvasHeight / 3, canvasHeight * 2 / 3],
     size: 10,
     speed: 300,
-    team: ['purple', 'purple', 'yellow', 'yellow'],
-    color: ['purple', 'purple', 'yellow', 'yellow'],
+    team: [TEAM_STATES.PURPLE, TEAM_STATES.PURPLE, TEAM_STATES.YELLOW, TEAM_STATES.YELLOW],
+    color: [COLORS.PURPLE, COLORS.PURPLE, COLORS.YELLOW, COLORS.YELLOW],
     state: BOT_STATES.ACTIVE,
     load: false,
     count: 0,
     tick: 0,
-    direction: "left"
+    direction: "left",
+    state: BOT_STATES.ACTIVE,
 }
 // export const botStartX = canvasWidth - 50;
 // export const botStartY = canvasHeight / 2;

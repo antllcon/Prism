@@ -1,9 +1,9 @@
 import {DEFAULT_BOTS} from './const'
 import {Bot} from './model'
 import {GAME} from "../game/model";
-
-import {activeBots, requiredBots, points} from "../../script"
-
+import {Point} from "../point/model";
+import {POINT_STATES} from "../point/const";
+import {ctx, activeBots, requiredBots, points} from "../../script"
 
 export function createBots() {
     //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов
@@ -24,6 +24,7 @@ export function initBotAnimation() {
         }
     })
 }
+
 
 export function resetAllBots() {
     for (let i = 0; i < activeBots.length; i++) {
@@ -55,7 +56,10 @@ export function botMovement(dt) {
         findNearestPoint();
         if (inRangeOfLaser) {
             moveBotOutOfLaserSpiral();
+            moveBotOutOfLaserSpiral();
         }
+        moveBotToLaser();
+        getRightDirection();
         moveBotToLaser();
         getRightDirection();
 
@@ -130,6 +134,7 @@ export function botMovement(dt) {
             const radialSpeed = bot.getSpeed() * dt;
             const angularSpeed = bot.getSpeed() * dt / hypMinActive;
 
+
             dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
             dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
         }
@@ -139,32 +144,40 @@ export function botMovement(dt) {
                 if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
                     if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
                         bot.moveOn(dxActive + dxInactive, dyActive + dyInactive);
+                        bot.moveOn(dxActive + dxInactive, dyActive + dyInactive);
                     } else {
                         const angle = Math.atan2(dyActive + dyInactive, dxActive + dxInactive);
+                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                         bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                     }
                 }
                 if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
                     if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive) ** 2) < bot.getSpeed() * dt) {
                         bot.moveOn(dxActive + dxInactive, dyActive);
+                        bot.moveOn(dxActive + dxInactive, dyActive);
                     } else {
                         const angle = Math.atan2(dyActive, dxActive + dxInactive);
+                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                         bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                     }
                 }
                 if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
                     if (Math.sqrt((dxActive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
                         bot.moveOn(dxActive, dyActive + dyInactive);
+                        bot.moveOn(dxActive, dyActive + dyInactive);
                     } else {
                         const angle = Math.atan2(dyActive + dyInactive, dxActive);
+                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                         bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                     }
                 }
                 if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
                     if (Math.sqrt((dxActive) ** 2 + (dyActive) ** 2) < bot.getSpeed() * dt) {
                         bot.moveOn(dxActive, dyActive);
+                        bot.moveOn(dxActive, dyActive);
                     } else {
                         const angle = Math.atan2(dyActive, dxActive);
+                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                         bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
                     }
                 }
