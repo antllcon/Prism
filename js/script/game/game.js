@@ -10,6 +10,7 @@ import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
 import {main, ctx, activePlayers, activeBots, points} from "../../script";
+import {playDeathPlayer} from "../../sound/deathPlayerSound";
 
 export function drawBackground() {
     ctx.fillStyle = game.getBackground();
@@ -35,20 +36,51 @@ export function countdown() {
 }
 
 function resetLevel() {
-    gameState.gameTime = -4.2;
     resetAllPlayers();
     resetAllBots();
 
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
-    // Сбрасываем параметры всех точек
     resetPoints();
-    // POINTS.forEach((point, index) => {
-    //     respawnPoint(point, index);
-    // });
+
+    let background = document.createElement("div");
+    let scoreGif = document.createElement("img");
+    document.body.appendChild(background);
+    background.classList.add('background-countdown');
+    background.appendChild(scoreGif);
+    if (score.getTeam1() === 0 && score.getTeam2() === 1) {
+        scoreGif.src = "./src/assets/img/0-1.gif";
+    }
+    if (score.getTeam1() === 0 && score.getTeam2() === 2) {
+        scoreGif.src = "./src/assets/img/0-2.gif";
+    }
+    if (score.getTeam1() === 1 && score.getTeam2() === 0) {
+        scoreGif.src = "./src/assets/img/1-0.gif";
+    }
+    if (score.getTeam1() === 1 && score.getTeam2() === 1) {
+        scoreGif.src = "./src/assets/img/1-1.gif";
+    }
+    if (score.getTeam1() === 1 && score.getTeam2() === 2) {
+        scoreGif.src = "./src/assets/img/1-2.gif";
+    }
+    if (score.getTeam1() === 2 && score.getTeam2() === 0) {
+        scoreGif.src = "./src/assets/img/2-0.gif";
+    }
+    if (score.getTeam1() === 2 && score.getTeam2() === 1) {
+        scoreGif.src = "./src/assets/img/2-1.gif";
+    }
+    if (score.getTeam1() === 2 && score.getTeam2() === 2) {
+        scoreGif.src = "./src/assets/img/2-2.gif";
+    }
+
+    setTimeout(() => {
+        background.remove();
+        scoreGif.remove();
+        lastState.lastTime = Date.now();
+        main();
+    }, 2000)
 
     setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
-    countdown(); // Запускаем анимацию и звук отсчёта
 }
 
 export function updateEntities(dt) {
@@ -87,17 +119,21 @@ export function updateEntities(dt) {
             if (bot.getTeam() === 'yellow') {
                 score.increaseTeamPurple()
             }
+            playDeathPlayer();
             resetLevel();
         }
     });
     activePlayers.forEach(player => {
         if (player.isDead()) {
+            // console.log("hey hey player is dead game js")
+            // console.log(activeBots, "active bots game js in player.is dead")
             if (player.getTeam() === 'purple') {
                 score.increaseTeamYellow()
             }
             if (player.getTeam() === 'yellow') {
                 score.increaseTeamPurple()
             }
+            playDeathPlayer();
             resetLevel();
         }
     });

@@ -1,10 +1,6 @@
-import {Bot} from "../script/bot/model";
-import {BOT_STATES} from "../script/bot/const";
 import {getMyPlayer} from "../script/player/player";
-import {Player} from "../script/player/model";
 import {activePlayers, activeBots, points} from "../script";
-import {POINT_STATES, POINT_TYPES} from "../script/point/const";
-import {GAME, game} from "../script/game/model";
+import {game} from "../script/game/model";
 
 function checkLaserBounds() {
 
@@ -86,7 +82,7 @@ function checkLaserBounds() {
             ];
     
             for (const corner of botCorners) {
-                // расчитываем удаленность угловой точки игрока от центра лазера
+                // рассчитываем удаленность угловой точки игрока от центра лазера
                 const dx = corner.x - point.getX();
                 const dy = corner.y - point.getY();
     
@@ -139,6 +135,10 @@ function checkLaserBounds() {
                 }
             }
         });
+    activeBots.forEach(bot => {
+        // console.log("x", bot.getX(), " y ", bot.getY(), " state ", bot.getState(), "bounds.js")
+        }
+    )
     });
 }
 
@@ -156,6 +156,7 @@ function checkBorderGameBounds() {
     }
     activeBots.forEach(bot => {
         if (bot.getX() < 0) {
+            // console.log(game.getWidth(), "getwidth bounds js")
             bot.setX(game.getWidth() - bot.getSize());
         } else if (bot.getX() + bot.getSize() > game.getWidth()) {
             bot.setX(0);

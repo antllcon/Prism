@@ -18,6 +18,7 @@ function findRoomBySocketId(id) {
         return false;
     }
 }
+// console.log(findRoomBySocketId(123));
 
 
 function findRoomBySocketId(id) {

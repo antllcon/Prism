@@ -1,5 +1,5 @@
 import {scoreAlphaState} from "./model";
-import {SCORE, score} from "./model";
+import {score} from "./model";
 import {ctx} from "../../script";
 
 export function drawScore() {
@@ -14,9 +14,9 @@ export function drawScore() {
 export function drawFinalScore() {
     ctx.save();
     ctx.globalAlpha = scoreAlphaState.scoreAlpha;
-    ctx.fillStyle = score.getColor();;
+    ctx.fillStyle = score.getColor();
     ctx.font = "700px Font Over";
-    ctx.fillText(`${score.getTeam1()}:${score.getTeam1()}`, 270, 750);
+    ctx.fillText(`${score.getTeam1()}:${score.getTeam2()}`, 270, 750);
     ctx.restore();
 }
 

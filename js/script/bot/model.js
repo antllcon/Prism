@@ -1,5 +1,4 @@
 import {BOT_STATES, DEFAULT_BOTS} from "./const";
-
 export class Bot {
     constructor(i) {
         this.type = DEFAULT_BOTS.type;

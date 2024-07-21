@@ -24,13 +24,12 @@ export let activeBots = [];
 const players = ['1'];
 const socket_id = '1';
 
-async function init() {
-    await connect();
-    await initPlayerAnimation();
+function init() {
+    connect();
+    // initPlayers();
     activeBots = createBots();
     createPoints();
     initBotAnimation();
-    countdown();
 }
 
 function render() {
@@ -66,11 +65,9 @@ export function main() {
     requestAnimFrame(main);
 }
 function connect() {
-    return new Promise((resolve) => {
-        socket.on('connect', () => {
-            activePlayers = createPlayers(players, socket_id);
-            resolve();
-        });
+    socket.on('connect', () => {
+        // console.log('Connected to server with id:', socket.id);
+        activePlayers = createPlayers(players, socket_id);
     });
 }
 
@@ -108,5 +105,5 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
 };
 
 setTimeout(fadeOutScore, 6800);
-
+countdown();
 init();

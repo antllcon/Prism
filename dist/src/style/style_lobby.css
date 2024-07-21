@@ -51,7 +51,7 @@
     padding-top: 30px;
 }
 
-.players {
+.card-container {
     position: absolute;
     right: -20px;
     top: 362px;
@@ -60,6 +60,14 @@
     width: 1300px;
     height: 450px;
     animation: 2s alternate animateCardsLobby;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    height: 430px;
+    width: 290px;
+    margin-right: 54px;
 }
 
 .player-card-top {
@@ -71,14 +79,6 @@
     margin-top: 10px;
 }
 
-.player {
-    display: flex;
-    flex-direction: column;
-    height: 390px;
-    width: 290px;
-    margin-right: 54px;
-}
-
 .menu {
     display: flex;
     flex-direction: column;
@@ -87,7 +87,7 @@
     padding-right: 80px;
 }
 
-.player-img-container{
+.player-img-container {
     background-color: inherit;
     margin-top: 15px;
     display: flex;
@@ -151,17 +151,15 @@
 }
 
 .arrow-left {
-    border-right: 12px solid #fff;
     left: 12px;
 }
 
 .arrow-right {
-    border-left: 12px solid #fff;
     right: 12px;
 }
 
 .player-count {
-    margin: 10px 0 10px 20px;
+    margin: 10px 0 0px 20px;
     color: white;
     font: 700 38px Font_Over;
     background-color: inherit;
@@ -176,34 +174,24 @@
     font: 700 18px Font_Over;
     background-color: inherit;
     margin-left: 20px;
+    margin-top: 10px;
 }
 
-.player-get-bot {
+.player-get {
     font: 700 18px Font_Over;
-    color: #CFA333;
-    background-color: #FFDA7B;
     width: 200px;
     height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     align-self: center;
     text-align: center;
     border: none;
     cursor: pointer;
-    transition: background-color 0.5s ease-out, transform 0.5s ease-out;
+    transition: transform 0.3s ease-out;
 }
 
-.player-get-bot:hover {
-    background-color: rgb(253, 234, 182);
-    color: #bf9b39;
-}
-
-.player-get-bot:active {
-    background-color: rgb(253, 222, 144);
-    color: #bf9b39;
-    transform: scale(0.96);
-}
-
-.player-get-bot::selection {
-    background-color: #FFDA7B;
+.player-get:active {
+    transform: scale(0.97);
 }
 
 .central-part-lobby {
