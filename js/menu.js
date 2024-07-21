@@ -113,6 +113,7 @@ let buttonPlay;
 let buttonMenu;
 let buttonLeave;
 let inputRoomId;
+let currentPlayerCard;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
@@ -147,8 +148,10 @@ function loadCard(templateId) {
     if (template) {
         const cardContainer = document.getElementById('card-container');
         if (cardContainer) {
-            const card = template.content.cloneNode(true);
+            let card = template.content.cloneNode(true);
+            let cardNode = card.querySelector('.player');
             cardContainer.appendChild(card);
+            return cardNode;
         }
     }
 }
@@ -214,13 +217,37 @@ function addBot(button) {
     }
 }
 
+function addPlayer(button) {
+    let buttonGetWait = currentPlayerCard.querySelector('.get-wait');
+    let card = addWait(buttonGetWait);
+    initCardEventListener(card);
+
+    const playerTemplate = document.getElementById('player-template');
+    const waitingCard = button.closest('.player');
+    if (playerTemplate && waitingCard) {
+        const playerCard = playerTemplate.content.cloneNode(true);
+
+        let card = playerCard.querySelector(".player")
+        waitingCard.replaceWith(playerCard);
+
+        setTimeout(() => {
+            setStyleCard(0);
+            setStyleCard(1);
+            setStyleCard(2);
+            setStyleCard(3);
+        }, 0);
+
+        return card;
+    }
+}
+
 function addWait(button) {
     const tempCard = button.closest('.player');
-    const waitTemplate = document.getElementById('wait-template');
+    const waitTemplate = document.getElementById('waiting-template');
     if (waitTemplate && tempCard) {
         const waitCard = waitTemplate.content.cloneNode(true);
 
-        let card = waitCard.querySelector(".player")
+        let card = waitCard.querySelector(".player");
         tempCard.replaceWith(waitCard);
 
         setTimeout(() => {
@@ -245,19 +272,7 @@ function loadToMainPageLink() {
 }
 
 function initCardEventListeners() {
-    let buttonGetBot = document.querySelectorAll('.get-bot');
     let playerCards = document.querySelectorAll('.player');
-
-    buttonGetBot.forEach(function(button, i) {
-        button.addEventListener('click', function() {
-            let botCard = addBot(button);
-            let waitCard = addWait(button);
-
-            if (botCard) {
-                initCardEventListener(botCard, i+1);
-            }
-        });
-    });
 
     playerCards.forEach(initCardEventListener);
 }
@@ -265,6 +280,36 @@ function initCardEventListeners() {
 function initCardEventListener(card, indexCount) {
     let navigationArrowLeft = card.querySelector('.button-left');
     let navigationArrowRight = card.querySelector('.button-right');
+    let buttonGetWait = card.querySelector('.get-wait');
+    let buttonGetBot = card.querySelector('.get-bot');
+    let buttonGetPlayer = card.querySelector('.get-player');
+
+    if (buttonGetBot) {
+        buttonGetBot.addEventListener('click', function () {
+            let botCard = addBot(buttonGetBot);
+
+            if (botCard) {
+                initCardEventListener(botCard, indexCount);
+            }
+        });
+    }
+
+    if (buttonGetPlayer) {
+        buttonGetPlayer.addEventListener('click', function () {
+            currentPlayerCard = addPlayer(buttonGetPlayer);
+
+            if (currentPlayerCard) {
+                initCardEventListener(currentPlayerCard, indexCount);
+            }
+        });
+    }
+
+    if (buttonGetWait) {
+        buttonGetWait.addEventListener('click', function() {
+            let card = addWait(buttonGetWait);
+            initCardEventListener(card);
+        });
+    }
 
     navigationArrowLeft.addEventListener('click', () => {
         cardStyles[indexCount].nameCharacter.character--;
@@ -272,14 +317,15 @@ function initCardEventListener(card, indexCount) {
             cardStyles[indexCount].nameCharacter.character = playerImages.length-1;
         }
         setStyleCard(indexCount);
-    })
+    });
+
     navigationArrowRight.addEventListener('click', () => {
         cardStyles[indexCount].nameCharacter.character++;
         if (cardStyles[indexCount].nameCharacter.character > playerImages.length-1) {
             cardStyles[indexCount].nameCharacter.character = 0;
         }
         setStyleCard(indexCount);
-    })
+    });
 }
 
 function initEventListeners() {
@@ -302,13 +348,17 @@ function initEventListeners() {
     }
 
     if (buttonBot) {
-        buttonBot.addEventListener('click', () => {
-            setTimeout(() => transitionToPage("with_bot.html"), 0);
-        });
+        buttonBot.addEventListener('click', () => {transitionToPage("with_bot.html")});
     }
 
     if (buttonPlayer) {
-        buttonPlayer.addEventListener('click', () => { transitionToPage("with-player.html"); });
+        buttonPlayer.addEventListener('click', () => {
+            if (!(document.cookie.indexOf('userId') > -1)) {
+                setCookie();
+                sendCookie();
+            }
+            transitionToPage("with-player.html");
+        });
     }
 
     if (button1vs1) {
@@ -322,6 +372,9 @@ function initEventListeners() {
     if (buttonLobby) {
         buttonLobby.addEventListener('click', () => {
             socket.emit('createRoom');
+            socket.on('requestForCookie', () => {
+                sendCookie();
+            })
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
                 transitionToPage("lobby.html");
@@ -341,6 +394,9 @@ function initEventListeners() {
             if (inputRoomId.value.length === 6) {
                 let codeRoom = document.getElementById('input-code').value;
                 socket.emit('joinRoom', codeRoom);
+                socket.on('requestForCookie', () => {
+                    sendCookie();
+                })
                 socket.on('joinedRoom', (roomId) => {
                     globalRoomId = roomId;
                     transitionToPage("lobby.html");
@@ -356,7 +412,7 @@ function initEventListeners() {
     }
 
     if (cardBox) {
-        loadCard('player-template');
+        currentPlayerCard = loadCard('player-template');
         loadCard('waiting-template');
         loadCard('waiting-template');
         loadCard('waiting-template');
@@ -368,12 +424,16 @@ function initEventListeners() {
             setStyleCard(3);
         }, 0);
 
-        initCardEventListeners(); // Инициализируем события для добавленных карточек
+        initCardEventListeners();
     }
 
     if (buttonPlay) {
         buttonPlay.addEventListener('click', () => {
             buttonPlay.textContent = 'READY';
+            socket.emit('playerIsReady');
+            socket.on('roomIsReady', () => {
+                window.location.href = "game.html";
+            })
             setTimeout(() => {
                 window.location.href = "game.html";
             }, 1000);
@@ -390,12 +450,41 @@ function initEventListeners() {
     if (buttonMenu) {
         buttonMenu.addEventListener('click', () => { transitionToPage("menu.html"); });
     }
+
+    // window.addEventListener('beforeunload', function(e) {
+    //     e.preventDefault(); // Предотвращаем стандартное поведение
+    //     e.returnValue = ''; // Убираем сообщение о подтверждении
+    //     // Здесь вы можете вызвать функцию для отправки уведомления на сервер
+    //     socket.emit('pageRefreshed');
+    // })
+
 }
 
-// Initial load of the menu page
+function sendCookie() {
+    const cookieValue = document.cookie.split('; ')
+        .find(row => row.startsWith('userId='))
+        ?.split('=')[1];
+    //console.log(document.cookie, 'document.cookie');
+    // Отправляем куки на сервер
+    socket.emit('sentCookie', cookieValue);
+}
+function setCookie() {
+    let now = new Date();
+    now.setHours(now.getHours() + 2);
+    const cookieValue = generateId();
+    document.cookie = 'userId=' + cookieValue + '; expires=' + now.toUTCString() + '; path=/';
+    //console.log(document.cookie, '   cookie set');
+}
+function generateId() {
+    let uniqueId = Math.random().toString().slice(-6);
+    uniqueId = parseInt(uniqueId);
+    return uniqueId;
+}
+
 loadHTML('menu.html', (html) => {
     callback(html);
     playMenuTheme();
     loadToMainPageLink();
     initEventListeners();
+
 });

@@ -68,6 +68,7 @@
     height: 430px;
     width: 290px;
     margin-right: 54px;
+    border-radius: 1%;
 }
 
 .player-card-top {
@@ -188,6 +189,10 @@
     border: none;
     cursor: pointer;
     transition: transform 0.3s ease-out;
+}
+
+.get {
+    display: none;
 }
 
 .player-get:active {
