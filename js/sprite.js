@@ -15,8 +15,8 @@
             let frame;
 
             if (this.speed > 0) {
-                let max = this.frames.length;
-                let idx = Math.floor(this._index);
+                const max = this.frames.length;
+                const idx = Math.floor(this._index);
                 frame = this.frames[idx % max];
 
                 if (this.once && idx >= max) {

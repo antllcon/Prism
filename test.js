@@ -20,6 +20,7 @@ function findRoomBySocketId(id) {
 }
 console.log(findRoomBySocketId(123));
 
+/*
 function findRoomBySocketId(id) {
     Object.keys(rooms).forEach((roomId) => {
         if (rooms[roomId].clients.includes(id)) {
@@ -28,3 +29,4 @@ function findRoomBySocketId(id) {
     });
     return false;
 }
+*/

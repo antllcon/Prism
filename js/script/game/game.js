@@ -24,8 +24,8 @@ export function drawBackground() {
 
 export function countdown() {
     //let inputTime = Date.now(); // возможно вообще не нужен
-    let background = document.createElement('div');
-    let countdownGif = document.createElement('img');
+    const background = document.createElement('div');
+    const countdownGif = document.createElement('img');
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(countdownGif);
@@ -57,7 +57,7 @@ function resetLevel() {
 }
 
 export function updateEntities(dt) {
-    let player = getMyPlayer(activePlayers);
+    const player = getMyPlayer(activePlayers);
     player.updateAbilityScale(dt);
 
     activeBots.forEach((bot) => {

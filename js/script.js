@@ -15,15 +15,15 @@ import { countdown, drawBackground, updateEntities } from './script/game/game';
 import { checkCollisions } from './controller/bounds';
 import { initBonuses, drawBonuses } from './script/bonuses/bonus';
 
-let canvas = document.getElementById('canvas');
-export let ctx = canvas.getContext('2d');
+const canvas = document.getElementById('canvas');
+export const ctx = canvas.getContext('2d');
 canvas.width = game.getWidth();
 canvas.height = game.getHeight();
 const socket = io();
 
 export let activePlayers = [];
-export let points = [];
-export let requiredBots = [2];
+export const points = [];
+export const requiredBots = [2];
 export let activeBots = [];
 export let bonuses = [];
 
@@ -64,8 +64,8 @@ function update(dt) {
 }
 
 export function main() {
-    let now = Date.now();
-    let dt = (now - lastState.lastTime) / 1000.0;
+    const now = Date.now();
+    const dt = (now - lastState.lastTime) / 1000.0;
     if (score.getTeam1() < 3 && score.getTeam2() < 3) {
         update(dt);
         render();
@@ -94,8 +94,8 @@ function initPlayers() {
 }
 
 function sendDataToServer() {
-    let playerAsEntity = getMyPlayer(activePlayers);
-    let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
+    const playerAsEntity = getMyPlayer(activePlayers);
+    const transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
     socket.emit('sendDataToServer', transmittedPlayer);
 }
 

@@ -4,7 +4,7 @@ import { bonuses, ctx } from '../../script';
 import { AVAILABLE_BONUSES, BONUS_TYPES } from './bonusTypes';
 
 export function initBonuses() {
-    let bonusesForRound = [];
+    const bonusesForRound = [];
 
     AVAILABLE_BONUSES.forEach((bonusInfo) => {
         for (let i = 0; i < bonusInfo.count; i++) {
@@ -23,7 +23,6 @@ export function initBonuses() {
                 );
                 bonusesForRound.push(bonus);
                 console.log(`Бонус создан: ${bonus.type}`);
-                console.log(bonus);
             }
         }
     });

@@ -36,7 +36,7 @@ export function resetPoints() {
 }
 
 export function resetPoint(point) {
-    let id = point.getId();
+    const id = point.getId();
     point = new Point(id);
     // const defaultPoint = DEFAULT_POINTS[index];
     // point.id = defaultPoint.id;

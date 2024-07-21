@@ -32,9 +32,9 @@ export class Game {
     }
 }
 
-export let game = new Game();
+export const game = new Game();
 
-export let GAME = {
+export const GAME = {
     width: canvasWidth,
     height: canvasHeight,
     background: dark,

@@ -157,6 +157,5 @@ export class Point {
 
     deactivate() {
         this.setInactive();
-        console.log(`Поинт ${this.id} деактивирован!`);
     }
 }

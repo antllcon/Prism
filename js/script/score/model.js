@@ -31,9 +31,9 @@ export class Score {
     }
 }
 
-export let score = new Score();
+export const score = new Score();
 
-export let SCORE = {
+export const SCORE = {
     color: white,
     team1: 0,
     team2: 0,

@@ -14,8 +14,8 @@ app.use(express.static(path.dirname(__dirname) + '/dist'));
 app.get('/', (req, res) => {
     res.sendFile(path.dirname(__dirname) + '/dist/index.html');
 });
-let rooms = {};
-let players = [];
+const rooms = {};
+const players = [];
 
 // socket.id по каким-то причинам не существует на беке
 // Обработчик подключения клиента к сокету
@@ -37,13 +37,13 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leaveRoom', () => {
-        let roomId = findRoomBySocketId(socket.id);
+        const roomId = findRoomBySocketId(socket.id);
         leaveRoom(roomId, socket);
     });
 
     socket.on('sendDataToServer', (transPlayer) => {
         //внутри data находятся данные о плеере текущего клиента
-        let roomId = findRoomBySocketId(socket.id);
+        const roomId = findRoomBySocketId(socket.id);
         players.forEach((player) => {
             if (player.id === transPlayer.id) {
                 updatePlayer(player, transPlayer);
@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        let roomId = findRoomBySocketId(socket.id);
+        const roomId = findRoomBySocketId(socket.id);
         if (roomId) {
             leaveRoom(roomId, socket);
         }
@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
 
     //  socket.on('playerIsReady')
     socket.on('playerIsReady', () => {
-        let roomId = findRoomBySocketId(socket.id);
+        const roomId = findRoomBySocketId(socket.id);
         rooms[roomId].readyClients++;
         if (rooms[roomId].readyClients === rooms[roomId].clients.length) {
             io.in(roomId).emit('roomIsReady');

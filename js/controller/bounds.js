@@ -9,7 +9,7 @@ import { SIZE as SIZE_PB } from '../script/player/progressBar/progressBar';
 
 function checkLaserBounds() {
     points.forEach((point) => {
-        let player = getMyPlayer(activePlayers);
+        const player = getMyPlayer(activePlayers);
 
         if (player.isInvisibleLasers()) {
             return;
@@ -203,7 +203,7 @@ function checkLaserBounds() {
 }
 
 function checkBorderGameBounds() {
-    let player = getMyPlayer(activePlayers);
+    const player = getMyPlayer(activePlayers);
     if (player.getX() < 0) {
         player.setX(game.getWidth() - player.getSize());
     } else if (player.getX() + player.getSize() > game.getWidth()) {

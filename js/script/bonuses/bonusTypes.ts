@@ -6,7 +6,7 @@ import {ChangeColorBonus} from "./ChangeColorBonus";
 import {InvisibleLaserBonus} from "./InvisibleLaserBonus";
 
 export const BONUS_TYPES: BonusType[] = [
-    { type: 'base', class: BaseBonus, size: 20, color: '#FFFF00', team: 'neutral' },
+    //{ type: 'base', class: BaseBonus, size: 20, color: '#FFFF00', team: 'neutral' },
     { type: 'stopBot', class: StopBonus, size: 30, color: '#FF0000',  team: 'neutral'  },
     { type: 'deactivatePoints', class: DeactivatePointsBonus, size: 30, color: '#05bbf4' ,  team: 'neutral' },
     { type: 'changeColor', class: ChangeColorBonus, size: 30, color: '#00FF00' ,  team: 'neutral' },

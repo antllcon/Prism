@@ -1,7 +1,7 @@
 (function () {
     let pressedKeys = {};
     function setKey(event, status) {
-        let code = event.keyCode;
+        const code = event.keyCode;
         let key;
 
         switch (code) {

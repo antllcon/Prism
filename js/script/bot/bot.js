@@ -8,7 +8,7 @@ import { yellow } from '../game/const';
 
 export function createBots() {
     //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов
-    let createdBots = [];
+    const createdBots = [];
     let i = 0;
     requiredBots.forEach((placeId) => {
         createdBots[i] = new Bot(placeId);
@@ -101,7 +101,7 @@ export function botMovement(dt) {
                 } else {
                     dx = point.getX() - bot.getX();
                 }
-                let hyp = Math.sqrt(dx ** 2 + dy ** 2);
+                const hyp = Math.sqrt(dx ** 2 + dy ** 2);
                 if (hyp < hypMinInactive) {
                     idInactive = point.id;
                     dxMinInactive = dx;
@@ -122,9 +122,9 @@ export function botMovement(dt) {
                         dxMinActive ** 2 + dyMinActive ** 2
                     );
                 }
-                let dx = point.getX() - bot.getX();
-                let dy = point.getY() - bot.getY();
-                let hyp = Math.sqrt(dx ** 2 + dy ** 2);
+                const dx = point.getX() - bot.getX();
+                const dy = point.getY() - bot.getY();
+                const hyp = Math.sqrt(dx ** 2 + dy ** 2);
                 if (hyp < hypMinActive) {
                     idActive = point.getId();
                     dxMinActive = dx;

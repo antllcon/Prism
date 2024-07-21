@@ -12,7 +12,7 @@ export const POINT_TYPES = {
     TRIGRAPH: 'trigraph',
     CROSS: 'cross',
 };
-export let DEFAULT_POINTS = {
+export const DEFAULT_POINTS = {
     id: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     x: [
         canvasWidth / 2,

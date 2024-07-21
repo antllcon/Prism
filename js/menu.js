@@ -19,7 +19,7 @@ let buttonLeave;
 let buttonReady;
 
 function loadHTML(filename, callback) {
-    let xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('GET', filename);
     xhr.onload = () => {
         callback(xhr.response);
@@ -42,7 +42,7 @@ function transitionToPage(file) {
             loadToMainPageLink();
         }
         if (file === 'lobby.html') {
-            let chapterCodeElement = document.querySelector('.chapter__code');
+            const chapterCodeElement = document.querySelector('.chapter__code');
             chapterCodeElement.textContent = globalRoomId;
         }
 
@@ -51,7 +51,7 @@ function transitionToPage(file) {
 }
 
 function loadToMainPageLink() {
-    let toMainPage = document.createElement('a');
+    const toMainPage = document.createElement('a');
     toMainPage.classList.add('logo');
     toMainPage.href = '';
     loadHTML('src/assets/img/prism.svg', (html) => {
@@ -116,7 +116,7 @@ function initEventListeners() {
 
     if (buttonEnter) {
         buttonEnter.addEventListener('click', () => {
-            let inputRoomId = document.getElementById('input-code').value;
+            const inputRoomId = document.getElementById('input-code').value;
             socket.emit('joinRoom', inputRoomId);
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
@@ -138,7 +138,7 @@ function initEventListeners() {
 
     if (buttonConnect) {
         buttonConnect.addEventListener('click', () => {
-            let inputField = document.getElementById('input-code');
+            const inputField = document.getElementById('input-code');
             inputField.classList.toggle('input-for-code');
         });
     }

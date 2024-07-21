@@ -60,7 +60,7 @@ export function drawPlayer(activePlayers) {
 }
 
 export function createPlayers(players, myId) {
-    let createdPlayers = [];
+    const createdPlayers = [];
     for (let i = 0; i < players.length; i++) {
         createdPlayers[i] = new Player(i, players[i], myId);
     }
