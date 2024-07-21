@@ -4,11 +4,14 @@ import {
     ABILITY_SCALE_SPEED,
     ABILITY_SCALE_MAX,
     ABILITY_DURATION,
-    MAX_SPEED
+    MAX_SPEED,
+    DURATION_DISABILITY
 } from "./const";
 
 import { canvasHeight, canvasWidth } from "../game/const";
 import { ProgressBar } from "./progressBar/progressBar";
+import {BOT_STATES, DEFAULT_BOTS} from "../bot/const";
+import {ctx} from "../../script";
 
 export class Player {
     private id: string;
@@ -24,6 +27,7 @@ export class Player {
     private abilityScale: number;
     private abilityActive: boolean;
     private progressBar: ProgressBar;
+    private stunnedUntil: number;
 
     constructor(i: number, id: string, socket_id: string) {
         this.id = id;
@@ -39,6 +43,7 @@ export class Player {
         this.abilityActive = false;
         this.progressBar = new ProgressBar(this);
         this.progressBar.render();
+        this.stunnedUntil = 0;
     }
 
     getId(): string { return this.id; }
@@ -53,6 +58,7 @@ export class Player {
     getAbilityScale(): number { return this.abilityScale; }
     isAlive(): boolean { return this.state === PLAYER_STATES.ACTIVE; }
     isDead(): boolean { return this.state === PLAYER_STATES.DEAD; }
+    isStunned(): boolean { return this.state === PLAYER_STATES.STUNNED; }
 
     moveOn(x: number, y: number): void {
         this.x += x;
@@ -65,10 +71,11 @@ export class Player {
     setX(x: number): void { this.x = x; }
     setY(y: number): void { this.y = y; }
     setSpeed(speed: number): void { this.speed = speed; }
+    // @ts-ignore
+    setState(state: PLAYER_STATES): PLAYER_STATES { this.state = state; }
     renaissance(): void { this.state = PLAYER_STATES.ACTIVE; }
     renderPB(): void { this.progressBar.render(); }
     setAbilityScale(value: number): void { this.abilityScale = value; }
-
     updateAbilityScale(deltaTime: number): void {
         this.abilityScale += ABILITY_SCALE_SPEED * deltaTime;
         this.progressBar.update(this.abilityScale);
@@ -76,7 +83,6 @@ export class Player {
             this.abilityScale = ABILITY_SCALE_MAX;
         }
     }
-
     resetAbilityScale(): void {
         if (this.abilityScale >= ABILITY_SCALE_MAX) {
             this.activateAbility();
@@ -84,7 +90,6 @@ export class Player {
             this.progressBar.update(this.abilityScale);
         }
     }
-
     activateAbility(): void {
         this.abilityActive = true;
         console.log('ability activated');
@@ -94,5 +99,36 @@ export class Player {
             this.abilityActive = false;
             this.setSpeed(DEFAULT_PLAYERS.speed);
         }, ABILITY_DURATION);
+    }
+    makeStunned(): void {
+        this.stunnedUntil = Date.now() + DURATION_DISABILITY;
+        this.setSpeed(0);
+        this.setState(PLAYER_STATES.STUNNED);
+    }
+
+    recoverFromStunned() {
+        this.stunnedUntil = 0;
+        this.setSpeed(DEFAULT_PLAYERS.speed);
+
+        if (this.isDead()) {
+            this.renaissance();
+        } else {
+            this.setState(BOT_STATES.ACTIVE);
+        }
+    }
+
+    drawCountdown() {
+        console.log('drawCountdown')
+        if (this.isStunned()) {
+            console.log('drawCountdown 2');
+            const remainingTime = this.stunnedUntil - Date.now();
+            const seconds = Math.floor(remainingTime / 1000);
+            const milliseconds = Math.floor((remainingTime % 1000) / 10);
+            const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
+
+            ctx.fillStyle = 'white';
+            ctx.font = '16px Arial';
+            ctx.fillText(countdownText, this.x, this.y - 30);
+        }
     }
 }

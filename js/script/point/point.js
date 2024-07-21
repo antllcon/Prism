@@ -6,7 +6,8 @@ import {ctx, points} from "../../script";
 import {gameState} from "../game/model"
 
 export function createPoints() {
-    for (let i = 0; i < pointsAmount; i++) {
+    //pointsAmount вместо 2
+    for (let i = 0; i < 2; i++) {
         points[i] = new Point(i);
     }
 }

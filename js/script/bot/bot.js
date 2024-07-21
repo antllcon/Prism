@@ -3,7 +3,7 @@ import {Bot} from './model'
 import {GAME} from "../game/model";
 import {Point} from "../point/model";
 import {POINT_STATES} from "../point/const";
-import {ctx, activeBots, requiredBots, points} from "../../script"
+import {ctx, activeBots, requiredBots, points, bonuses} from "../../script"
 import {yellow} from "../game/const";
 
 export function createBots() {
@@ -23,12 +23,13 @@ export function drawBot() {
             ctx.fillStyle = bot.getColor();
             ctx.fillRect(bot.getX(), bot.getY(), bot.getSize(), bot.getSize());
         }
-        if (bot.getState() === BOT_STATES.STUNNED && bot.stunnedUntil < Date.now()) {
+        if (bot.isStunned() && bot.stunnedUntil < Date.now()) {
             bot.recoverFromStunned();
         }
-        // if (bot.isDead()) {
-        //     // bot.setState(BOT_STATES.ACTIVE);
-        // }
+        if (bot.isStunned())
+        {
+            bot.drawCountdown();
+        };
     });
 }
 export function resetAllBots() {
@@ -134,22 +135,41 @@ export function botMovement(dt) {
         }
 
         function moveBotOutOfLaserSpiral() {
-            // Определяем угол между ботом и точкой
             const angle = Math.atan2(dyMinActive, dxMinActive);
-
-            // Радиальная скорость (от центра прочь)
             const radialSpeed = bot.getSpeed() * dt;
-
-            // Угловая скорость (по окружности)
             const angularSpeed = bot.getSpeed() * dt / hypMinActive;
-            // Обновляем координаты бота
             dxActive = angularSpeed * Math.sin(angle) * hypMinActive - radialSpeed * Math.cos(angle);
             dyActive = (-1) * (radialSpeed * Math.sin(angle) + angularSpeed * Math.cos(angle) * hypMinActive);
         }
 
         function getRightDirection() {
-            if (inRangeOfLaser) {
-                if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
+            let closestBonus = null;
+            let closestDistance = Infinity;
+
+            bonuses.forEach(bonus => {
+                const dx = bot.x - bonus.getX();
+                const dy = bot.y - bonus.getY();
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestBonus = bonus;
+                }
+            });
+
+            if (closestBonus) {
+                const dxBonus = closestBonus.getX() - bot.x;
+                const dyBonus = closestBonus.getY() - bot.y;
+                const angleToBonus = Math.atan2(dyBonus, dxBonus);
+                const speed = bot.getSpeed() * dt;
+
+                bot.moveOn(speed * Math.cos(angleToBonus), speed * Math.sin(angleToBonus));
+            } else {
+
+
+                if (inRangeOfLaser)
+                {
+                    if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
                     if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
                         bot.moveOn(dxActive + dxInactive, 
                             dyActive + dyInactive
@@ -201,8 +221,7 @@ export function botMovement(dt) {
                 bot.moveOn(dxInactive, 
                     dyInactive
                 );
-            }
+            }}
         }
-    });
-    
+        });
 }

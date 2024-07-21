@@ -6,14 +6,13 @@ export class BaseBonus {
     public type: string;
     public teamActivated: string
 
-    constructor(x: number, y: number, size: number = 20, color: string = 'yellow', team: string) {
+    constructor(x: number, y: number, size: number = 20, color: string, team: string) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.color = color;
         this.type = 'generic';
         this.teamActivated = team;
-        console.log('BaseBonus constructed');
     }
 
     public getX(): number { return this.x;}
@@ -21,6 +20,5 @@ export class BaseBonus {
     public getSize(): number {return this.size;}
     public getTeam(): string {return this.teamActivated}
     public catch(entity: { id: string, team: string }, ...args: any[]): void {
-        console.log(`${entity.id} из команды ${entity.team} поймал бонус!`);
     }
 }

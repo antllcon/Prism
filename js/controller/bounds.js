@@ -210,7 +210,7 @@ function checkRectCollision(rect1, rect2) {
     );
 }
 
-export function checkPlayerBotBonusCollision(bonuses) {
+function checkPlayerBotBonusCollision(bonuses) {
     const player = getMyPlayer(activePlayers);
 
     bonuses.forEach(bonus => {
@@ -219,7 +219,8 @@ export function checkPlayerBotBonusCollision(bonuses) {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < (player.size + bonus.getSize())) {
-            bonus.catch(player, activeBots);
+            bonus.catch(player, activeBots, activePlayers);
+            bonuses.splice(bonuses.indexOf(bonus), 1);
         }
     });
     activeBots.forEach(bot => {
@@ -229,8 +230,7 @@ export function checkPlayerBotBonusCollision(bonuses) {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < (bot.size + bonus.getSize())) {
-                bonus.catch(bot, activeBots);
-                //удаление бонуса с карты сделать
+                bonus.catch(bot, activeBots, activePlayers);
                 bonuses.splice(bonuses.indexOf(bonus), 1);
             }
         });

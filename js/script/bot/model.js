@@ -1,5 +1,6 @@
 import {BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY} from "./const";
 import {yellow, TEAM_STATES} from "../game/const";
+import {ctx} from "../../script";
 
 export class Bot {
     constructor(i)  {
@@ -11,7 +12,9 @@ export class Bot {
         this.color = DEFAULT_BOTS.color[i];
         this.state = DEFAULT_BOTS.state;
         this.stunnedUntil = 0;
+        this.name = "Bot"
     }
+    getName(){return this.name = "Bot"}
     getX() {return this.x;}
     getY() {return this.y;}
     getSize() {return this.size;}
@@ -41,7 +44,6 @@ export class Bot {
         this.speed = value;
     }
 
-
     recoverFromStunned() {
         this.stunnedUntil = 0;
         this.setSpeed(DEFAULT_BOTS.speed);
@@ -50,6 +52,21 @@ export class Bot {
             this.renaissance();
         } else {
             this.setState(BOT_STATES.ACTIVE);
+        }
+    }
+
+    drawCountdown() {
+        console.log('drawCountdown')
+        if (this.isStunned()) {
+            console.log('drawCountdown 2');
+            const remainingTime = this.stunnedUntil - Date.now();
+            const seconds = Math.floor(remainingTime / 1000);
+            const milliseconds = Math.floor((remainingTime % 1000) / 10);
+            const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
+
+            ctx.fillStyle = 'white';
+            ctx.font = '16px Arial';
+            ctx.fillText(countdownText, this.x, this.y - 30);
         }
     }
 }

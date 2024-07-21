@@ -1,7 +1,8 @@
 import {Player} from "./model";
-import {DEFAULT_PLAYERS} from "./const";
+import {DEFAULT_PLAYERS, PLAYER_STATES} from "./const";
 import {ctx, activePlayers} from "../../script";
 import {GREEN} from "./const";
+import {BOT_STATES} from "../bot/const";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
@@ -24,9 +25,11 @@ export function handleInput(dt) {
 }
 
 export function drawPlayer(activePlayers) {
-    const mainPlayer = getMyPlayer(activePlayers)
+
+    const mainPlayer = getMyPlayer(activePlayers);
+
     activePlayers.forEach(player => {
-        if (player.isAlive()) {
+        if (player.isAlive() || player.isStunned()) {
             ctx.fillStyle = player.getColor();
             ctx.fillRect(player.getX(), player.getY(), player.getSize(), player.getSize());
         }
@@ -36,11 +39,18 @@ export function drawPlayer(activePlayers) {
                 player.setX(10);
                 player.setY(10);
                 player.renaissance();
-            }, 1000); // Changed delay to 1000ms
+            }, 1000);
+        }
+        if (player.getState() === PLAYER_STATES.STUNNED && player.stunnedUntil < Date.now()) {
+            player.recoverFromStunned();
         }
         if (player.getId() === mainPlayer.getId())
         {
-            player.renderPB()
+            player.renderPB();
+            if (player.isStunned())
+            {
+                player.drawCountdown();
+            };
         }
     })
 

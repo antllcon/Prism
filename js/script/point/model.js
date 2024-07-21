@@ -152,8 +152,14 @@ export class Point {
         this.type = POINT_TYPES.CROSS;
     }
 
+
     moveOn(x, y) {
         this.x += x;
         this.y += y;
+    }
+
+    deactivate() {
+        this.setInactive();
+        console.log(`Поинт ${this.id} деактивирован!`);
     }
 }

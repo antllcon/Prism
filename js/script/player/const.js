@@ -8,6 +8,8 @@ export const PLAYER_STATES = {
     DEAD: 'dead'
 }
 
+export const DURATION_DISABILITY = 5000;
+
 export const DEFAULT_PLAYERS = {
     x: [50, 50, canvasWidth-50, canvasWidth-50],
     y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],

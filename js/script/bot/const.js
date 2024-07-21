@@ -18,5 +18,3 @@ export const DEFAULT_BOTS = {
     color: ['purple', 'purple', 'yellow', 'yellow'],
     state: BOT_STATES.ACTIVE
 }
-// export const botStartX = canvasWidth - 50;
-// export const botStartY = canvasHeight / 2;

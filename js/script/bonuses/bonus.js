@@ -13,14 +13,13 @@ export function initBonuses() {
             if (bonusType) {
                 const x = Math.floor(Math.random() * (canvas.width - 40)) + 20;
                 const y = Math.floor(Math.random() * (canvas.height - 40)) + 20;
-                const bonus = new bonusType.class(x, y);
+                const bonus = new bonusType.class(x, y, bonusType.size, bonusType.color, bonusType.team);
                 bonusesForRound.push(bonus);
                 console.log(`Бонус создан: ${bonus.type}`);
+                console.log(bonus);
             }
         }
     });
-    console.log(bonusesForRound)
-    console.log('bonusesForRound')
     return bonusesForRound;
 }
 
@@ -28,7 +27,7 @@ export function drawBonuses() {
     bonuses.forEach(bonus => {
         ctx.beginPath();
         ctx.arc(bonus.getX(), bonus.getY(), bonus.getSize(), 0, 2 * Math.PI);
-        ctx.fillStyle = bonus.color || 'yellow'; // Используйте цвет бонуса, если он задан
+        ctx.fillStyle = bonus.color;
         ctx.fill();
         ctx.closePath();
     });
