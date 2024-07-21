@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
     socket.on('sendDataToServer', (transPlayer) => {
         //внутри data находятся данные о плеере текущего клиента
         let roomId = findRoomBySocketId(socket.id);
-        players.forEach(player => {
+        players.forEach((player) => {
             if (player.id === transPlayer.id) {
                 updatePlayer(player, transPlayer);
                 socket.to(rooms[roomId]).emit('dataFromServer', player);
@@ -54,24 +54,23 @@ io.on('connection', (socket) => {
 
     socket.on('requestOnDataFromServer', () => {
         socket.emit('dataFromServer', players);
-    })
+    });
 
     socket.on('disconnect', () => {
-        let roomId = findRoomBySocketId(socket.id)
+        let roomId = findRoomBySocketId(socket.id);
         if (roomId) {
             leaveRoom(roomId, socket);
         }
-    })
+    });
 
     //  socket.on('playerIsReady')
     socket.on('playerIsReady', () => {
-        let roomId  = findRoomBySocketId(socket.id);
+        let roomId = findRoomBySocketId(socket.id);
         rooms[roomId].readyClients++;
-        if (rooms[roomId].readyClients === rooms[roomId].clients.length)
-        {
-            io.in(roomId).emit('roomIsReady')
+        if (rooms[roomId].readyClients === rooms[roomId].clients.length) {
+            io.in(roomId).emit('roomIsReady');
         }
-    })
+    });
 });
 
 function updatePlayer(player, transPlayer) {
@@ -86,7 +85,6 @@ function broadcastRoomUpdate(roomId) {
     io.to(roomId).emit('roomUpdate', rooms[roomId]);
 }
 
-
 const PORT = process.env.PORT || 5000;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
@@ -100,7 +98,9 @@ function generateRoomId() {
 
 function leaveRoom(roomId, socket) {
     if (rooms[roomId]) {
-        rooms[roomId].clients = rooms[roomId].clients.filter(clientId => clientId !== socket.id);
+        rooms[roomId].clients = rooms[roomId].clients.filter(
+            (clientId) => clientId !== socket.id
+        );
         socket.leave(roomId);
         console.log(socket.id, ' left the room with id: ', roomId);
         broadcastRoomUpdate(roomId);
@@ -109,7 +109,7 @@ function leaveRoom(roomId, socket) {
 
 function findRoomBySocketId(id) {
     let foundId;
-    Object.keys(rooms).forEach(roomId => {
+    Object.keys(rooms).forEach((roomId) => {
         if (rooms[roomId].clients.includes(id)) {
             foundId = roomId;
         }

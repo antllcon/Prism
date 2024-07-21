@@ -1,15 +1,21 @@
 // import {TEAM_STATES} from "./const";
-import {game, lastState, gameState} from "./model";
-import {Point} from "../point/model";
-import {POINT_STATES} from "../point/const";
-import {movePoint, resetPoint, resetPoints, respawnPoint, updateVisibilityPoints} from "../point/point"
-import {getMyPlayer, resetAllPlayers} from "../player/player"
-import {resetAllBots} from "../bot/bot"
-import {score, SCORE, scoreAlphaState} from "../score/model";
-import {fadeOutScore} from "../score/score";
-import {playCountdown} from "../../sound/countdownAudio";
-import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main, ctx, activePlayers, activeBots, points} from "../../script";
+import { game, lastState, gameState } from './model';
+import { Point } from '../point/model';
+import { POINT_STATES } from '../point/const';
+import {
+    movePoint,
+    resetPoint,
+    resetPoints,
+    respawnPoint,
+    updateVisibilityPoints,
+} from '../point/point';
+import { getMyPlayer, resetAllPlayers } from '../player/player';
+import { resetAllBots } from '../bot/bot';
+import { score, SCORE, scoreAlphaState } from '../score/model';
+import { fadeOutScore } from '../score/score';
+import { playCountdown } from '../../sound/countdownAudio';
+import { playGameTheme } from '../../sound/gameThemeAudio';
+import { main, ctx, activePlayers, activeBots, points } from '../../script';
 
 export function drawBackground() {
     ctx.fillStyle = game.getBackground();
@@ -18,12 +24,12 @@ export function drawBackground() {
 
 export function countdown() {
     //let inputTime = Date.now(); // возможно вообще не нужен
-    let background = document.createElement("div");
-    let countdownGif = document.createElement("img");
+    let background = document.createElement('div');
+    let countdownGif = document.createElement('img');
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(countdownGif);
-    countdownGif.src = "./src/assets/img/cat.gif";
+    countdownGif.src = './src/assets/img/cat.gif';
     playCountdown();
     setTimeout(() => {
         playGameTheme();
@@ -31,7 +37,7 @@ export function countdown() {
         countdownGif.remove();
         lastState.lastTime = Date.now();
         main();
-    }, 4200)
+    }, 4200);
 }
 
 function resetLevel() {
@@ -52,12 +58,15 @@ function resetLevel() {
 
 export function updateEntities(dt) {
     let player = getMyPlayer(activePlayers);
-    player.updateAbilityScale(dt)
+    player.updateAbilityScale(dt);
 
-    activeBots.forEach(bot => {
-        points.forEach(point => {
+    activeBots.forEach((bot) => {
+        points.forEach((point) => {
             if (point.isActive()) {
-                if (Date.now() - point.getActivationTime() < point.getExistTime()) {
+                if (
+                    Date.now() - point.getActivationTime() <
+                    point.getExistTime()
+                ) {
                     if (point.getTeam() === player.getTeam()) {
                         point.setColor(player.getColor());
                     }
@@ -71,7 +80,6 @@ export function updateEntities(dt) {
                 }
             }
             if (point.isInactive()) {
-    
             }
             if (point.isInvisible()) {
                 updateVisibilityPoints(point);
@@ -79,26 +87,26 @@ export function updateEntities(dt) {
             if (point.isActive() || point.isInactive()) {
                 movePoint(point, dt);
             }
-        })
+        });
 
         if (bot.isDead()) {
             if (bot.getTeam() === 'purple') {
-                score.increaseTeamYellow()
+                score.increaseTeamYellow();
             }
             if (bot.getTeam() === 'yellow') {
-                score.increaseTeamPurple()
+                score.increaseTeamPurple();
             }
             resetLevel();
         }
     });
 
-    activePlayers.forEach(player => {
+    activePlayers.forEach((player) => {
         if (player.isDead()) {
             if (player.getTeam() === 'purple') {
-                score.increaseTeamYellow()
+                score.increaseTeamYellow();
             }
             if (player.getTeam() === 'yellow') {
-                score.increaseTeamPurple()
+                score.increaseTeamPurple();
             }
             resetLevel();
         }

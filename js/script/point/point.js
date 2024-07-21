@@ -1,16 +1,16 @@
 // noinspection JSPrimitiveTypeWrapperUsage
 
-import {Point} from "./model";
-import {POINT_STATES, POINT_TYPES, pointsAmount} from "./const";
-import {ctx, points} from "../../script";
-import {gameState} from "../game/model"
+import { Point } from './model';
+import { POINT_STATES, POINT_TYPES, pointsAmount } from './const';
+import { ctx, points } from '../../script';
+import { gameState } from '../game/model';
 
 export function createPoints() {
-    //pointsAmount вместо 2
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < pointsAmount; i++) {
         points[i] = new Point(i);
     }
 }
+
 // export function createPoint(point) {
 //     return {
 //         id: point.id,
@@ -54,7 +54,7 @@ export function resetPoint(point) {
 }
 
 export function drawPoints() {
-    points.forEach(point => {
+    points.forEach((point) => {
         if (point.isActive()) {
             //console.log(point);
             // console.log(point.isTypeTrigraph());
@@ -86,9 +86,15 @@ export function drawPoints() {
                 ctx.moveTo(point.getSize() / 2, 0);
                 ctx.lineTo(0, 0);
                 ctx.moveTo(0, 0);
-                ctx.lineTo(-point.getSize() / 2 * Math.cos(Math.PI / 3), -point.getSize() / 2 * Math.sin(Math.PI / 3));
+                ctx.lineTo(
+                    (-point.getSize() / 2) * Math.cos(Math.PI / 3),
+                    (-point.getSize() / 2) * Math.sin(Math.PI / 3)
+                );
                 ctx.moveTo(0, 0);
-                ctx.lineTo(-point.getSize() / 2 * Math.cos(-Math.PI / 3), -point.getSize() / 2 * Math.sin(-Math.PI / 3));
+                ctx.lineTo(
+                    (-point.getSize() / 2) * Math.cos(-Math.PI / 3),
+                    (-point.getSize() / 2) * Math.sin(-Math.PI / 3)
+                );
                 ctx.stroke();
                 ctx.restore();
             }
@@ -104,19 +110,25 @@ export function drawPoints() {
                 ctx.stroke();
                 ctx.restore();
             }
-
         }
         if (point.isInactive()) {
             point.setAngle(point.getAngle() + Math.PI / 180);
             ctx.save();
-            ctx.translate(point.getX() + point.getWidth() / 2, point.getY() + point.getHeight() / 2);
+            ctx.translate(
+                point.getX() + point.getWidth() / 2,
+                point.getY() + point.getHeight() / 2
+            );
             ctx.rotate(point.getAngle());
             ctx.fillStyle = point.getColor();
-            ctx.fillRect(-point.getWidth() / 2, -point.getHeight() / 2, point.getWidth(), point.getHeight());
+            ctx.fillRect(
+                -point.getWidth() / 2,
+                -point.getHeight() / 2,
+                point.getWidth(),
+                point.getHeight()
+            );
             ctx.restore();
         }
         if (point.isInvisible()) {
-
         }
     });
 }
@@ -135,10 +147,18 @@ export function movePoint(point, dt) {
 
 export function updateVisibilityPoints(point) {
     if (point.isTypeTrigraph()) {
-        if (5 <= point.getId() && point.getId() <= 12 && gameState.gameTime > 3) {
+        if (
+            5 <= point.getId() &&
+            point.getId() <= 12 &&
+            gameState.gameTime > 3
+        ) {
             point.setInactive();
         }
-        if (2 <= point.getId() && point.getId() <= 3 && gameState.gameTime > 6) {
+        if (
+            2 <= point.getId() &&
+            point.getId() <= 3 &&
+            gameState.gameTime > 6
+        ) {
             point.setInactive();
         }
     }

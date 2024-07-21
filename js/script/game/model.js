@@ -1,42 +1,36 @@
-import {canvasHeight, canvasWidth, dark, GAME_STATES} from "./const";
+import { canvasHeight, canvasWidth, dark, GAME_STATES } from './const';
 
 export const lastState = {
-    lastTime: 0
+    lastTime: 0,
 };
 
 export const gameState = {
-    gameTime: 0
+    gameTime: 0,
 };
 
-//game заменить на классы
-
 export class Game {
-    constructor()
-    {
+    constructor() {
         this.width = canvasWidth;
         this.height = canvasHeight;
-        this.background =  dark;
+        this.background = dark;
         this.state = GAME_STATES.PLAY;
     }
 
-    getWidth()
-    {
-        return this.width
+    getWidth() {
+        return this.width;
     }
-    getHeight(){
-        return this.height
-    }
-
-    getBackground(){
-        return this.background
+    getHeight() {
+        return this.height;
     }
 
-    getState(){
-        return this.state
+    getBackground() {
+        return this.background;
     }
 
+    getState() {
+        return this.state;
+    }
 }
-
 
 export let game = new Game();
 
@@ -44,5 +38,5 @@ export let GAME = {
     width: canvasWidth,
     height: canvasHeight,
     background: dark,
-    state: GAME_STATES.PLAY
+    state: GAME_STATES.PLAY,
 };

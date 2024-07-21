@@ -1,4 +1,4 @@
-import {playMenuTheme} from "./sound/menuThemeAudio";
+import { playMenuTheme } from './sound/menuThemeAudio';
 
 const socket = io();
 
@@ -20,10 +20,10 @@ let buttonReady;
 
 function loadHTML(filename, callback) {
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", filename);
+    xhr.open('GET', filename);
     xhr.onload = () => {
         callback(xhr.response);
-    }
+    };
     xhr.send();
 }
 
@@ -34,13 +34,16 @@ function callback(html) {
 function transitionToPage(file) {
     loadHTML(file, (html) => {
         callback(html);
-        if (file === 'menu.html' || file === 'with_bot.html'
-            || file === 'with-player.html') {
+        if (
+            file === 'menu.html' ||
+            file === 'with_bot.html' ||
+            file === 'with-player.html'
+        ) {
             loadToMainPageLink();
         }
-        if (file === 'lobby.html') {            
+        if (file === 'lobby.html') {
             let chapterCodeElement = document.querySelector('.chapter__code');
-            chapterCodeElement.textContent = globalRoomId;        
+            chapterCodeElement.textContent = globalRoomId;
         }
 
         initEventListeners();
@@ -48,10 +51,10 @@ function transitionToPage(file) {
 }
 
 function loadToMainPageLink() {
-    let toMainPage = document.createElement("a");
-    toMainPage.classList.add("logo");
-    toMainPage.href = "";
-    loadHTML("src/assets/img/prism.svg", (html) => {
+    let toMainPage = document.createElement('a');
+    toMainPage.classList.add('logo');
+    toMainPage.href = '';
+    loadHTML('src/assets/img/prism.svg', (html) => {
         toMainPage.innerHTML = html;
     });
     document.body.appendChild(toMainPage);
@@ -76,20 +79,26 @@ function initEventListeners() {
     if (buttonBot) {
         buttonBot.addEventListener('click', () => {
             // centralPartMenu.classList.add("central-part__menu-animate-out");
-            setTimeout(() => transitionToPage("with_bot.html"), 0);
+            setTimeout(() => transitionToPage('with_bot.html'), 0);
         });
     }
 
     if (buttonPlayer) {
-        buttonPlayer.addEventListener('click', () => { transitionToPage("with-player.html"); });
+        buttonPlayer.addEventListener('click', () => {
+            transitionToPage('with-player.html');
+        });
     }
 
     if (button1vs1) {
-        button1vs1.addEventListener('click', () => { window.location.href = "game.html"; });
+        button1vs1.addEventListener('click', () => {
+            window.location.href = 'game.html';
+        });
     }
 
     if (button2vs2) {
-        button2vs2.addEventListener('click', () => { transitionToPage("lobby.html"); });
+        button2vs2.addEventListener('click', () => {
+            transitionToPage('lobby.html');
+        });
     }
 
     if (buttonLobby) {
@@ -97,8 +106,8 @@ function initEventListeners() {
             socket.emit('createRoom');
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
-                transitionToPage("lobby.html"); 
-            }) 
+                transitionToPage('lobby.html');
+            });
             // socket.on('roomCreated', () => {
             //     socket.emit('joinRoom');
             // })
@@ -111,50 +120,52 @@ function initEventListeners() {
             socket.emit('joinRoom', inputRoomId);
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
-                transitionToPage("lobby.html"); 
+                transitionToPage('lobby.html');
                 console.log('transition');
-            })
+            });
             socket.on('wrongId', () => {
                 // добавить обработку несуществующего айди комнаты
-            })
-        })
+            });
+        });
     }
 
     if (buttonLeave) {
         buttonLeave.addEventListener('click', () => {
             socket.emit('leaveRoom');
-            transitionToPage("with-player.html"); 
-        })
+            transitionToPage('with-player.html');
+        });
     }
 
     if (buttonConnect) {
         buttonConnect.addEventListener('click', () => {
             let inputField = document.getElementById('input-code');
-            inputField.classList.toggle("input-for-code")
+            inputField.classList.toggle('input-for-code');
         });
     }
 
     if (buttonPlay) {
-        buttonPlay.addEventListener('click', () => { window.location.href = "game.html"; });
+        buttonPlay.addEventListener('click', () => {
+            window.location.href = 'game.html';
+        });
     }
 
     if (buttonMenu) {
-        buttonMenu.addEventListener('click', () => { transitionToPage("menu.html"); });
+        buttonMenu.addEventListener('click', () => {
+            transitionToPage('menu.html');
+        });
     }
 
     // новый event listener
     if (buttonReady) {
         buttonReady.addEventListener('click', () => {
             socket.emit('playerIsReady');
-
-        })
+        });
     }
 
     socket.on('roomIsReady', () => {
         console.log('room is ready отработало');
-        window.location.href = "game.html";
-    })
-
+        window.location.href = 'game.html';
+    });
 }
 
 // Initial load of the menu page
@@ -164,6 +175,3 @@ loadHTML('menu.html', (html) => {
     loadToMainPageLink();
     initEventListeners();
 });
-
-
-

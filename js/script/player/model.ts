@@ -28,6 +28,7 @@ export class Player {
     private abilityActive: boolean;
     private progressBar: ProgressBar;
     private stunnedUntil: number;
+    private invisibleLasers: boolean = false;
 
     constructor(i: number, id: string, socket_id: string) {
         this.id = id;
@@ -92,8 +93,6 @@ export class Player {
     }
     activateAbility(): void {
         this.abilityActive = true;
-        console.log('ability activated');
-        console.log(this.abilityActive, 'activateAbility');
         this.setSpeed(MAX_SPEED);
         setTimeout(() => {
             this.abilityActive = false;
@@ -110,25 +109,28 @@ export class Player {
         this.stunnedUntil = 0;
         this.setSpeed(DEFAULT_PLAYERS.speed);
 
-        if (this.isDead()) {
+        if (this.isDead() || this.isStunned()) {
             this.renaissance();
-        } else {
-            this.setState(BOT_STATES.ACTIVE);
         }
     }
 
     drawCountdown() {
-        console.log('drawCountdown')
         if (this.isStunned()) {
-            console.log('drawCountdown 2');
             const remainingTime = this.stunnedUntil - Date.now();
             const seconds = Math.floor(remainingTime / 1000);
             const milliseconds = Math.floor((remainingTime % 1000) / 10);
             const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
-
             ctx.fillStyle = 'white';
             ctx.font = '16px Arial';
             ctx.fillText(countdownText, this.x, this.y - 30);
         }
+    }
+
+    public setInvisibleLasers(state: boolean): void {
+        this.invisibleLasers = state;
+    }
+
+    public isInvisibleLasers(): boolean {
+        return this.invisibleLasers;
     }
 }

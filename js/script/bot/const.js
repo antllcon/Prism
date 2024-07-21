@@ -1,20 +1,25 @@
-import {canvasHeight, canvasWidth} from "../game/const";
+import { canvasHeight, canvasWidth } from '../game/const';
 
 export const BOT_STATES = {
     ACTIVE: 'active',
     STUNNED: 'stunned',
-    DEAD: 'dead'
-}
+    DEAD: 'dead',
+};
 
 export const DURATION_DISABILITY = 5000;
 
 export const DEFAULT_BOTS = {
-    x: [50, 50, canvasWidth-50, canvasWidth-50],
-    y: [canvasHeight/3, canvasHeight*2/3, canvasHeight/3, canvasHeight*2/3],
+    x: [50, 50, canvasWidth - 50, canvasWidth - 50],
+    y: [
+        canvasHeight / 3,
+        (canvasHeight * 2) / 3,
+        canvasHeight / 3,
+        (canvasHeight * 2) / 3,
+    ],
     //временное значение сайза
     size: 50,
     speed: 200,
     team: ['purple', 'purple', 'yellow', 'yellow'],
     color: ['purple', 'purple', 'yellow', 'yellow'],
-    state: BOT_STATES.ACTIVE
-}
+    state: BOT_STATES.ACTIVE,
+};

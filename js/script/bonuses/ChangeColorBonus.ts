@@ -1,6 +1,7 @@
 import { BaseBonus } from "./BaseBonus";
 import { points } from "../../script";
 import {purple, yellow} from "../game/const";
+import {drawPoints} from "../point/point";
 
 export class ChangeColorBonus extends BaseBonus {
     constructor(x: number, y: number, size: number, color: string, team: string) {
@@ -12,21 +13,24 @@ export class ChangeColorBonus extends BaseBonus {
         super.catch(entity);
 
         points.forEach(point => {
+            if (point.getColor() === 'yellow') {
+                    console.log('yellow мы обнаружили поинт по имени ', point.getId(), point)
+                    point.setColor('purple');
+                    point.setTeam('purple');
 
-            console.log(point, "до захода в условие")
-            if (point.isActive()) {
-                console.log('до захода активны:', point.isActive(), point.getId())
-                if (point.getColor() === 'yellow') {
-                    console.log('мы обнаружили поинт по имени ', point.getId(), point)
-                    point.setColor(purple);
                 } else if (point.getColor() === 'purple') {
-                    console.log('мы обнаружили поинт по имени ', point.getId(), point)
-                    point.setColor(yellow);
+                    console.log('purple мы обнаружили поинт по имени ', point.getId(), point)
+                    point.setColor('yellow');
+                    point.setTeam('yellow');
                 }
                 console.log(`Цвет поинта ${point.getId()} изменен на ${point.getColor()}`);
             }
-        });
-
+        );
+        points.forEach(point => {
+            console.log(point.getColor(), 'get color после')
+            console.log(point.getTeam(), 'get team после')
+        }
+        );
         console.log(`${entity.id} из команды ${entity.team} активировал бонус смены цвета!`);
     }
 }

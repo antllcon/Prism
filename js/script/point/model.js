@@ -1,9 +1,7 @@
-import {POINT_STATES, POINT_TYPES, DEFAULT_POINTS} from "./const";
-
-
+import { POINT_STATES, POINT_TYPES, DEFAULT_POINTS } from './const';
 
 export class Point {
-    constructor(i)  {
+    constructor(i) {
         this.id = DEFAULT_POINTS.id[i];
         this.x = DEFAULT_POINTS.x[i];
         this.y = DEFAULT_POINTS.y[i];
@@ -57,16 +55,16 @@ export class Point {
     getActivationTime() {
         return this.activationTime;
     }
-    getState(){
+    getState() {
         return this.state;
     }
-    getSpeed(){
+    getSpeed() {
         return this.speed;
     }
-    getDirection(){
+    getDirection() {
         return this.direction;
     }
-    
+
     setId(id) {
         this.id = id;
     }
@@ -103,13 +101,13 @@ export class Point {
     setActivationTime(activationTime) {
         this.activationTime = activationTime;
     }
-    setState(state){
+    setState(state) {
         this.state = state;
     }
-    setSpeed(speed){
+    setSpeed(speed) {
         this.speed = speed;
     }
-    setDirection(direction){
+    setDirection(direction) {
         this.direction = direction;
     }
 
@@ -151,7 +149,6 @@ export class Point {
     setTypeCross() {
         this.type = POINT_TYPES.CROSS;
     }
-
 
     moveOn(x, y) {
         this.x += x;
