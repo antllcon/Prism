@@ -4,7 +4,6 @@ import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots, initBotAnimation} from "./script/bot/bot";
 import {
-    drawPlayer,
     handleInput,
     createPlayers,
     getMyPlayer,
@@ -107,6 +106,7 @@ function dataExchange() {
 }
 function sendDataToServer() {
     let playerAsEntity = getMyPlayer(activePlayers);
+    console.log(activePlayers, 'activePlayers');
     let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
     socket.emit('sendDataToServer', transmittedPlayer);
 }

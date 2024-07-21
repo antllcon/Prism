@@ -1,17 +1,16 @@
 import { ctx } from "./script";
+import {getMyPlayer} from "./script/player/player";
 
 export function drawCharacters(arrayCharacters) {
-
     const endAnimation = 9;
     const spriteSize = 64;
 
     arrayCharacters.forEach(character => {
         console.log(character);
         console.log('character that is alive');
-        if (character.isAlive()) {
+        if (character.isAlive() || character.isStunned()) {
             ctx.fillStyle = character.getColor();
             ctx.fillRect(character.getX(), character.getY(), character.getSize(), character.getSize());
-
             if (character.getLoad()) {
                 let spritePath;
                 if (character.getType() === 'bot') {
@@ -53,6 +52,21 @@ export function drawCharacters(arrayCharacters) {
                 }
                 if (character.getCount() === endAnimation) {
                     character.setCount(0);
+                }
+            }
+        }
+        if (
+            character.isStunned() &&
+            character.stunnedUntil < Date.now()
+        ) {
+            character.recoverFromStunned();
+        }
+        const mainPlayer = getMyPlayer(arrayCharacters);
+        if (character.getType() === 'player'){
+            if (character.isMain()) {
+                character.renderPB();
+                if (character.isStunned()) {
+                    character.drawCountdown();
                 }
             }
         }

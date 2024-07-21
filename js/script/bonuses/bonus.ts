@@ -30,6 +30,7 @@ export function initBonuses(): BaseBonus[]    {
 }
 
 export function drawBonuses(): void {
+
     bonuses.forEach((bonus): void => {
         ctx.beginPath();
         ctx.arc(bonus.getX(), bonus.getY(), bonus.getSize(), 0, 2 * Math.PI);

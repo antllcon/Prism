@@ -75,6 +75,7 @@ export class Player {
     // @ts-ignore
     getState(): PLAYER_STATES {return this.state;}
     getAbilityScale(): number {return this.abilityScale;}
+    isMain(): boolean {return this.main}
     isAlive(): boolean {return this.state === PLAYER_STATES.ACTIVE;}
     isDead(): boolean {return this.state === PLAYER_STATES.DEAD;}
     isStunned(): boolean {return this.state === PLAYER_STATES.STUNNED;}
