@@ -23,7 +23,6 @@ export function initBonuses(): BaseBonus[]    {
                     bonusType.team
                 );
                 bonusesForRound.push(bonus);
-                console.log(`Бонус создан: ${bonus.type}`);
             }
         }
     });

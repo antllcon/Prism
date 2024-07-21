@@ -26,6 +26,7 @@ export function handleInput(dt) {
 }
 
 export function initPlayerAnimation() {
+    console.log(activePlayers)
     activePlayers.forEach(player => {
         player.setImage("./src/assets/sprites/player/right.png");
         player.getImage().onload = () => {

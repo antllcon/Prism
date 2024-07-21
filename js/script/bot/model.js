@@ -19,57 +19,22 @@ export class Bot {
         this.tick = DEFAULT_BOTS.tick;
         this.direction = DEFAULT_BOTS.direction;
     }
-    getName() {
-        return (this.name = 'Bot');
-    }
-    getType() {
-        return this.type;
-    }
-    getX() {
-        return this.x;
-    }
-    getY() {
-        return this.y;
-    }
-    getSize() {
-        return this.size;
-    }
-    getSpeed() {
-        return this.speed;
-    }
-    getTeam() {
-        return this.team;
-    }
-    getColor() {
-        return this.color;
-    }
-    getState() {
-        return this.state;
-    }
-    getImage() {
-        return this.image;
-    }
-    getLoad() {
-        return this.load;
-    }
-    getCount() {
-        return this.count;
-    }
-    getTick() {
-        return this.tick;
-    }
-    getDirection() {
-        return this.direction;
-    }
-
-    setX(x) {
-        this.x = x;
-    }
-
-    setY(y) {
-        this.y = y;
-    }
-
+    getName() {return (this.name = 'Bot');}
+    getType() {return this.type;}
+    getX() {return this.x;}
+    getY() {return this.y;}
+    getSize() {return this.size;}
+    getSpeed() {return this.speed;}
+    getTeam() {return this.team;}
+    getColor() {return this.color;}
+    getState() {return this.state;}
+    getImage() {return this.image;}
+    getLoad() {return this.load;}
+    getCount() {return this.count;}
+    getTick() {return this.tick;}
+    getDirection() {return this.direction;}
+    setX(x) {this.x = x;}
+    setY(y) {this.y = y;}
     setTeam(team) {
         this.team = team;
     }

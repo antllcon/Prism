@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "webpack | nodemon js/server/server.js",
+    "build": "webpack",
     "ws": "nodemon js/server/server.js",
     "start": "webpack serve",
     "lint": "eslint . --fix",

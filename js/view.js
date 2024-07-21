@@ -6,6 +6,8 @@ export function drawCharacters(arrayCharacters) {
     const spriteSize = 64;
 
     arrayCharacters.forEach(character => {
+        console.log(character);
+        console.log('character that is alive');
         if (character.isAlive()) {
             ctx.fillStyle = character.getColor();
             ctx.fillRect(character.getX(), character.getY(), character.getSize(), character.getSize());

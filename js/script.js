@@ -12,12 +12,14 @@ import {
     findPlayerBySocketId,
     updatePlayer
 } from "./script/player/player";
+import { Player } from "./script/player/model";
 import {SCORE, score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
 import {drawCharacters} from "./view";
 import {io} from "socket.io-client";
+import {drawBonuses, initBonuses} from "./script/bonuses/bonus";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -27,6 +29,7 @@ const socket = io();
 
 export let activePlayers = [];
 export let points = [];
+export let bonuses = [];
 export let requiredBots = [2, 3];
 export let activeBots = [];
 
@@ -36,6 +39,7 @@ const socket_id = '1';
 function init() {
     connect();
     activeBots = createBots();
+    bonuses = initBonuses();
     createPoints();
     initBotAnimation();
 }
@@ -44,6 +48,7 @@ function render() {
     ctx.clearRect(0, 0, game.getWidth(), game.getHeight());
     drawBackground();
     drawScore();
+    drawBonuses();
     drawPoints();
     drawCharacters(activePlayers.concat(activeBots));
 }
@@ -54,7 +59,7 @@ function update(dt) {
     handleInput(dt);
     // отправляем на сервер и получаем с сервера
     dataExchange();
-    checkCollisions();
+    checkCollisions(bonuses);
     updateEntities(dt);
 }
 

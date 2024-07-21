@@ -1,8 +1,6 @@
 import { Player } from '../model';
 import { ctx } from '../../../script';
-import { GREEN } from '../const';
-import { logPlugin } from '@babel/preset-env/lib/debug';
-import { game } from '../../game/model';
+import { COLORS } from '../../game/const';
 import {
     PLAYER_STATES,
     DEFAULT_PLAYERS,
@@ -26,35 +24,23 @@ export class ProgressBar {
         this.y = player.y - 60;
         this.height = SIZE.y;
         this.width = ABILITY_SCALE_MAX;
-        this.color = GREEN;
+        this.color = COLORS.GREEN;
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, 100, 20);
-        this.progressFillColor = GREEN;
-        this.progressEmptyColor = GRAY;
+        this.progressFillColor = COLORS.GREEN;
+        this.progressEmptyColor = COLORS.GRAY;
         this.progress = 0;
     }
 
-    setX(x) {
-        this.x = x;
-    }
-    setY(y) {
-        this.y = y;
-    }
-    getX() {
-        return this.x;
-    }
-    getY() {
-        return this.y;
-    }
-
+    setX(x) {this.x = x;}
+    setY(y) {this.y = y;}
+    getX() {return this.x;}
+    getY() {return this.y;}
     updatePosition(x, y) {
         this.x += x;
         this.y += y;
     }
-
-    update(scaleValue) {
-        this.progress = scaleValue;
-    }
+    update(scaleValue) {this.progress = scaleValue;}
     render() {
         ctx.strokeStyle = this.progressEmptyColor;
         ctx.lineWidth = 2;
