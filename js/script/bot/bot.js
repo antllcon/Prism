@@ -4,7 +4,6 @@ import {GAME} from "../game/model";
 import {Point} from "../point/model";
 import {POINT_STATES} from "../point/const";
 import {ctx, activeBots, requiredBots, points} from "../../script"
-import {yellow} from "../game/const";
 
 export function createBots() {
     //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов

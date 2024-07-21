@@ -1,4 +1,4 @@
-import {white} from "../game/const";
+import {COLORS} from "../game/const";
 
 export const scoreAlphaState = {
     scoreAlpha: 0.2
@@ -6,7 +6,7 @@ export const scoreAlphaState = {
 
 export class Score{
     constructor(){
-        this.color = white;
+        this.color = COLORS.WHITE;
         this.team1 = 0;
         this.team2 = 0;
     }
@@ -34,7 +34,7 @@ export class Score{
 export let score = new Score();
 
 export let SCORE = {
-    color: white,
+    color: COLORS.WHITE,
     team1: 0,
     team2: 0
 }

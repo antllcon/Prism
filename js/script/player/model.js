@@ -1,5 +1,4 @@
 import {PLAYER_STATES, DEFAULT_PLAYERS} from "./const";
-import {canvasHeight, canvasWidth} from "../game/const";
 
 
 export class Player {

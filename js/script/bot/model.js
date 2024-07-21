@@ -1,5 +1,4 @@
 import {BOT_STATES, DEFAULT_BOTS} from "./const";
-import {yellow, TEAM_STATES} from "../game/const";
 
 
 
