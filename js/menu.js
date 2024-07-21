@@ -386,6 +386,11 @@ function initEventListeners() {
     if (buttonPlay) {
         buttonPlay.addEventListener('click', () => {
             buttonPlay.textContent = 'READY';
+            socket.emit('playerIsReady');
+            socket.on('roomIsReady', () => {
+                console.log('room is ready отработало');
+                window.location.href = "game.html";
+            })
             setTimeout(() => {
                 window.location.href = "game.html";
             }, 1000);
@@ -403,16 +408,6 @@ function initEventListeners() {
         buttonMenu.addEventListener('click', () => { transitionToPage("menu.html"); });
     }
 
-    // новый event listener
-    if (buttonReady) {
-        buttonReady.addEventListener('click', () => {
-            socket.emit('playerIsReady');
-            socket.on('roomIsReady', () => {
-                console.log('room is ready отработало');
-                window.location.href = "game.html";
-            })
-        })
-    }
     // window.addEventListener('beforeunload', function(e) {
     //     e.preventDefault(); // Предотвращаем стандартное поведение
     //     e.returnValue = ''; // Убираем сообщение о подтверждении
