@@ -159,6 +159,7 @@ function checkBorderGameBounds() {
     }
     activeBots.forEach(bot => {
         if (bot.getX() < 0) {
+            // console.log(game.getWidth(), "getwidth bounds js")
             bot.setX(game.getWidth() - bot.getSize());
         } else if (bot.getX() + bot.getSize() > game.getWidth()) {
             bot.setX(0);

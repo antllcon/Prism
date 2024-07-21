@@ -3,9 +3,13 @@ import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots} from "./script/bot/bot";
 import {drawPlayer, handleInput, createPlayers, getMyPlayer, findPlayerBySocketId, updatePlayer} from "./script/player/player";
 import {SCORE, score} from "./script/score/model";
+import {botMovement, createBots, initBotAnimation} from "./script/bot/bot";
+import {handleInput, createPlayers, initPlayerAnimation} from "./script/player/player";
+import {score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
+import {drawCharacters} from "./view";
 import {io} from "socket.io-client";
 
 let canvas = document.getElementById("canvas");
@@ -20,19 +24,13 @@ export let requiredBots = [];
 export let activeBots = [];
 
 const players = ['1'];
-
 const socket_id = '1';
 
-function init() {
+async function init() {
     connect();
-    initEventListeners();
     activeBots = createBots();
     createPoints();
-    drawBackground();
-    drawScore();
-    drawPoints();
-    drawPlayer(activePlayers);
-    drawBot();
+    initBotAnimation();
     countdown();
 }
 
@@ -41,8 +39,7 @@ function render() {
     drawBackground();
     drawScore();
     drawPoints();
-    drawPlayer(activePlayers);
-    drawBot();
+    drawCharacters(activePlayers.concat(activeBots));
 }
 
 function update(dt) {
@@ -61,16 +58,16 @@ export function main() {
     if (score.getTeam1() < 3 && score.getTeam2() < 3) {
         update(dt);
         render();
-    }
-    else {
+    } else {
         drawBackground();
         drawFinalScore();
-        setTimeout(() => {window.location.href = 'index.html';}, 1500);
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
     }
     lastState.lastTime = now;
     requestAnimFrame(main);
 }
-
 function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
@@ -88,6 +85,7 @@ function initPlayers() {
         console.log(clients);
         activePlayers = createPlayers(clients, socket.id);
         console.log(activePlayers, 'active players')
+        initPlayerAnimation()
     })
 }
 
@@ -153,5 +151,6 @@ function sendCookie() {
 }
 
 setTimeout(fadeOutScore, 6800);
+
 init();
 

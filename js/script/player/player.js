@@ -1,54 +1,61 @@
 import {Player} from "./model";
 import {DEFAULT_PLAYERS} from "./const";
-import {ctx, activePlayers} from "../../script";
-
-// export function handleInput(dt) {
-//     if (input.isDown('LEFT') || input.isDown('a')) {
-//         PLAYER.x -= PLAYER.speed * dt;
-//     }
-//     if (input.isDown('RIGHT') || input.isDown('d')) {
-//         PLAYER.x += PLAYER.speed * dt;
-//     }
-//     if (input.isDown('DOWN') || input.isDown('s')) {
-//         PLAYER.y += PLAYER.speed * dt;
-//     }
-//     if (input.isDown('UP') || input.isDown('w')) {
-//         PLAYER.y -= PLAYER.speed * dt;
-//     }
-// }
+import {activePlayers} from "../../script";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
     if (input.isDown('LEFT') || input.isDown('a')) {
-        player.moveOn(player.getSpeed() * dt * (-1), 0)
+        player.moveOn(player.getSpeed() * dt * (-1), 0);
+        player.setDirection("left");
+        player.moveOn(player.getSpeed() * dt * (-1), 0);
+        player.setDirection("left");
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
-        player.moveOn(player.getSpeed() * dt, 0)
+        player.moveOn(player.getSpeed() * dt, 0);
+        player.setDirection("right");
+        player.moveOn(player.getSpeed() * dt, 0);
+        player.setDirection("right");
     }
     if (input.isDown('DOWN') || input.isDown('s')) {
-        player.moveOn(0,player.getSpeed() * dt )
+        player.moveOn(0, player.getSpeed() * dt);
+        player.setDirection("down");
+        player.moveOn(0, player.getSpeed() * dt);
+        player.setDirection("down");
     }
     if (input.isDown('UP') || input.isDown('w')) {
-        player.moveOn(0,player.getSpeed() * dt * (-1))
+        player.moveOn(0, player.getSpeed() * dt * (-1));
+        player.setDirection("up");
+        player.moveOn(0, player.getSpeed() * dt * (-1));
+        player.setDirection("up");
     }
 }
 
-export function drawPlayer(activePlayers) {
+export function initPlayerAnimation() {
+    console.log('зашли в инит плеерс анимейшн');
+
     activePlayers.forEach(player => {
-        if (player.isAlive()) {
-            ctx.fillStyle = player.getColor();
-            ctx.fillRect(player.getX(), player.getY(), player.getSize(), player.getSize());
-        }
-        if (player.isDead()) {
-            setTimeout(() => {
-                player.setColor(green);
-                player.setX(10);
-                player.setY(10);
-                player.renaissance();
-            }, 1000); // Changed delay to 1000ms
-        }
-    })
+        player.setImage("./src/assets/sprites/player/right.png");
+        player.getImage().onload = () => {
+            player.setLoad(true);
+        };
+    });
 }
+//
+// export function drawPlayer(activePlayers) {
+//     const spriteSize = 64;
+//     const endAnimation = 9;
+//
+//     activePlayers.forEach(player => {
+//
+//         if (player.isDead()) {
+//             setTimeout(() => {
+//                 player.setX(10);
+//                 player.setY(10);
+//                 player.renaissance();
+//             }, 1000);
+//         }
+//     });
+// }
 
 export function createPlayers(clients, myId) {
     let createdPlayers = [];
