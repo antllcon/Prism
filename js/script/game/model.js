@@ -43,6 +43,6 @@ export let game = new Game();
 export let GAME = {
     width: canvasWidth,
     height: canvasHeight,
-    background: dark,
+    background: COLORS.DARK,
     state: GAME_STATES.PLAY
 };
