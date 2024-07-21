@@ -5,19 +5,20 @@ import {game} from "../script/game/model";
 function checkLaserBounds() {
 
     points.forEach(point => {
-        // let player = getMyPlayer(activePlayers);
+
+
+
+
         activePlayers.forEach(player => {
             const sin = Math.sin(point.angle);
             const cos = Math.cos(point.angle);
-
+            
             const playerCorners = [
                 {x: player.getX(), y: player.getY()},
                 {x: player.getX() + player.getSize(), y: player.getY()},
                 {x: player.getX(), y: player.getY() + player.getSize()},
                 {x: player.getX() + player.getSize(), y: player.getY() + player.getSize()}
             ];
-
-
 
             for (const corner of playerCorners) {
                 // расчитываем удаленность угловой точки игрока от центра лазера
@@ -67,7 +68,7 @@ function checkLaserBounds() {
                     }
                     if (point.isTypeLine() && point.getTeam() !== player.getTeam()) { // Прямая линия (горизонтальная)
                         if (corner.y >= point.getY() - point.getWidth() / 2 && corner.y <= point.getY() + point.getWidth() / 2 &&
-                            corner.x >= point.getX() - point.getSize() / 2 && corner.x <= point.getX() + point.getSize() / 2) {
+                            corner.x >= point.getX() - point.getSize() && corner.x <= point.getX() + point.getSize()) {
                             player.die();
                         }
                     }
@@ -129,7 +130,7 @@ function checkLaserBounds() {
                         }
                         if (point.isTypeLine() && point.getTeam() !== bot.getTeam()) { // Прямая линия (горизонтальная)
                             if (corner.y >= point.getY() - point.getWidth() / 2 && corner.y <= point.getY() + point.getWidth() / 2 &&
-                                corner.x >= point.getX() - point.getSize() / 2 && corner.x <= point.getX() + point.getSize() / 2) {
+                                corner.x >= point.getX() - point.getSize() && corner.x <= point.getX() + point.getSize()) {
                                 bot.die();
                             }
                         }
@@ -151,16 +152,15 @@ function checkBorderGameBounds() {
     if (player.getY() < 0) {
         player.setY(game.getHeight() - player.getSize());
     } else if (player.getY() + player.getSize() > game.getHeight()) {
-        player.setY(0)  ;
+        player.setY(0);
     }
     activeBots.forEach(bot => {
         if (bot.getX() < 0) {
-            // console.log(game.getWidth(), "getwidth bounds js")
             bot.setX(game.getWidth() - bot.getSize());
         } else if (bot.getX() + bot.getSize() > game.getWidth()) {
             bot.setX(0);
         }
-    
+
         if (bot.getY() < 0) {
             bot.setY(game.getHeight() - bot.getSize());
         } else if (bot.getY() + bot.getSize() > game.getHeight()) {

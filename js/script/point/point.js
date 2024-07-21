@@ -1,34 +1,13 @@
-// noinspection JSPrimitiveTypeWrapperUsage
-
 import {Point} from "./model";
 import {pointsAmount} from "./const";
 import {ctx, points} from "../../script";
-import {gameState} from "../game/model"
+import {gameState} from "../game/model";
 
 export function createPoints() {
     for (let i = 0; i < pointsAmount; i++) {
         points[i] = new Point(i);
     }
 }
-// export function createPoint(point) {
-//     return {
-//         id: point.id,
-//         x: point.x,
-//         y: point.y,
-//         width: point.width,
-//         height: point.height,
-//         size: point.size,
-//         type: point.type,
-//         team: point.team,
-//         color: point.color,
-//         angle: point.angle,
-//         existTime: point.existTime,
-//         activationTime: null,
-//         state: point.state,
-//         speed: point.speed,
-//         direction: point.direction
-//     };
-// }
 
 export function resetPoints() {
     createPoints();
