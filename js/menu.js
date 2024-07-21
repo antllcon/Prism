@@ -100,6 +100,7 @@ const cardStyles = [
 
 let globalRoomId;
 
+let buttonLogo;
 let centralPartMenu;
 let buttonBot;
 let buttonPlayer;
@@ -162,7 +163,10 @@ function setStyleCard(index) {
         let nameCharacter =  cardBackground.querySelector('.player-name');
         let navigationArrowLeft = cardBackground.querySelector('.arrow-left');
         let navigationArrowRight = cardBackground.querySelector('.arrow-right');
-        let buttonPickBot = cardBackground.querySelector('.player-get-bot');
+        let buttonPickBot = cardBackground.querySelector('.get-bot');
+        let buttonPickPlayer = cardBackground.querySelector('.get-player');
+        let buttonPickWait = cardBackground.querySelector('.get-wait');
+
         let playerPicture = cardBackground.querySelector('.player-img');
 
         let styles = cardStyles[index];
@@ -176,9 +180,15 @@ function setStyleCard(index) {
             navigationArrowRight.style.borderLeft = styles.nameCharacter.borderLeft;
             playerPicture.src = styles.nameCharacter.src;
         }
+        if (buttonPickWait) {
+            buttonPickWait.style.backgroundColor = styles.buttonPickBot.backgroundColor;
+            buttonPickWait.style.color = styles.buttonPickBot.color;
+        }
         if (buttonPickBot) {
             buttonPickBot.style.backgroundColor = styles.buttonPickBot.backgroundColor;
             buttonPickBot.style.color = styles.buttonPickBot.color;
+            buttonPickPlayer.style.backgroundColor = styles.buttonPickBot.backgroundColor;
+            buttonPickPlayer.style.color = styles.buttonPickBot.color;
             playerPicture.src = styles.buttonPickBot.playerPictureSrc;
         }
     }
@@ -204,10 +214,30 @@ function addBot(button) {
     }
 }
 
+function addWait(button) {
+    const tempCard = button.closest('.player');
+    const waitTemplate = document.getElementById('wait-template');
+    if (waitTemplate && tempCard) {
+        const waitCard = waitTemplate.content.cloneNode(true);
+
+        let card = waitCard.querySelector(".player")
+        tempCard.replaceWith(waitCard);
+
+        setTimeout(() => {
+            setStyleCard(0);
+            setStyleCard(1);
+            setStyleCard(2);
+            setStyleCard(3);
+        }, 0);
+
+        return card;
+    }
+}
+
 function loadToMainPageLink() {
-    let toMainPage = document.createElement("a");
+    let toMainPage = document.createElement("button");
     toMainPage.classList.add("logo");
-    toMainPage.href = "";
+    toMainPage.setAttribute('id', 'logo');
     loadHTML("src/assets/img/prism.svg", (html) => {
         toMainPage.innerHTML = html;
     });
@@ -215,12 +245,13 @@ function loadToMainPageLink() {
 }
 
 function initCardEventListeners() {
-    let buttonGetBot = document.querySelectorAll('.player-get-bot');
+    let buttonGetBot = document.querySelectorAll('.get-bot');
     let playerCards = document.querySelectorAll('.player');
 
     buttonGetBot.forEach(function(button, i) {
         button.addEventListener('click', function() {
             let botCard = addBot(button);
+            let waitCard = addWait(button);
 
             if (botCard) {
                 initCardEventListener(botCard, i+1);
@@ -252,6 +283,7 @@ function initCardEventListener(card, indexCount) {
 }
 
 function initEventListeners() {
+    buttonLogo = document.getElementById('logo');
     centralPartMenu = document.getElementById('central-part-menu');
     buttonBot = document.getElementById('button-bot');
     buttonPlayer = document.getElementById('button-player');
@@ -264,6 +296,10 @@ function initEventListeners() {
     buttonLeave = document.getElementById('button-leave');
     inputRoomId = document.getElementById('input-code');
     cardBox = document.getElementById('card-container');
+
+    if (buttonLogo) {
+        buttonLogo.addEventListener('click', () => { transitionToPage("menu.html"); });
+    }
 
     if (buttonBot) {
         buttonBot.addEventListener('click', () => {

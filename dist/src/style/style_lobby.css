@@ -65,7 +65,7 @@
 .player {
     display: flex;
     flex-direction: column;
-    height: 390px;
+    height: 430px;
     width: 290px;
     margin-right: 54px;
 }
@@ -159,7 +159,7 @@
 }
 
 .player-count {
-    margin: 10px 0 10px 20px;
+    margin: 10px 0 0px 20px;
     color: white;
     font: 700 38px Font_Over;
     background-color: inherit;
@@ -174,12 +174,15 @@
     font: 700 18px Font_Over;
     background-color: inherit;
     margin-left: 20px;
+    margin-top: 10px;
 }
 
-.player-get-bot {
+.player-get {
     font: 700 18px Font_Over;
     width: 200px;
     height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     align-self: center;
     text-align: center;
     border: none;
@@ -187,7 +190,7 @@
     transition: transform 0.3s ease-out;
 }
 
-.player-get-bot:active {
+.player-get:active {
     transform: scale(0.97);
 }
 
