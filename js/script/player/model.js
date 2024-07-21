@@ -34,6 +34,7 @@ export class Player {
     getSpeed() { return this.speed; }
     getTeam() { return this.team; }
     getColor() { return this.color; }
+    getState() { return this.state; }
     getImage() { return this.image; }
     getLoad() { return this.load; }
     getCount() { return this.count; }
