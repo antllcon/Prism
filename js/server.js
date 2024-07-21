@@ -88,7 +88,7 @@ function broadcastRoomUpdate(roomId) {
 // Запуск сервера
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
+    // console.log(`Server listening on port ${PORT}`);
 });
 
 function generateRoomId() {
@@ -104,7 +104,7 @@ function leaveRoom(roomId, socket) {
     if (rooms[roomId]) {
         rooms[roomId].clients = rooms[roomId].clients.filter(clientId => clientId !== socket.id);
         socket.leave(roomId); // Leave the room in Socket.IO
-        console.log('Left the room with id: ', roomId);
+        // console.log('Left the room with id: ', roomId);
         broadcastRoomUpdate(roomId);
     }
 }
@@ -127,7 +127,7 @@ function joinRoom(roomId, socket) {
         rooms[roomId].clients.push(socket.id);
         socket.join(roomId); // Join the room in Socket.IO
         socket.emit('joinedRoom', roomId);
-        console.log('Joined to room with id: ', roomId);
+        // console.log('Joined to room with id: ', roomId);
         broadcastRoomUpdate(roomId);
     } else {
         socket.emit('wrongId');

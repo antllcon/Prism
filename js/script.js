@@ -34,7 +34,6 @@ export function init() {
     drawPoints();
     drawPlayer(activePlayers);
     drawBot();
-    countdown();
 }
 
 function render() {
@@ -72,7 +71,7 @@ export function main() {
 
 function connect() {
     socket.on('connect', () => {
-        console.log('Connected to server with id:', socket.id);
+        // console.log('Connected to server with id:', socket.id);
         activePlayers = createPlayers(players, socket_id);
     });
 }
@@ -110,4 +109,5 @@ window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
 };
 
 setTimeout(fadeOutScore, 6800);
+countdown();
 init();
