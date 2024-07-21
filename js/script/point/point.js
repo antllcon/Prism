@@ -10,7 +10,6 @@ export function createPoints() {
         points[i] = new Point(i);
     }
 }
-
 // export function createPoint(point) {
 //     return {
 //         id: point.id,

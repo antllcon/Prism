@@ -121,7 +121,7 @@ function initEventListeners() {
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
                 transitionToPage('lobby.html');
-                console.log('transition');
+                // console.log('transition');
             });
             socket.on('wrongId', () => {
                 // добавить обработку несуществующего айди комнаты

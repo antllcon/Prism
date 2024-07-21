@@ -1,9 +1,8 @@
 import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const';
-import { yellow, TEAM_STATES } from '../game/const';
 import { ctx } from '../../script';
 
 export class Bot {
-    constructor(i) {
+    constructor(i)  {
         this.x = DEFAULT_BOTS.x[i];
         this.y = DEFAULT_BOTS.y[i];
         this.size = DEFAULT_BOTS.size;
@@ -13,6 +12,11 @@ export class Bot {
         this.state = DEFAULT_BOTS.state;
         this.stunnedUntil = 0;
         this.name = 'Bot';
+        this.image = new Image();
+        this.load = DEFAULT_BOTS.load;
+        this.count = DEFAULT_BOTS.count;
+        this.tick = DEFAULT_BOTS.tick;
+        this.direction = DEFAULT_BOTS.direction;
     }
     getName() {
         return (this.name = 'Bot');
@@ -26,7 +30,7 @@ export class Bot {
     getSize() {
         return this.size;
     }
-    getSpeed() {
+    getSpeed(){
         return this.speed;
     }
     getTeam() {
@@ -38,6 +42,69 @@ export class Bot {
     getState() {
         return this.state;
     }
+
+    getImage() {
+        return this.image;
+    }
+
+    getLoad() {
+        return this.load;
+    }
+
+    getCount() {
+        return this.count;
+    }
+
+    getTick() {
+        return this.tick;
+    }
+
+    getDirection() {
+        return this.direction;
+    }
+
+    // Сеттеры
+    setX(x) {
+        this.x = x;
+    }
+
+    setY(y) {
+        this.y = y;
+    }
+
+    setTeam(team) {
+        this.team = team;
+    }
+
+    setColor(color) {
+        this.color = color;
+    }
+
+    setState(state) {
+        this.state = state;
+    }
+
+    setImage(image) {
+        this.image.src = image;
+    }
+
+    setLoad(load) {
+        this.load = load;
+    }
+
+    setCount(count) {
+        this.count = count;
+    }
+
+    setTick(tick) {
+        this.tick = tick;
+    }
+
+    setDirection(direction) {
+        this.direction = direction;
+    }
+
+    // Методы
     isAlive() {
         return this.state === BOT_STATES.ACTIVE;
     }
@@ -54,15 +121,7 @@ export class Bot {
     die() {
         this.state = BOT_STATES.DEAD;
     }
-    setColor(color) {
-        this.color = color;
-    }
-    setX(x) {
-        this.x = x;
-    }
-    setY(y) {
-        this.y = y;
-    }
+
     renaissance() {
         this.state = BOT_STATES.ACTIVE;
     }
