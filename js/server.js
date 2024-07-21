@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
         // Проверка id на уникальность сравнением со списком ids !!!!!!!! РЕАЛИЗОВАТЬ
         if (!rooms[roomId]) {
             rooms[roomId] = { clients: [], messages: [] };
-            console.log('Room created with id: ', roomId);
+            // console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
             // socket.emit('roomCreated');
         }
@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
 
     socket.on('leaveRoom', () => {
         roomId = findRoomBySocketId(socket.id);
-        console.log(roomId, 'on leaveRoom');
+        // console.log(roomId, 'on leaveRoom');
         leaveRoom(roomId, socket);
     });
 
