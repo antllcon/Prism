@@ -230,7 +230,7 @@ function checkBorderGameBounds() {
         player.progressBar.y + player.progressBar.height >
         game.getHeight()
     ) {
-        player.progressBar.y = player.progressBar.height;
+        player.progressBar.y = player.progressBar.height + 20;
     }
 
     activeBots.forEach((bot) => {

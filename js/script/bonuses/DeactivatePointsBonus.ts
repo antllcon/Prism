@@ -15,6 +15,5 @@ export class DeactivatePointsBonus extends BaseBonus {
                 point.deactivate();
             }
         });
-
     }
 }

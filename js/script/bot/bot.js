@@ -159,84 +159,122 @@ export function botMovement(dt) {
         }
 
         function getRightDirection() {
-            if (inRangeOfLaser) {
-                if (dxActive * dxInactive >= 0 && dyActive * dyInactive >= 0) {
-                    if (
-                        Math.sqrt(
-                            (dxActive + dxInactive) ** 2 +
-                                (dyActive + dyInactive) ** 2
-                        ) <
-                        bot.getSpeed() * dt
-                    ) {
-                        bot.moveOn(
-                            dxActive + dxInactive,
-                            dyActive + dyInactive
-                        );
-                    } else {
-                        const angle = Math.atan2(
-                            dyActive + dyInactive,
-                            dxActive + dxInactive
-                        );
-                        bot.moveOn(
-                            bot.getSpeed() * dt * Math.cos(angle),
-                            bot.getSpeed() * dt * Math.sin(angle)
-                        );
-                    }
+            let closestBonus = null;
+            let closestDistance = Infinity;
+
+            bonuses.forEach((bonus) => {
+                const dx = bot.x - bonus.getX();
+                const dy = bot.y - bonus.getY();
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestBonus = bonus;
                 }
-                if (dxActive * dxInactive >= 0 && dyActive * dyInactive < 0) {
-                    if (
-                        Math.sqrt(
-                            (dxActive + dxInactive) ** 2 + dyActive ** 2
-                        ) <
-                        bot.getSpeed() * dt
-                    ) {
-                        bot.moveOn(dxActive + dxInactive, dyActive);
-                    } else {
-                        const angle = Math.atan2(
-                            dyActive,
-                            dxActive + dxInactive
-                        );
-                        bot.moveOn(
-                            bot.getSpeed() * dt * Math.cos(angle),
-                            bot.getSpeed() * dt * Math.sin(angle)
-                        );
-                    }
-                }
-                if (dxActive * dxInactive < 0 && dyActive * dyInactive >= 0) {
-                    if (
-                        Math.sqrt(
-                            dxActive ** 2 + (dyActive + dyInactive) ** 2
-                        ) <
-                        bot.getSpeed() * dt
-                    ) {
-                        bot.moveOn(dxActive, dyActive + dyInactive);
-                    } else {
-                        const angle = Math.atan2(
-                            dyActive + dyInactive,
-                            dxActive
-                        );
-                        bot.moveOn(
-                            bot.getSpeed() * dt * Math.cos(angle),
-                            bot.getSpeed() * dt * Math.sin(angle)
-                        );
-                    }
-                }
-                if (dxActive * dxInactive < 0 && dyActive * dyInactive < 0) {
-                    if (
-                        Math.sqrt(dxActive ** 2 + dyActive ** 2) <
-                        bot.getSpeed() * dt
-                    ) {
-                        bot.moveOn(dxActive, dyActive);
-                    } else {
-                        const angle = Math.atan2(dyActive, dxActive);
-                        bot.moveOn(
-                            bot.getSpeed() * dt * Math.cos(angle),
-                            bot.getSpeed() * dt * Math.sin(angle)
-                        );
-                    }
-                }
+            });
+
+            if (closestBonus) {
+                const dxBonus = closestBonus.getX() - bot.x;
+                const dyBonus = closestBonus.getY() - bot.y;
+                const angleToBonus = Math.atan2(dyBonus, dxBonus);
+                const speed = bot.getSpeed() * dt;
+
+                bot.moveOn(
+                    speed * Math.cos(angleToBonus),
+                    speed * Math.sin(angleToBonus)
+                );
             } else {
-                bot.moveOn(dxInactive, dyInactive);
+                if (inRangeOfLaser) {
+                    if (
+                        dxActive * dxInactive >= 0 &&
+                        dyActive * dyInactive >= 0
+                    ) {
+                        if (
+                            Math.sqrt(
+                                (dxActive + dxInactive) ** 2 +
+                                    (dyActive + dyInactive) ** 2
+                            ) <
+                            bot.getSpeed() * dt
+                        ) {
+                            bot.moveOn(
+                                dxActive + dxInactive,
+                                dyActive + dyInactive
+                            );
+                        } else {
+                            const angle = Math.atan2(
+                                dyActive + dyInactive,
+                                dxActive + dxInactive
+                            );
+                            bot.moveOn(
+                                bot.getSpeed() * dt * Math.cos(angle),
+                                bot.getSpeed() * dt * Math.sin(angle)
+                            );
+                        }
+                    }
+                    if (
+                        dxActive * dxInactive >= 0 &&
+                        dyActive * dyInactive < 0
+                    ) {
+                        if (
+                            Math.sqrt(
+                                (dxActive + dxInactive) ** 2 + dyActive ** 2
+                            ) <
+                            bot.getSpeed() * dt
+                        ) {
+                            bot.moveOn(dxActive + dxInactive, dyActive);
+                        } else {
+                            const angle = Math.atan2(
+                                dyActive,
+                                dxActive + dxInactive
+                            );
+                            bot.moveOn(
+                                bot.getSpeed() * dt * Math.cos(angle),
+                                bot.getSpeed() * dt * Math.sin(angle)
+                            );
+                        }
+                    }
+                    if (
+                        dxActive * dxInactive < 0 &&
+                        dyActive * dyInactive >= 0
+                    ) {
+                        if (
+                            Math.sqrt(
+                                dxActive ** 2 + (dyActive + dyInactive) ** 2
+                            ) <
+                            bot.getSpeed() * dt
+                        ) {
+                            bot.moveOn(dxActive, dyActive + dyInactive);
+                        } else {
+                            const angle = Math.atan2(
+                                dyActive + dyInactive,
+                                dxActive
+                            );
+                            bot.moveOn(
+                                bot.getSpeed() * dt * Math.cos(angle),
+                                bot.getSpeed() * dt * Math.sin(angle)
+                            );
+                        }
+                    }
+                    if (
+                        dxActive * dxInactive < 0 &&
+                        dyActive * dyInactive < 0
+                    ) {
+                        if (
+                            Math.sqrt(dxActive ** 2 + dyActive ** 2) <
+                            bot.getSpeed() * dt
+                        ) {
+                            bot.moveOn(dxActive, dyActive);
+                        } else {
+                            const angle = Math.atan2(dyActive, dxActive);
+                            bot.moveOn(
+                                bot.getSpeed() * dt * Math.cos(angle),
+                                bot.getSpeed() * dt * Math.sin(angle)
+                            );
+                        }
+                    }
+                } else {
+                    bot.moveOn(dxInactive, dyInactive);
+                }
             }
         }
     });

@@ -8,8 +8,8 @@ import {
     DURATION_DISABILITY
 } from "./const";
 
-import { canvasHeight, canvasWidth } from "../game/const";
-import { ProgressBar } from "./progressBar/progressBar";
+import {canvasHeight, canvasWidth} from "../game/const";
+import {ProgressBar} from "./progressBar/progressBar";
 import {BOT_STATES, DEFAULT_BOTS} from "../bot/const";
 import {ctx} from "../../script";
 
@@ -47,19 +47,54 @@ export class Player {
         this.stunnedUntil = 0;
     }
 
-    getId(): string { return this.id; }
-    getX(): number { return this.x; }
-    getY(): number { return this.y; }
-    getSize(): number { return this.size; }
-    getSpeed(): number { return this.speed; }
-    getTeam(): string { return this.team; }
-    getColor(): string { return this.color; }
+    getId(): string {
+        return this.id;
+    }
+
+    getX(): number {
+        return this.x;
+    }
+
+    getY(): number {
+        return this.y;
+    }
+
+    getSize(): number {
+        return this.size;
+    }
+
+    getSpeed(): number {
+        return this.speed;
+    }
+
+    getTeam(): string {
+        return this.team;
+    }
+
+    getColor(): string {
+        return this.color;
+    }
+
     // @ts-ignore
-    getState(): PLAYER_STATES { return this.state; }
-    getAbilityScale(): number { return this.abilityScale; }
-    isAlive(): boolean { return this.state === PLAYER_STATES.ACTIVE; }
-    isDead(): boolean { return this.state === PLAYER_STATES.DEAD; }
-    isStunned(): boolean { return this.state === PLAYER_STATES.STUNNED; }
+    getState(): PLAYER_STATES {
+        return this.state;
+    }
+
+    getAbilityScale(): number {
+        return this.abilityScale;
+    }
+
+    isAlive(): boolean {
+        return this.state === PLAYER_STATES.ACTIVE;
+    }
+
+    isDead(): boolean {
+        return this.state === PLAYER_STATES.DEAD;
+    }
+
+    isStunned(): boolean {
+        return this.state === PLAYER_STATES.STUNNED;
+    }
 
     moveOn(x: number, y: number): void {
         this.x += x;
@@ -67,16 +102,43 @@ export class Player {
         this.progressBar.updatePosition(x, y);
     }
 
-    die(): void { this.state = PLAYER_STATES.DEAD; }
-    setColor(color: string): void { this.color = color; }
-    setX(x: number): void { this.x = x; }
-    setY(y: number): void { this.y = y; }
-    setSpeed(speed: number): void { this.speed = speed; }
+    die(): void {
+        this.state = PLAYER_STATES.DEAD;
+    }
+
+    setColor(color: string): void {
+        this.color = color;
+    }
+
+    setX(x: number): void {
+        this.x = x;
+    }
+
+    setY(y: number): void {
+        this.y = y;
+    }
+
+    setSpeed(speed: number): void {
+        this.speed = speed;
+    }
+
     // @ts-ignore
-    setState(state: PLAYER_STATES): PLAYER_STATES { this.state = state; }
-    renaissance(): void { this.state = PLAYER_STATES.ACTIVE; }
-    renderPB(): void { this.progressBar.render(); }
-    setAbilityScale(value: number): void { this.abilityScale = value; }
+    setState(state: PLAYER_STATES): PLAYER_STATES {
+        this.state = state;
+    }
+
+    renaissance(): void {
+        this.state = PLAYER_STATES.ACTIVE;
+    }
+
+    renderPB(): void {
+        this.progressBar.render();
+    }
+
+    setAbilityScale(value: number): void {
+        this.abilityScale = value;
+    }
+
     updateAbilityScale(deltaTime: number): void {
         this.abilityScale += ABILITY_SCALE_SPEED * deltaTime;
         this.progressBar.update(this.abilityScale);
@@ -84,6 +146,7 @@ export class Player {
             this.abilityScale = ABILITY_SCALE_MAX;
         }
     }
+
     resetAbilityScale(): void {
         if (this.abilityScale >= ABILITY_SCALE_MAX) {
             this.activateAbility();
@@ -91,6 +154,7 @@ export class Player {
             this.progressBar.update(this.abilityScale);
         }
     }
+
     activateAbility(): void {
         this.abilityActive = true;
         this.setSpeed(MAX_SPEED);
@@ -99,6 +163,7 @@ export class Player {
             this.setSpeed(DEFAULT_PLAYERS.speed);
         }, ABILITY_DURATION);
     }
+
     makeStunned(): void {
         this.stunnedUntil = Date.now() + DURATION_DISABILITY;
         this.setSpeed(0);

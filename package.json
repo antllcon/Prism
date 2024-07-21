@@ -3,7 +3,8 @@
     "build": "webpack | nodemon js/server.js",
     "ws": "nodemon js/server.js",
     "start": "webpack serve",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "beaty": "npx prettier --write \"**/*.js\""
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",

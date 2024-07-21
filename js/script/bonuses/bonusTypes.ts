@@ -13,6 +13,9 @@ export const BONUS_TYPES: BonusType[] = [
     { type: 'invisibleLaser', class: InvisibleLaserBonus, size: 30, color: '#ff7300' ,  team: 'neutral' },
 ];
 
+// появление каждые 30 секунд
+// а еще нужно поправить движение бота, сначала убегание, потом захват бонуса
+
 export const AVAILABLE_BONUSES: AvailableBonus[] = [
     { type: 'base', count: 5 },
     { type: 'stopBot', count: 2 },
