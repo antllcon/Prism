@@ -15,7 +15,7 @@ export class Game {
     {
         this.width = canvasWidth;
         this.height = canvasHeight;
-        this.background =  COLORS.DARK;
+        this.background = COLORS.DARK;
         this.state = GAME_STATES.PLAY;
     }
 

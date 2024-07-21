@@ -1,10 +1,6 @@
-import {Bot} from "../script/bot/model";
-import {BOT_STATES} from "../script/bot/const";
 import {getMyPlayer} from "../script/player/player";
-import {Player} from "../script/player/model";
 import {activePlayers, activeBots, points} from "../script";
-import {POINT_STATES, POINT_TYPES} from "../script/point/const";
-import {GAME, game} from "../script/game/model";
+import {game} from "../script/game/model";
 
 function checkLaserBounds() {
 
@@ -21,7 +17,7 @@ function checkLaserBounds() {
                 {x: player.getX() + player.getSize(), y: player.getY() + player.getSize()}
             ];
 
-            
+
 
             for (const corner of playerCorners) {
                 // расчитываем удаленность угловой точки игрока от центра лазера
@@ -85,19 +81,19 @@ function checkLaserBounds() {
                     {x: bot.getX(), y: bot.getY() + bot.getSize()},
                     {x: bot.getX() + bot.getSize(), y: bot.getY() + bot.getSize()}
                 ];
-        
+
                 for (const corner of botCorners) {
-                    // расчитываем удаленность угловой точки игрока от центра лазера
+                    // рассчитываем удаленность угловой точки игрока от центра лазера
                     const dx = corner.x - point.getX();
                     const dy = corner.y - point.getY();
-        
+
                     // переводим удаленность в систему координат вращения лазера
                     const rotatedX = cos * dx + sin * dy;
                     const rotatedY = -sin * dx + cos * dy;
-        
+
                     // смотрим на положение, делаем выводы относительно каждого состояния лазера
                     // и так ищем коллизию игрока с лазером
-        
+
                     // Если точка принимает неактивное состояние
                     if (point.isInactive() &&
                         rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
@@ -107,7 +103,7 @@ function checkLaserBounds() {
                         point.setTeam(bot.getTeam()); // Убедитесь, что присваивается команда бота
                         point.setActivationTime(Date.now());
                     }
-        
+
                     // Проверка коллизий с лазерами
                     if (point.isActive()) {
                         if (point.isTypeCross() && point.getTeam() !== bot.getTeam()) { // Крест
@@ -118,14 +114,14 @@ function checkLaserBounds() {
                         }
                         if (point.isTypeTrigraph() && point.getTeam() !== bot.getTeam()) { // Три-радиус
                             const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
-        
+
                             angles.forEach(angle => {
                                 const angleSin = Math.sin(angle);
                                 const angleCos = Math.cos(angle);
-        
+
                                 const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
                                 const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
-        
+
                                 if (rotatedRayX > 0 && rotatedRayX < point.getSize() / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
                                     bot.die();
                                 }
@@ -141,7 +137,7 @@ function checkLaserBounds() {
                 }
             });
         });
-        
+
     });
 }
 

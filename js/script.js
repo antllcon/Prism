@@ -23,12 +23,11 @@ export let activeBots = [];
 const players = ['1'];
 const socket_id = '1';
 
-async function init() {
+function init() {
     connect();
     activeBots = createBots();
     createPoints();
     initBotAnimation();
-    countdown();
 }
 
 function render() {
@@ -148,6 +147,5 @@ function sendCookie() {
 }
 
 setTimeout(fadeOutScore, 6800);
-
+countdown();
 init();
-

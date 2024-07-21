@@ -1,7 +1,4 @@
 import {POINT_STATES, POINT_TYPES, DEFAULT_POINTS} from "./const";
-
-
-
 export class Point {
     constructor(i)  {
         this.id = DEFAULT_POINTS.id[i];

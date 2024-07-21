@@ -22,12 +22,12 @@ export class Score{
         return this.team2
     }
 
-    increaseTeamYellow(){
-        this.team2 ++
-    }
-
     increaseTeamPurple(){
         this.team1 ++
+    }
+
+    increaseTeamYellow(){
+        this.team2 ++
     }
 }
 

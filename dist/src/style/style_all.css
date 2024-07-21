@@ -41,6 +41,7 @@ body {
     position: absolute;
     right: 0;
     top: 0;
+    border: none;
     width: 62vw;
     height: 72vh;
     animation: 2s alternate animateLogo;
