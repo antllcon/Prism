@@ -1,8 +1,6 @@
-import { Player } from './model';
-import { DEFAULT_PLAYERS, PLAYER_STATES } from './const';
-import { ctx, activePlayers } from '../../script';
-import { GREEN } from './const';
-import { BOT_STATES } from '../bot/const';
+import {Player} from "./model";
+import {DEFAULT_PLAYERS} from "./const";
+import {ctx, activePlayers} from "../../script";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
@@ -21,7 +19,6 @@ export function handleInput(dt) {
     if (input.isDown('UP') || input.isDown('w')) {
         player.moveOn(0, player.getSpeed() * dt * (-1));
         player.setDirection("up");
-        player.moveOn(0, player.getSpeed() * dt * -1);
     }
     if (input.isDown('f') || input.isDown('F')) {
         player.resetAbilityScale();
@@ -106,12 +103,12 @@ export function drawPlayer(activePlayers) {
     });
 }
 
-export function createPlayers(players, myId) {
-    const createdPlayers = [];
-    for (let i = 0; i < players.length; i++) {
-        createdPlayers[i] = new Player(i, players[i], myId);
+export function createPlayers(clients, myId) {
+    let createdPlayers = [];
+    for (let i = 0; i < clients.length; i++) {
+        createdPlayers[i] = new Player(i, clients[i], myId);
     }
-    return createdPlayers;
+    return createdPlayers
 }
 
 export function getMyPlayer(players) {
@@ -129,4 +126,22 @@ export function resetAllPlayers() {
         activePlayers[i].progressBar.update(activePlayers[i].getAbilityScale());
         activePlayers[i].renaissance();
     }
+}
+
+export function findPlayerBySocketId(socketId) {
+    let foundPlayer;
+    activePlayers.forEach(player => {
+        if (player.getId() === socketId) {
+            foundPlayer = player;
+        }
+    });
+    return foundPlayer;
+}
+
+export function updatePlayer(player, playerFromServer) {
+    playerFromServer.x ? player.setX(playerFromServer.x) : null;
+    playerFromServer.y ? player.setY(playerFromServer.y) : null;
+    playerFromServer.team ? player.setTeam(playerFromServer.team) : null;
+    playerFromServer.color ? player.setColor(playerFromServer.color) : null;
+    playerFromServer.state ? player.setState(playerFromServer.state) : null;
 }

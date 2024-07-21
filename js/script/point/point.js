@@ -35,7 +35,7 @@ export function resetPoints() {
 }
 
 export function resetPoint(point) {
-    const id = point.getId();
+    let id = point.getId();
     point = new Point(id);
     // const defaultPoint = DEFAULT_POINTS[index];
     // point.id = defaultPoint.id;
@@ -53,12 +53,12 @@ export function resetPoint(point) {
 }
 
 export function drawPoints() {
-    points.forEach((point) => {
+    points.forEach(point => {
         if (point.isActive()) {
-            //console.log(point);
+            // console.log(point);
             // console.log(point.isTypeTrigraph());
             if (point.isTypeCross()) {
-                //console.log('cross');
+                // console.log('cross');
                 point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
@@ -74,7 +74,7 @@ export function drawPoints() {
                 ctx.restore();
             }
             if (point.isTypeTrigraph()) {
-                //console.log('trigraph');
+                // console.log('trigraph');
                 point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
@@ -109,6 +109,7 @@ export function drawPoints() {
                 ctx.stroke();
                 ctx.restore();
             }
+
         }
         if (point.isInactive()) {
             point.setAngle(point.getAngle() + Math.PI / 180);

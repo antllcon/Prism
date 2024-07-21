@@ -1,18 +1,18 @@
-import { gray, TEAM_STATES } from '../game/const';
-import { canvasWidth, canvasHeight } from '../game/const';
+import {COLORS, TEAM_STATES} from "../game/const";
+import {canvasWidth, canvasHeight} from "../game/const"
 
 export const pointsAmount = 13;
 export const POINT_STATES = {
     ACTIVE: 'active',
     INACTIVE: 'inactive',
-    INVISIBLE: 'invisible',
-};
+    INVISIBLE: 'invisible'
+}
 export const POINT_TYPES = {
-    LINE: 'line',
-    TRIGRAPH: 'trigraph',
-    CROSS: 'cross',
-};
-export const DEFAULT_POINTS = {
+    LINE: "line",
+    TRIGRAPH: "trigraph",
+    CROSS: "cross"
+}
+export let DEFAULT_POINTS = {
     id: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     x: [
         canvasWidth / 2,
@@ -46,30 +46,13 @@ export const DEFAULT_POINTS = {
     ],
     width: 10,
     height: 10,
-    // было
-    //size: [1000, 1000, 350, 350, 2100, 500, 500, 500, 500, 500, 500, 500, 500],
-    size: [300, 300, 350, 350, 300, 300, 300, 300, 300, 300, 300, 300, 300],
-    // было type: [POINT_TYPES.LINE, POINT_TYPES.LINE, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, здесь POINT_TYPES.CROSS,
-    //         POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH,
-    //         POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH
-    //     ],
-    type: [
-        POINT_TYPES.LINE,
-        POINT_TYPES.LINE,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
-        POINT_TYPES.TRIGRAPH,
+    size: [1000, 1000, 350, 350, 2100, 500, 500, 500, 500, 500, 500, 500, 500],
+    type: [POINT_TYPES.LINE, POINT_TYPES.LINE, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.CROSS,
+        POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH,
+        POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH
     ],
     team: TEAM_STATES.NONE,
-    color: gray,
+    color: COLORS.GRAY,
     angle: 0,
     existTime: 10000,
     state: [

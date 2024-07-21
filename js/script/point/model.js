@@ -1,7 +1,6 @@
 import { POINT_STATES, POINT_TYPES, DEFAULT_POINTS } from './const';
-
 export class Point {
-    constructor(i) {
+    constructor(i)  {
         this.id = DEFAULT_POINTS.id[i];
         this.x = DEFAULT_POINTS.x[i];
         this.y = DEFAULT_POINTS.y[i];

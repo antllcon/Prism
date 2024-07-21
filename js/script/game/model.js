@@ -1,4 +1,4 @@
-import { canvasHeight, canvasWidth, dark, GAME_STATES } from './const';
+import {canvasHeight, canvasWidth, COLORS, GAME_STATES} from "./const";
 
 export const lastState = {
     lastTime: 0,
@@ -12,7 +12,7 @@ export class Game {
     constructor() {
         this.width = canvasWidth;
         this.height = canvasHeight;
-        this.background = dark;
+        this.background = COLORS.DARK;
         this.state = GAME_STATES.PLAY;
     }
 
@@ -37,6 +37,6 @@ export const game = new Game();
 export const GAME = {
     width: canvasWidth,
     height: canvasHeight,
-    background: dark,
-    state: GAME_STATES.PLAY,
+    background: COLORS.DARK,
+    state: GAME_STATES.PLAY
 };

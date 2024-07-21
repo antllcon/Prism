@@ -2,7 +2,8 @@ import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const';
 import { ctx } from '../../script';
 
 export class Bot {
-    constructor(i)  {
+    constructor(i) {
+        this.type = DEFAULT_BOTS.type;
         this.x = DEFAULT_BOTS.x[i];
         this.y = DEFAULT_BOTS.y[i];
         this.size = DEFAULT_BOTS.size;
@@ -21,6 +22,9 @@ export class Bot {
     getName() {
         return (this.name = 'Bot');
     }
+    getType() {
+        return this.type;
+    }
     getX() {
         return this.x;
     }
@@ -30,7 +34,7 @@ export class Bot {
     getSize() {
         return this.size;
     }
-    getSpeed(){
+    getSpeed() {
         return this.speed;
     }
     getTeam() {
@@ -42,28 +46,22 @@ export class Bot {
     getState() {
         return this.state;
     }
-
     getImage() {
         return this.image;
     }
-
     getLoad() {
         return this.load;
     }
-
     getCount() {
         return this.count;
     }
-
     getTick() {
         return this.tick;
     }
-
     getDirection() {
         return this.direction;
     }
 
-    // Сеттеры
     setX(x) {
         this.x = x;
     }
@@ -114,19 +112,18 @@ export class Bot {
     isDead() {
         return this.state === BOT_STATES.DEAD;
     }
+
     moveOn(x, y) {
         this.x += x;
         this.y += y;
     }
+
     die() {
         this.state = BOT_STATES.DEAD;
     }
 
     renaissance() {
         this.state = BOT_STATES.ACTIVE;
-    }
-    setState(state) {
-        this.state = state;
     }
     makeStunned() {
         this.stunnedUntil = Date.now() + DURATION_DISABILITY;

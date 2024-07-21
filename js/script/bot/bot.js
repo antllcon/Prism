@@ -25,7 +25,7 @@ export function initBotAnimation() {
         }
     })
 }
-
+// переписать drawcharacters
 export function drawBot() {
 
     const endAnimation = 9;

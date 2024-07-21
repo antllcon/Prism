@@ -1,6 +1,4 @@
-import { canvasHeight, canvasWidth } from '../game/const';
-
-export const GREEN = '#00ff00';
+import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const";
 
 export const PLAYER_STATES = {
     ACTIVE: 'active',
@@ -11,6 +9,7 @@ export const PLAYER_STATES = {
 export const DURATION_DISABILITY = 5000;
 
 export const DEFAULT_PLAYERS = {
+    type: "player",
     x: [50, 50, canvasWidth - 50, canvasWidth - 50],
     y: [
         canvasHeight / 3,
@@ -18,10 +17,10 @@ export const DEFAULT_PLAYERS = {
         canvasHeight / 3,
         (canvasHeight * 2) / 3,
     ],
-    size: 50,
-    speed: 500,
-    team: ['purple', 'purple', 'yellow', 'yellow'],
-    color: ['purple', 'purple', 'yellow', 'yellow'],
+    size: 10,
+    speed: 300,
+    team: [TEAM_STATES.PURPLE, TEAM_STATES.PURPLE, TEAM_STATES.YELLOW, TEAM_STATES.YELLOW],
+    color: [COLORS.PURPLE, COLORS.PURPLE, COLORS.YELLOW, COLORS.YELLOW],
     state: PLAYER_STATES.ACTIVE,
     load: false,
     count: 0,

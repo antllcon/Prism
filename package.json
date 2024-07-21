@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "build": "webpack | nodemon js/server.js",
-    "ws": "nodemon js/server.js",
+    "build": "webpack | nodemon js/server/server.js",
+    "ws": "nodemon js/server/server.js",
     "start": "webpack serve",
     "lint": "eslint . --fix",
     "beaty": "npx prettier --write \"**/*.js\""

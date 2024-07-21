@@ -1,21 +1,13 @@
-// import {TEAM_STATES} from "./const";
-import { game, lastState, gameState } from './model';
-import { Point } from '../point/model';
-import { POINT_STATES } from '../point/const';
-import {
-    movePoint,
-    resetPoint,
-    resetPoints,
-    respawnPoint,
-    updateVisibilityPoints,
-} from '../point/point';
-import { getMyPlayer, resetAllPlayers } from '../player/player';
-import { resetAllBots } from '../bot/bot';
-import { score, SCORE, scoreAlphaState } from '../score/model';
-import { fadeOutScore } from '../score/score';
-import { playCountdown } from '../../sound/countdownAudio';
-import { playGameTheme } from '../../sound/gameThemeAudio';
-import { main, ctx, activePlayers, activeBots, points } from '../../script';
+import {game, lastState} from "./model";
+import {COLORS, TEAM_STATES} from "./const";
+import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point"
+import {getMyPlayer, resetAllPlayers} from "../player/player"
+import {resetAllBots} from "../bot/bot"
+import {score, scoreAlphaState} from "../score/model";
+import {fadeOutScore} from "../score/score";
+import {playCountdown} from "../../sound/countdownAudio";
+import {playGameTheme} from "../../sound/gameThemeAudio";
+import {main, ctx, activePlayers, activeBots, points} from "../../script";
 
 export function drawBackground() {
     ctx.fillStyle = game.getBackground();
@@ -41,74 +33,102 @@ export function countdown() {
 }
 
 function resetLevel() {
-    gameState.gameTime = -4.2;
     resetAllPlayers();
     resetAllBots();
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
     // Сбрасываем параметры всех точек
     resetPoints();
-    // POINTS.forEach((point, index) => {
-    //     respawnPoint(point, index);
-    // });
 
-    setTimeout(fadeOutScore, 6800);
-    countdown();
+    let background = document.createElement("div");
+    let scoreGif = document.createElement("img");
+    document.body.appendChild(background);
+    background.classList.add('background-countdown');
+    background.appendChild(scoreGif);
+    if (score.getTeam1() === 0 && score.getTeam2() === 1) {
+        scoreGif.src = "./src/assets/img/0-1.gif";
+    }
+    if (score.getTeam1() === 0 && score.getTeam2() === 2) {
+        scoreGif.src = "./src/assets/img/0-2.gif";
+    }
+    if (score.getTeam1() === 1 && score.getTeam2() === 0) {
+        scoreGif.src = "./src/assets/img/1-0.gif";
+    }
+    if (score.getTeam1() === 1 && score.getTeam2() === 1) {
+        scoreGif.src = "./src/assets/img/1-1.gif";
+    }
+    if (score.getTeam1() === 1 && score.getTeam2() === 2) {
+        scoreGif.src = "./src/assets/img/1-2.gif";
+    }
+    if (score.getTeam1() === 2 && score.getTeam2() === 0) {
+        scoreGif.src = "./src/assets/img/2-0.gif";
+    }
+    if (score.getTeam1() === 2 && score.getTeam2() === 1) {
+        scoreGif.src = "./src/assets/img/2-1.gif";
+    }
+    if (score.getTeam1() === 2 && score.getTeam2() === 2) {
+        scoreGif.src = "./src/assets/img/2-2.gif";
+    }
+
+    setTimeout(() => {
+        background.remove();
+        scoreGif.remove();
+        lastState.lastTime = Date.now();
+        main();
+    }, 2000)
+
+    setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
 }
 
 export function updateEntities(dt) {
     const player = getMyPlayer(activePlayers);
     player.updateAbilityScale(dt);
-
-    activeBots.forEach((bot) => {
-        points.forEach((point) => {
-            if (point.isActive()) {
-                if (
-                    Date.now() - point.getActivationTime() <
-                    point.getExistTime()
-                ) {
-                    if (point.getTeam() === player.getTeam()) {
-                        point.setColor(player.getColor());
-                    }
-                    if (point.getTeam() === bot.getTeam()) {
-                        point.setColor(bot.getColor());
-                    }
-                    point.setHeight(5);
-                } else {
-                    point.setInactive();
-                    resetPoint(point);
-                }
-            }
-            if (point.isInactive()) {
-            }
-            if (point.isInvisible()) {
-                updateVisibilityPoints(point);
-            }
-            if (point.isActive() || point.isInactive()) {
-                movePoint(point, dt);
-            }
-        });
-
+    activeBots.forEach(bot => {
         if (bot.isDead()) {
-            if (bot.getTeam() === 'purple') {
-                score.increaseTeamYellow();
+            if (bot.getTeam() === TEAM_STATES.PURPLE) {
+                score.increaseTeamYellow()
             }
-            if (bot.getTeam() === 'yellow') {
-                score.increaseTeamPurple();
+            if (bot.getTeam() === TEAM_STATES.YELLOW) {
+                score.increaseTeamPurple()
             }
             resetLevel();
         }
     });
-
-    activePlayers.forEach((player) => {
+    activePlayers.forEach(player => {
         if (player.isDead()) {
-            if (player.getTeam() === 'purple') {
-                score.increaseTeamYellow();
+            if (player.getTeam() === TEAM_STATES.PURPLE) {
+                score.increaseTeamYellow()
             }
-            if (player.getTeam() === 'yellow') {
-                score.increaseTeamPurple();
+            if (player.getTeam() === TEAM_STATES.YELLOW) {
+                score.increaseTeamPurple()
             }
             resetLevel();
         }
     });
+    points.forEach(point => {
+        if (point.isActive()) {
+            if (Date.now() - point.getActivationTime() < point.getExistTime()) {
+                if (point.getTeam() === TEAM_STATES.PURPLE) {
+                    point.setColor(COLORS.PURPLE);
+                }
+                if (point.getTeam() === TEAM_STATES.YELLOW) {
+                    point.setColor(COLORS.YELLOW);
+                }
+                point.setHeight(5);
+            } else {
+                point.setInactive();
+                point.setColor(COLORS.GRAY)
+                resetPoint(point);
+            }
+        }
+        if (point.isInactive()) {
+
+        }
+        if (point.isInvisible()) {
+            updateVisibilityPoints(point);
+        }
+        if (point.isActive() || point.isInactive()) {
+            movePoint(point, dt);
+        }
+    })
 }
