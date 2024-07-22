@@ -1,19 +1,10 @@
-import {updatePlayer} from '../script/player/player.js';
+const updatePlayer = require('../script/player/player.js');
 
-// const express = require('express');
-// const app = express();
-// const http = require('http').createServer(app);
-// const path = require('path');
-// const io = require('socket.io')(http);
-
-import express from 'express';
-import http from 'http';
-import path from 'path';
-import socketIO from 'socket.io';
-
+const express = require('express');
 const app = express();
-const server = http.createServer(app);
-const io = new socketIO(server);
+const http = require('http').createServer(app);
+const path = require('path');
+const io = require('socket.io')(http);
 
 
 const Client = require('./client.js');
@@ -88,7 +79,11 @@ io.on('connection', (socket) => {
     socket.on('playerIsReady', () => {
         const roomId  = findRoomBySocketId(socket.id);
         const client = findClientBySocketId(roomId, socket.id);
-        client.setReady();
+        if (client.getIsReady()) {
+            client.setReady();
+        } else {
+            client.setNotReady();
+        }
         let amountReadyClients = 0;
         rooms[roomId]['clients'].forEach(client => {
             if (client.getIsReady()) {
