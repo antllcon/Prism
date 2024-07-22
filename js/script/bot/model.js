@@ -1,8 +1,9 @@
-import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const';
-import { ctx } from '../../script';
+import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const.js';
+import { ctx } from '../../script.js';
 
 export class Bot {
     constructor(i) {
+        this.id = DEFAULT_BOTS.id[i];
         this.type = DEFAULT_BOTS.type;
         this.x = DEFAULT_BOTS.x[i];
         this.y = DEFAULT_BOTS.y[i];
@@ -19,6 +20,7 @@ export class Bot {
         this.tick = DEFAULT_BOTS.tick;
         this.direction = DEFAULT_BOTS.direction;
     }
+    getId() {return this.id;}
     getName() {return (this.name = 'Bot');}
     getType() {return this.type;}
     getX() {return this.x;}
@@ -33,6 +35,7 @@ export class Bot {
     getCount() {return this.count;}
     getTick() {return this.tick;}
     getDirection() {return this.direction;}
+    setId(id) {this.id = id;}
     setX(x) {this.x = x;}
     setY(y) {this.y = y;}
     setTeam(team) {

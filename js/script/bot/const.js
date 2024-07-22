@@ -1,4 +1,4 @@
-import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const";
+import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const.js";
 
 export const BOT_STATES = {
     ACTIVE: 'active',
@@ -9,6 +9,7 @@ export const BOT_STATES = {
 export const DURATION_DISABILITY = 5000;
 
 export const DEFAULT_BOTS = {
+    id: [0, 1, 2, 3],
     type: "bot",
     x: [50, 50, canvasWidth - 50, canvasWidth - 50],
     y: [canvasHeight / 3, canvasHeight * 2 / 3, canvasHeight / 3, canvasHeight * 2 / 3],
