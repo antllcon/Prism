@@ -4,6 +4,9 @@ import { bonuses, ctx } from '../../script';
 import { AVAILABLE_BONUSES, BONUS_TYPES } from './bonusTypes';
 import {AvailableBonus, BonusType} from "./types";
 
+let bonusIndex = 0;
+const bonusInterval = 10000;
+
 export function initBonuses(): BaseBonus[]    {
     const bonusesForRound: BaseBonus[] = [];
 
@@ -30,11 +33,10 @@ export function initBonuses(): BaseBonus[]    {
 }
 
 export function drawBonuses(): void {
-
     bonuses.forEach((bonus): void => {
         ctx.beginPath();
         ctx.arc(bonus.getX(), bonus.getY(), bonus.getSize(), 0, 2 * Math.PI);
-        ctx.fillStyle = bonus.color;
+        ctx.fillStyle = bonus.getColor();
         ctx.fill();
         ctx.closePath();
     });

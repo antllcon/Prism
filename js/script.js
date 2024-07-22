@@ -43,7 +43,7 @@ function init() {
     initBotAnimation();
 }
 
-function render() {
+function render(dt) {
     ctx.clearRect(0, 0, game.getWidth(), game.getHeight());
     drawBackground();
     drawScore();
@@ -60,6 +60,7 @@ function update(dt) {
     dataExchange();
     checkCollisions(bonuses);
     updateEntities(dt);
+
 }
 
 export function main() {
@@ -67,7 +68,7 @@ export function main() {
     let dt = (now - lastState.lastTime) / 1000.0;
     if (score.getTeam1() < 3 && score.getTeam2() < 3) {
         update(dt);
-        render();
+        render(dt);
     }
     else {
         drawBackground();
@@ -121,8 +122,6 @@ function prepTransmittedPlayer(playerAsEntity) {
     }
 }
 function getDataFromServer() {
-    // Получили массив данных по игрокам
-    // нужно обновить всех игроков, которые не наш
     socket.on('dataFromServer', (playersFromServer) => {
         // console.log('dataFromServer on', playersFromServer);
         // console.log(socket.id, 'socket.id');

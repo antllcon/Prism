@@ -18,6 +18,7 @@ export class BaseBonus {
     public getX(): number { return this.x;}
     public getY(): number { return this.y;}
     public getSize(): number {return this.size;}
+    public getColor():string {return this.color}
     public getTeam(): string {return this.teamActivated}
     public catch(entity: { id: string, team: string }, ...args: any[]): void {
     }
