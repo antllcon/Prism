@@ -464,7 +464,7 @@ function sendCookie() {
     const cookieValue = document.cookie.split('; ')
         .find(row => row.startsWith('userId='))
         ?.split('=')[1];
-    //console.log(document.cookie, 'document.cookie');
+    console.log(document.cookie, 'document.cookie');
     // Отправляем куки на сервер
     socket.emit('sentCookie', cookieValue);
 }
@@ -473,7 +473,7 @@ function setCookie() {
     now.setHours(now.getHours() + 2);
     const cookieValue = generateId();
     document.cookie = 'userId=' + cookieValue + '; expires=' + now.toUTCString() + '; path=/';
-    //console.log(document.cookie, '   cookie set');
+    console.log(document.cookie, '   cookie set');
 }
 function generateId() {
     let uniqueId = Math.random().toString().slice(-6);

@@ -1,4 +1,4 @@
-import {gray, TEAM_STATES} from "../game/const";
+import {COLORS, TEAM_STATES} from "../game/const";
 import {canvasWidth, canvasHeight} from "../game/const"
 
 export const pointsAmount = 13;
@@ -31,7 +31,7 @@ export let DEFAULT_POINTS = {
         POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH
     ],
     team: TEAM_STATES.NONE,
-    color: gray,
+    color: COLORS.GRAY,
     angle: 0,
     existTime: 10000,
     state: [POINT_STATES.INACTIVE, POINT_STATES.INACTIVE, POINT_STATES.INVISIBLE, POINT_STATES.INVISIBLE, 

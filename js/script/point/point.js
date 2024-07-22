@@ -92,7 +92,6 @@ export function drawPoints() {
                 ctx.restore();
             }
             if (point.isTypeLine()) {
-                // console.log('line');
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
                 ctx.strokeStyle = point.getColor();
