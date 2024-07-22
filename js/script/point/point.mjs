@@ -1,9 +1,9 @@
 // noinspection JSPrimitiveTypeWrapperUsage
 
-import { Point } from './model';
-import { POINT_STATES, POINT_TYPES, pointsAmount } from './const';
-import { ctx, points } from '../../script';
-import { gameState } from '../game/model';
+import { Point } from './model.mjs';
+import { POINT_STATES, POINT_TYPES, pointsAmount } from './const.mjs';
+import { ctx, points } from '../../script.mjs';
+import { gameState } from '../game/model.js';
 
 export function createPoints() {
     for (let i = 0; i < pointsAmount; i++) {

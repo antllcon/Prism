@@ -1,6 +1,6 @@
 import { BaseBonus } from "./BaseBonus";
-import {points} from "../../script";
-import {Point} from "../point/model";
+import {points} from "../../script.mjs";
+import {Point} from "../point/model.mjs";
 
 export class DeactivatePointsBonus extends BaseBonus {
     constructor(x: number, y: number, size: number, color: string, team: string) {

@@ -1,6 +1,6 @@
-import {scoreAlphaState} from "./model";
-import {score} from "./model";
-import {ctx} from "../../script";
+import {scoreAlphaState} from "./model.mjs";
+import {score} from "./model.mjs";
+import {ctx} from "../../script.mjs";
 
 export function drawScore() {
     ctx.save();

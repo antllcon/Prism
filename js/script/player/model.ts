@@ -6,12 +6,12 @@ import {
     ABILITY_DURATION,
     MAX_SPEED,
     DURATION_DISABILITY
-} from "./const";
+} from "./const.mjs";
 
-import {canvasHeight, canvasWidth} from "../game/const";
-import {ProgressBar} from "./progressBar/progressBar";
+import {canvasHeight, canvasWidth} from "../game/const.mjs";
+import {ProgressBar} from "./progressBar/progressBar.mjs";
 import {BOT_STATES, DEFAULT_BOTS} from "../bot/const";
-import {ctx} from "../../script";
+import {ctx} from "../../script.mjs";
 
 export class Player {
     private type: string

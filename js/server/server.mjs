@@ -1,20 +1,34 @@
-const express = require('express');
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { Client } from "./client.mjs";
+import {hello} from "../sprite.mjs";
+
+console.log(hello)
+// Получаем путь к текущему модулю
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const http = require('http').createServer(app);
-const path = require('path');
-const io = require('socket.io')(http);
+const server = http.createServer(app);
+const io = new Server(server);
 
 
-const Client = require('./client.js');
-const Player = require('./player.js');
-const RECONNECT_TIMEOUT = 60 * 1000; // 60 секунд
-const staticDistPath = path.resolve(path.dirname(__dirname), '../dist');
+console.log(__dirname, "__dirname")
+console.log(__filename, "__filename")
+
+const staticDistPath = path.join(__dirname, '../../dist');
 app.use(express.static(staticDistPath));
-
+console.log(staticDistPath, "staticDistPath")
 app.get('/', (req, res) => {
-    const distPath = path.resolve(path.dirname(__dirname), '../dist/index.html');
+    // Используем path.join для создания пути к файлу index.html
+    const distPath = path.join(__dirname, '../../dist');
+    console.log(distPath, "distPath")
     res.sendFile(distPath);
 });
+
 
 let rooms = {};
 let players = [];
@@ -172,12 +186,10 @@ function updatePlayer(player, transPlayer) {
 // }
 
 // Запуск сервера
-
 const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
-
 
 
 function generateId() {

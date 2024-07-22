@@ -1,7 +1,7 @@
 import { BaseBonus } from "./BaseBonus";
-import { points } from "../../script";
-import {purple, yellow} from "../game/const";
-import {drawPoints} from "../point/point";
+import { points } from "../../script.mjs";
+import {purple, yellow} from "../game/const.mjs";
+import {drawPoints} from "../point/point.mjs";
 
 export class ChangeColorBonus extends BaseBonus {
     constructor(x: number, y: number, size: number, color: string, team: string) {

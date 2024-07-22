@@ -1,6 +1,6 @@
-import {Player} from "./model";
-import {DEFAULT_PLAYERS} from "./const";
-import {ctx, activePlayers} from "../../script";
+import {Player} from "./model.ts";
+import {DEFAULT_PLAYERS} from "./const.mjs";
+import {ctx, activePlayers} from "../../script.mjs";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);

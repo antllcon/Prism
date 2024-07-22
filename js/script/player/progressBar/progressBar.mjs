@@ -1,6 +1,5 @@
-import { Player } from '../model';
-import { ctx } from '../../../script';
-import { COLORS } from '../../game/const';
+import { ctx } from '../../../script.mjs';
+import { COLORS } from '../../game/const.mjs';
 import {
     PLAYER_STATES,
     DEFAULT_PLAYERS,
@@ -8,7 +7,7 @@ import {
     ABILITY_SCALE_MAX,
     ABILITY_DURATION,
     ABILITY_SPEED_MULTIPLAYER,
-} from '../const';
+} from '../const.mjs';
 
 export const SIZE = {
     x: 50,

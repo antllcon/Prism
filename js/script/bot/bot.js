@@ -1,10 +1,10 @@
 import { BOT_STATES, DEFAULT_BOTS } from './const';
 import { Bot } from './model';
 import { GAME } from '../game/model';
-import { Point } from '../point/model';
-import { POINT_STATES } from '../point/const';
-import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script';
-import { yellow } from '../game/const';
+import { Point } from '../point/model.mjs';
+import { POINT_STATES } from '../point/const.mjs';
+import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script.mjs';
+import { yellow } from '../game/const.mjs';
 
 export function createBots() {
     //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов

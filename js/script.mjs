@@ -1,8 +1,8 @@
 // в константе socket должен лежать айди игрока
 // и по каждому айди мы должны его рисовать
-import {game, gameState, lastState} from "./script/game/model";
-import {drawPoints, createPoints} from "./script/point/point";
-import {botMovement, drawBot, createBots, initBotAnimation} from "./script/bot/bot";
+import {game, gameState, lastState} from "./script/game/model.js";
+import {drawPoints, createPoints} from "./script/point/point.mjs";
+import {botMovement, drawBot, createBots, initBotAnimation} from "./script/bot/bot.js";
 import {
     handleInput,
     createPlayers,
@@ -10,15 +10,14 @@ import {
     initPlayerAnimation,
     findPlayerBySocketId,
     updatePlayer
-} from "./script/player/player";
-import { Player } from "./script/player/model";
-import {SCORE, score} from "./script/score/model";
-import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
-import {countdown, drawBackground, updateEntities} from "./script/game/game";
-import {checkCollisions} from "./controller/bounds";
-import {drawCharacters} from "./view";
+} from "./script/player/player.js";
+import {SCORE, score} from "./script/score/model.mjs";
+import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score.mjs";
+import {countdown, drawBackground, updateEntities} from "./script/game/game.js";
+import {checkCollisions} from "./controller/bounds.js";
+import {drawCharacters} from "./view.mjs";
 import {io} from "socket.io-client";
-import {drawBonuses, initBonuses} from "./script/bonuses/bonus";
+import {drawBonuses, initBonuses} from "./script/bonuses/bonus.ts";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");

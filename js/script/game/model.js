@@ -1,4 +1,4 @@
-import {canvasHeight, canvasWidth, COLORS, GAME_STATES} from "./const";
+import {canvasHeight, canvasWidth, COLORS, GAME_STATES} from "./const.mjs";
 
 export const lastState = {
     lastTime: 0,

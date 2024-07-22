@@ -1,6 +1,6 @@
 import { BaseBonus } from "./BaseBonus";
 import {getMyPlayer} from "../player/player";
-import {activePlayers} from "../../script";
+import {activePlayers} from "../../script.mjs";
 
 export class InvisibleLaserBonus extends BaseBonus {
     constructor(x: number, y: number, size: number, color: string, team: string) {

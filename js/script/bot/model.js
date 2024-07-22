@@ -1,5 +1,5 @@
 import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const';
-import { ctx } from '../../script';
+import { ctx } from '../../script.mjs';
 
 export class Bot {
     constructor(i) {

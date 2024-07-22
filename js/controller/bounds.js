@@ -2,10 +2,10 @@ import { Bot } from '../script/bot/model';
 import { BOT_STATES } from '../script/bot/const';
 import { getMyPlayer } from '../script/player/player';
 import { Player } from '../script/player/model';
-import { activePlayers, activeBots, points } from '../script';
-import { POINT_STATES, POINT_TYPES } from '../script/point/const';
+import { activePlayers, activeBots, points } from '../script.mjs';
+import { POINT_STATES, POINT_TYPES } from '../script/point/const.mjs';
 import { GAME, game } from '../script/game/model';
-import { SIZE as SIZE_PB } from '../script/player/progressBar/progressBar';
+import { SIZE as SIZE_PB } from '../script/player/progressBar/progressBar.mjs';
 
 function checkLaserBounds() {
 

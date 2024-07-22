@@ -1,13 +1,13 @@
-import {game, lastState} from "./model";
-import {COLORS, TEAM_STATES} from "./const";
-import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point"
-import {getMyPlayer, resetAllPlayers} from "../player/player"
-import {resetAllBots} from "../bot/bot"
-import {score, scoreAlphaState} from "../score/model";
-import {fadeOutScore} from "../score/score";
-import {playCountdown} from "../../sound/countdownAudio";
-import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main, ctx, activePlayers, activeBots, points} from "../../script";
+import {game, lastState} from "./model.js";
+import {COLORS, TEAM_STATES} from "./const.mjs";
+import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point.mjs"
+import {getMyPlayer, resetAllPlayers} from "../player/player.js"
+import {resetAllBots} from "../bot/bot.js"
+import {score, scoreAlphaState} from "../score/model.mjs";
+import {fadeOutScore} from "../score/score.mjs";
+import {playCountdown} from "../../sound/countdownAudio.js";
+import {playGameTheme} from "../../sound/gameThemeAudio.js";
+import {main, ctx, activePlayers, activeBots, points} from "../../script.mjs";
 
 export function drawBackground() {
     ctx.fillStyle = game.getBackground();

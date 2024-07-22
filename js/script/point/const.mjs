@@ -1,5 +1,5 @@
-import {COLORS, TEAM_STATES} from "../game/const";
-import {canvasWidth, canvasHeight} from "../game/const"
+import {COLORS, TEAM_STATES} from "../game/const.mjs";
+import {canvasWidth, canvasHeight} from "../game/const.mjs"
 
 export const pointsAmount = 13;
 export const POINT_STATES = {

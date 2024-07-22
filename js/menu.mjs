@@ -1,4 +1,4 @@
-import { playMenuTheme } from './sound/menuThemeAudio';
+import { playMenuTheme } from './sound/menuThemeAudio.js';
 
 const socket = io();
 
@@ -9,7 +9,7 @@ const playerImages = [
     "src/assets/img/player-img-4.svg",
 ]
 
-const nameCharacters = ["neon killer", "cyber viper", "nova reaper", "quantum phantom"]
+export const nameCharacters = ["neon killer", "cyber viper", "nova reaper", "quantum phantom"]
 
 const cardStyles = [
     {

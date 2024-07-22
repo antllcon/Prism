@@ -1,4 +1,4 @@
-import {COLORS} from "../game/const";
+import {COLORS} from "../game/const.mjs";
 
 export const scoreAlphaState = {
     scoreAlpha: 0.2,
