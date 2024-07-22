@@ -1,5 +1,5 @@
 import { BaseBonus } from './BaseBonus';
-import { GAME as canvas } from '../game/model';
+import { GAME as canvas } from '../game/model.mjs';
 import { readyBonuses, ctx } from '../../script.mjs';
 import { AVAILABLE_BONUSES, BONUS_TYPES } from './bonusTypes';
 import {AvailableBonus, BonusType} from "./types";

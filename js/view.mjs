@@ -1,5 +1,5 @@
 import { ctx } from "./script.mjs";
-import {getMyPlayer} from "./script/player/player.js";
+import {getMyPlayer} from "./script/player/player.mjs";
 
 export function drawCharacters(arrayCharacters) {
     const endAnimation = 9;

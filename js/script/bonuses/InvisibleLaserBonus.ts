@@ -1,5 +1,5 @@
 import { BaseBonus } from "./BaseBonus";
-import {getMyPlayer} from "../player/player";
+import {getMyPlayer} from "../player/player.mjs";
 import {activePlayers} from "../../script.mjs";
 
 export class InvisibleLaserBonus extends BaseBonus {
