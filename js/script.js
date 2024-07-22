@@ -35,6 +35,11 @@ export let activeBots = [];
 const players = ['1'];
 const socket_id = '1';
 
+let lastBonusAddTime = 0;
+const bonusAddInterval = 3;
+export let readyBonuses = [];
+let bonusIndex = 0;
+
 function init() {
     connect();
     activeBots = createBots();
@@ -43,7 +48,7 @@ function init() {
     initBotAnimation();
 }
 
-function render(dt) {
+function render() {
     ctx.clearRect(0, 0, game.getWidth(), game.getHeight());
     drawBackground();
     drawScore();
@@ -56,10 +61,19 @@ function update(dt) {
     gameState.gameTime += dt;
     botMovement(dt);
     handleInput(dt);
-    // отправляем на сервер и получаем с сервера
     dataExchange();
-    checkCollisions(bonuses);
+    checkCollisions(readyBonuses);
     updateEntities(dt);
+    lastBonusAddTime += dt;
+    if (lastBonusAddTime >= bonusAddInterval) {
+        if (bonusIndex < bonuses.length) {
+            readyBonuses.push(bonuses[bonusIndex]); // Добавляем бонус в readyBonuses
+            bonusIndex++; // Увеличиваем индекс для следующего бонуса
+        } else {
+            console.log("No more bonuses to add.");
+        }
+        lastBonusAddTime = 0; // Сбрасываем таймер
+    }
 
 }
 
@@ -92,9 +106,11 @@ function initPlayers() {
     socket.emit('requestForClients');
     socket.on('sendClients', (clients) => {
         console.log('sendClients вызван')
-        console.log(clients);
+        /*console.log(clients);*/
         activePlayers = createPlayers(clients, socket.id);
+/*
         console.log(activePlayers, 'active players')
+*/
         initPlayerAnimation()
     })
 }
@@ -107,7 +123,7 @@ function dataExchange() {
 }
 function sendDataToServer() {
     let playerAsEntity = getMyPlayer(activePlayers);
-    console.log(activePlayers, 'activePlayers');
+    /*console.log(activePlayers, 'activePlayers');*/
     let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
     socket.emit('sendDataToServer', transmittedPlayer);
 }

@@ -13,35 +13,29 @@ export class StopBonus extends BaseBonus {
         super.catch(entity);
 
         if (entity.team === 'purple') {
-            console.log(`Player purple ${entity.id} поймал бонус и замораживает противников!`);
 
             activeBots.forEach(bot => {
                 if (bot.getTeam() !== entity.team && bot.getTeam() !== 'purple') {
                     bot.makeStunned();
-                    console.log(`Бот ${bot.getName()} из команды ${bot.getTeam()} остановлен!`);
                 }
             });
 
             activePlayers.forEach(player => {
                 if (player.getTeam() !== entity.team) {
                     player.makeStunned();
-                    console.log(`Игрок ${player.getId()} из команды ${player.getTeam()} остановлен!`);
                 }
             });
         } else if (entity.team === 'yellow') {
-            console.log(`Player yellow ${entity.id} поймал бонус и замораживает противников!`);
 
             activeBots.forEach(bot => {
                 if (bot.getTeam() !== entity.team && bot.getTeam() !== 'yellow') {
                     bot.makeStunned();
-                    console.log(`Бот ${bot.getName()} из команды ${bot.getTeam()} остановлен!`);
                 }
             });
 
             activePlayers.forEach(player => {
                 if (player.getTeam() !== entity.team) {
                     player.makeStunned();
-                    console.log(`Игрок ${player.getId()} из команды ${player.getTeam()} остановлен!`);
                 }
             });
         }

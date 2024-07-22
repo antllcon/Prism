@@ -3,7 +3,7 @@ import { Bot } from './model';
 import { GAME } from '../game/model';
 import { Point } from '../point/model';
 import { POINT_STATES } from '../point/const';
-import { ctx, activeBots, requiredBots, points, bonuses } from '../../script';
+import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script';
 import { yellow } from '../game/const';
 
 export function createBots() {
@@ -212,7 +212,7 @@ export function botMovement(dt) {
             let closestBonus = null;
             let closestDistance = Infinity;
 
-            bonuses.forEach((bonus) => {
+            readyBonuses.forEach((bonus) => {
                 const dx = bot.x - bonus.getX();
                 const dy = bot.y - bonus.getY();
                 const distance = Math.sqrt(dx * dx + dy * dy);
@@ -287,7 +287,6 @@ export function botMovement(dt) {
                     bot.setDirection("up");
                 }
             }
-            console.log(`Bot direction updated to: ${bot.getDirection()}`); // Добавлено логирование
         }}
     });
 }
