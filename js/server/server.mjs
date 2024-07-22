@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
         let roomId = generateId();
         // Проверка id на уникальность сравнением со списком ids !!!!!!!! РЕАЛИЗОВАТЬ
         if (!rooms[roomId]) {
-            rooms[roomId] = [];
+            rooms[roomId]['clients'] = [];
             console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
         }
@@ -88,14 +88,18 @@ io.on('connection', (socket) => {
     socket.on('playerIsReady', () => {
         const roomId  = findRoomBySocketId(socket.id);
         const client = findClientBySocketId(roomId, socket.id);
-        client.setReady();
+        if (client.getIsReady()) {
+            client.setReady();
+        } else {
+            client.setNotReady();
+        }
         let amountReadyClients = 0;
-        rooms[roomId].forEach(client => {
+        rooms[roomId]['clients'].forEach(client => {
             if (client.getIsReady()) {
                 amountReadyClients++;
             }
         })
-        if (amountReadyClients === rooms[roomId].length) {
+        if (amountReadyClients === rooms[roomId]['clients'].length) {
             io.to(parseInt(roomId)).emit('roomIsReady')
         }
     })
@@ -107,10 +111,23 @@ io.on('connection', (socket) => {
             client.setInGame(true);
             let clientsSockets = []
             clientsSockets = getAllSocketsFromRoom(roomId);
-            initPlayers(socket.id);
+            initPlayers(clientsSockets);
             const areAllInGame = findOutAreAllInGame(roomId, clientsSockets.length);
             if (areAllInGame) {
                 io.to(roomId).emit('sendClients', clientsSockets)
+            }
+        }
+    })
+
+    socket.on('requestForBots', () => {
+        const roomId = findRoomBySocketId(socket.id);
+        if (rooms[roomId]) {
+            rooms[roomId]['bots'] = createBots(requiredBots);
+            let clientsSockets = []
+            clientsSockets = getAllSocketsFromRoom(roomId);
+            const areAllInGame = findOutAreAllInGame(roomId, clientsSockets.length);
+            if (areAllInGame) {
+                io.to(roomId).emit('sendBots', rooms[roomId][bots])
             }
         }
     })
@@ -134,11 +151,11 @@ io.on('connection', (socket) => {
         socket.emit('requestForCookie');
         socket.on('sentCookie', (userId) => {
             const roomId = findRoomBySocketId(socket.id);
-            rooms[roomId].push(new Client(socket.id, userId));
+            rooms[roomId]['clients'].push(new Client(socket.id, userId));
             const client = findClientByUserId(roomId, userId);
             // client.setSocketId(socket.id);
             const lastSeen = client.getLastSeen();
-            if (rooms[roomId] && lastSeen) {
+            if (rooms[roomId]['clients'] && lastSeen) {
                 // Проверяем, был ли клиент в комнате и прошло ли достаточно времени
                 if (Date.now() - lastSeen < RECONNECT_TIMEOUT) {
                     client.setSocketId(socket.id);
