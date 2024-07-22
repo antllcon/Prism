@@ -6,7 +6,7 @@ import { POINT_STATES } from '../point/const.mjs';
 import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script.mjs';
 import { yellow } from '../game/const.mjs';
 
-export function createBots() {
+export function createBots(requiredBots) {
     //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов
     const createdBots = [];
     let i = 0;
@@ -291,7 +291,27 @@ export function botMovement(dt) {
     });
 }
 
-
+function findBotById(bots, id) {
+    let foundBot;
+    bots.forEach(bot => {
+        if (bot.getId() === id)
+        foundBot = bot;
+    });
+    return foundBot;
+}
+export function updateBots(bots) {
+    data[bots].foreach(botFromServer => {
+        const bot = findBotById(botFromServer.id);
+        updateBot(bot, botFromServer);
+    })
+}
+function updateBot(bot, botFromServer) {
+    botFromServer.y ? bot.setY(botFromServer.y) : null;
+    botFromServer.x ? bot.setX(botFromServer.x) : null;
+    botFromServer.team ? bot.setTeam(botFromServer.team) : null;
+    botFromServer.color ? bot.setColor(botFromServer.color) : null;
+    botFromServer.state ? bot.setState(botFromServer.state) : null;
+}
 
 /* let closestBonus = null;
             let closestDistance = Infinity;
