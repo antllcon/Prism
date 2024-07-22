@@ -48,7 +48,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js', 'mjs'],
+        extensions: ['.tsx', '.ts', '.js', '.mjs'],
         fallback: {
             "querystring": require.resolve("querystring-es3"),
             "path": require.resolve("path-browserify"),

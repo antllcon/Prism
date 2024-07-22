@@ -10,7 +10,7 @@ import {
 
 import {canvasHeight, canvasWidth} from "../game/const.mjs";
 import {ProgressBar} from "./progressBar/progressBar.mjs";
-import {BOT_STATES, DEFAULT_BOTS} from "../bot/const";
+import {BOT_STATES, DEFAULT_BOTS} from "../bot/const.mjs";
 import {ctx} from "../../script.mjs";
 
 export class Player {

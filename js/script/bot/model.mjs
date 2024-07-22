@@ -1,4 +1,4 @@
-import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const';
+import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const.mjs';
 import { ctx } from '../../script.mjs';
 
 export class Bot {

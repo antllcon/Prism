@@ -1,6 +1,6 @@
 import { BaseBonus } from "./BaseBonus";
-import { Bot } from "../bot/model";
-import {BOT_STATES} from "../bot/const";
+import { Bot } from "../bot/model.mjs";
+import {BOT_STATES} from "../bot/const.mjs";
 import {Player} from "../player/model";
 
 export class StopBonus extends BaseBonus {
