@@ -1,6 +1,6 @@
 // в константе socket должен лежать айди игрока
 // и по каждому айди мы должны его рисовать
-import {game, gameState, lastState} from "./script/game/model.js";
+import {game, gameState, lastState} from "./script/game/model.mjs";
 import {drawPoints, createPoints} from "./script/point/point.mjs";
 import {botMovement, drawBot, createBots, initBotAnimation} from "./script/bot/bot.mjs";
 import {
@@ -10,10 +10,10 @@ import {
     initPlayerAnimation,
     findPlayerBySocketId,
     updatePlayer
-} from "./script/player/player.js";
+} from "./script/player/player.mjs";
 import {SCORE, score} from "./script/score/model.mjs";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score.mjs";
-import {countdown, drawBackground, updateEntities} from "./script/game/game.js";
+import {countdown, drawBackground, updateEntities} from "./script/game/game.mjs";
 import {checkCollisions} from "./controller/bounds.mjs";
 import {drawCharacters} from "./view.mjs";
 import {io} from "socket.io-client";
