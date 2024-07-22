@@ -1,6 +1,6 @@
-import { BOT_STATES, DEFAULT_BOTS } from './const';
-import { Bot } from './model';
-import { GAME } from '../game/model';
+import { BOT_STATES, DEFAULT_BOTS } from './const.mjs';
+import { Bot } from './model.mjs';
+import { GAME } from '../game/model.js';
 import { Point } from '../point/model.mjs';
 import { POINT_STATES } from '../point/const.mjs';
 import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script.mjs';

@@ -2,7 +2,7 @@ import {game, lastState} from "./model.js";
 import {COLORS, TEAM_STATES} from "./const.mjs";
 import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point.mjs"
 import {getMyPlayer, resetAllPlayers} from "../player/player.js"
-import {resetAllBots} from "../bot/bot.js"
+import {resetAllBots} from "../bot/bot.mjs"
 import {score, scoreAlphaState} from "../score/model.mjs";
 import {fadeOutScore} from "../score/score.mjs";
 import {playCountdown} from "../../sound/countdownAudio.js";

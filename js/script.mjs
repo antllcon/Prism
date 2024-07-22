@@ -2,7 +2,7 @@
 // и по каждому айди мы должны его рисовать
 import {game, gameState, lastState} from "./script/game/model.js";
 import {drawPoints, createPoints} from "./script/point/point.mjs";
-import {botMovement, drawBot, createBots, initBotAnimation} from "./script/bot/bot.js";
+import {botMovement, drawBot, createBots, initBotAnimation} from "./script/bot/bot.mjs";
 import {
     handleInput,
     createPlayers,
@@ -14,7 +14,7 @@ import {
 import {SCORE, score} from "./script/score/model.mjs";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score.mjs";
 import {countdown, drawBackground, updateEntities} from "./script/game/game.js";
-import {checkCollisions} from "./controller/bounds.js";
+import {checkCollisions} from "./controller/bounds.mjs";
 import {drawCharacters} from "./view.mjs";
 import {io} from "socket.io-client";
 import {drawBonuses, initBonuses} from "./script/bonuses/bonus.ts";
