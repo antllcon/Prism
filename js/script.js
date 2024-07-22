@@ -67,12 +67,12 @@ function update(dt) {
     lastBonusAddTime += dt;
     if (lastBonusAddTime >= bonusAddInterval) {
         if (bonusIndex < bonuses.length) {
-            readyBonuses.push(bonuses[bonusIndex]); // Добавляем бонус в readyBonuses
-            bonusIndex++; // Увеличиваем индекс для следующего бонуса
+            readyBonuses.push(bonuses[bonusIndex]);
+            bonusIndex++;
         } else {
             console.log("No more bonuses to add.");
         }
-        lastBonusAddTime = 0; // Сбрасываем таймер
+        lastBonusAddTime = 0;
     }
 
 }
@@ -98,8 +98,19 @@ function connect() {
         socket.emit('redirected');
         sendCookie();
         initPlayers();
+        updatePlayerLobbyInfo();
         // activePlayers = createPlayers(players, socket_id);
     });
+}
+
+function updatePlayerLobbyInfo(){
+    socket.on('updatePlayerLobbyInfo', (playerCount) => {
+        console.log('мы попали в событие этой херни')
+        const playerCountLobby = document.querySelector('.lobby-count-players');
+        console.log(playerCountLobby)
+
+
+    })
 }
 
 function initPlayers() {

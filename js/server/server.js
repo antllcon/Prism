@@ -28,6 +28,7 @@ io.on('connection', (socket) => {
             rooms[roomId] = [];
             console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
+
         }
     });
 
@@ -38,6 +39,9 @@ io.on('connection', (socket) => {
     socket.on('leaveRoom', () => {
         const roomId = findRoomBySocketId(socket.id);
         leaveRoom(roomId, socket);
+        if (rooms[roomId]) {
+            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
+        }
     });
 
     
@@ -296,6 +300,7 @@ function joinRoom(roomId, socket) {
             socket.join(parseInt(roomId));
             socket.emit('joinedRoom', roomId);
             console.log(socket.id, ' joined the room ', roomId);
+            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
             // broadcastRoomUpdate(roomId);
         } else {
             socket.emit('wrongId');
