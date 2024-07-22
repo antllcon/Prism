@@ -41,7 +41,7 @@ let bonusIndex = 0;
 
 function init() {
     connect();
-    activeBots = createBots();
+    activeBots = createBots(requiredBots);
     bonuses = initBonuses();
     createPoints();
     initBotAnimation();
@@ -103,14 +103,19 @@ function connect() {
 
 function initPlayers() {
     socket.emit('requestForClients');
-    socket.on('sendClients', (clients) => {
+    socket.on('sendClients', (players) => {
         console.log('sendClients вызван')
-        /*console.log(clients);*/
-        activePlayers = createPlayers(clients, socket.id);
-/*
-        console.log(activePlayers, 'active players')
-*/
+        activePlayers = players;
+        setPlayerWithIdAsMain(socket.id);
         initPlayerAnimation()
+    })
+}
+function initBots() {
+    socket.emit('requestForBots');
+    socket.on('sendBots', (bots) => {
+        console.log(bots, 'bots from sendBots');
+        activeBots = bots;
+        initBotAnimation();
     })
 }
 
@@ -121,10 +126,13 @@ function dataExchange() {
     getDataFromServer();
 }
 function sendDataToServer() {
-    let playerAsEntity = getMyPlayer(activePlayers);
-    /*console.log(activePlayers, 'activePlayers');*/
-    let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
-    socket.emit('sendDataToServer', transmittedPlayer);
+    let data;
+    let myPlayer = getMyPlayer(activePlayers);
+    data['player'] = myPlayer;
+    // Подготовить лазеры к отправке
+    data['points'] = points;
+    // Добавить лазеры и игрока в массив и отправить
+    socket.emit('sendDataToServer', data);
 }
 function prepTransmittedPlayer(playerAsEntity) {
     return {
@@ -137,17 +145,11 @@ function prepTransmittedPlayer(playerAsEntity) {
     }
 }
 function getDataFromServer() {
-    socket.on('dataFromServer', (playersFromServer) => {
-        // console.log('dataFromServer on', playersFromServer);
-        // console.log(socket.id, 'socket.id');
-        playersFromServer.forEach(playerFromServer => {
-            if (playerFromServer.id !== socket.id) {
-                const player = findPlayerBySocketId(playerFromServer.id);
-                if (player) {
-                    updatePlayer(player, playerFromServer);
-                }
-            }
-        });
+    socket.on('dataFromServer', (data) => {
+        // Получение массива данных
+        // извлечение лазеров, ботов, игроков
+        updatePlayers(data['players'], socket.id);
+        updateBots(data['bots']);
     })
 }
 

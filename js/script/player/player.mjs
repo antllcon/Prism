@@ -107,9 +107,13 @@ export function drawPlayer(activePlayers) {
 export function createPlayers(clients, myId) {
     let createdPlayers = [];
     for (let i = 0; i < clients.length; i++) {
-        createdPlayers[i] = new Player(i, clients[i], myId);
+        createdPlayers[i] = new Player(i, clients[i]);
     }
     return createdPlayers
+}
+export function setPlayerWithIdAsMain(id) {
+    const player = findPlayerBySocketId(id);
+    player.setMain(true);
 }
 
 export function getMyPlayer(players) {
@@ -138,11 +142,18 @@ export function findPlayerBySocketId(socketId) {
     });
     return foundPlayer;
 }
-
-export function updatePlayer(player, playerFromServer) {
-    playerFromServer.x ? player.setX(playerFromServer.x) : null;
-    playerFromServer.y ? player.setY(playerFromServer.y) : null;
-    playerFromServer.team ? player.setTeam(playerFromServer.team) : null;
-    playerFromServer.color ? player.setColor(playerFromServer.color) : null;
-    playerFromServer.state ? player.setState(playerFromServer.state) : null;
+function updatePlayer(player, playerFromServer) {
+    playerFromServer.getX() ? player.setX(playerFromServer.getX()) : null;
+    playerFromServer.getY() ? player.setY(playerFromServer.getY()) : null;
+    playerFromServer.getState() ? player.setState(playerFromServer.getState()) : null;
+}
+export function updatePlayers(players, socketId) {
+    players.forEach(playerFromServer => {
+        if (playerFromServer.id !== socketId) {
+            const player = findPlayerBySocketId(playerFromServer.id);
+            if (player) {
+                updatePlayer(player, playerFromServer);
+            }
+        }
+    });
 }
