@@ -21,12 +21,12 @@ export function drawBackground() {
 
 export function countdown() {
     //let inputTime = Date.now(); // возможно вообще не нужен
-    let background = document.createElement("div");
-    let countdownGif = document.createElement("img");
+    const background = document.createElement('div');
+    const countdownGif = document.createElement('img');
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(countdownGif);
-    countdownGif.src = "./src/assets/img/cat.gif";
+    countdownGif.src = './src/assets/img/cat.gif';
     playCountdown();
     setTimeout(() => {
         playGameTheme();
@@ -34,15 +34,15 @@ export function countdown() {
         countdownGif.remove();
         lastState.lastTime = Date.now();
         main();
-    }, 4200)
+    }, 4200);
 }
 
 function resetLevel() {
     resetAllPlayers();
     resetAllBots();
-
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
+    // Сбрасываем параметры всех точек
     resetPoints();
 
     let background = document.createElement("div");
@@ -86,7 +86,8 @@ function resetLevel() {
 }
 
 export function updateEntities(dt) {
-    // let player = getMyPlayer(activePlayers);
+    const player = getMyPlayer(activePlayers);
+    player.updateAbilityScale(dt);
     activeBots.forEach(bot => {
         if (bot.isDead()) {
             if (bot.getTeam() === TEAM_STATES.PURPLE) {

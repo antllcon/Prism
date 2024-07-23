@@ -7,6 +7,7 @@ export const dark = "#333";
 export const black = "#111";
 export const white = "#FFF";
 
+
 export const GAME_STATES = {
     START: "start",
     PLAY: "play",
@@ -21,6 +22,7 @@ export const TEAM_STATES = {
 }
 
 export const COLORS = {
+    GREEN: '#40c140',
     YELLOW: "#f8df5c",
     PURPLE: "#8f23dc",
     GRAY: "#666",

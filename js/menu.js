@@ -1,4 +1,4 @@
-import {playMenuTheme} from "./sound/menuThemeAudio";
+import { playMenuTheme } from './sound/menuThemeAudio';
 
 const socket = io();
 
@@ -116,11 +116,11 @@ let inputRoomId;
 let currentPlayerCard;
 
 function loadHTML(filename, callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", filename);
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', filename);
     xhr.onload = () => {
         callback(xhr.response);
-    }
+    };
     xhr.send();
 }
 
@@ -131,11 +131,15 @@ function callback(html) {
 function transitionToPage(file) {
     loadHTML(file, (html) => {
         callback(html);
-        if (file === 'menu.html' || file === 'with_bot.html' || file === 'with-player.html') {
+        if (
+            file === 'menu.html' ||
+            file === 'with_bot.html' ||
+            file === 'with-player.html'
+        ) {
             loadToMainPageLink();
         }
         if (file === 'lobby.html') {
-            let chapterCodeElement = document.querySelector('.chapter__code');
+            const chapterCodeElement = document.querySelector('.chapter__code');
             chapterCodeElement.textContent = globalRoomId;
         }
 
@@ -348,25 +352,29 @@ function initEventListeners() {
     }
 
     if (buttonBot) {
-        buttonBot.addEventListener('click', () => {transitionToPage("with_bot.html")});
+        buttonBot.addEventListener('click', () => {transitionToPage('with_bot.html')});
     }
 
     if (buttonPlayer) {
         buttonPlayer.addEventListener('click', () => {
-            if (!(document.cookie.indexOf('userId') > -1)) {
+           if (!(document.cookie.indexOf('userId') > -1)) {
                 setCookie();
                 sendCookie();
             }
-            transitionToPage("with-player.html");
+            transitionToPage('with-player.html');
         });
     }
 
     if (button1vs1) {
-        button1vs1.addEventListener('click', () => { window.location.href = "game.html"; });
+        button1vs1.addEventListener('click', () => {
+            window.location.href = 'game.html';
+        });
     }
 
     if (button2vs2) {
-        button2vs2.addEventListener('click', () => { transitionToPage("lobby.html"); });
+        button2vs2.addEventListener('click', () => {
+            transitionToPage('lobby.html');
+        });
     }
 
     if (buttonLobby) {
@@ -377,7 +385,7 @@ function initEventListeners() {
             })
             socket.on('joinedRoom', (roomId) => {
                 globalRoomId = roomId;
-                transitionToPage("lobby.html");
+                transitionToPage('lobby.html');
             });
         });
     }
@@ -399,7 +407,7 @@ function initEventListeners() {
                 })
                 socket.on('joinedRoom', (roomId) => {
                     globalRoomId = roomId;
-                    transitionToPage("lobby.html");
+                    transitionToPage('lobby.html');
                 });
                 socket.on('wrongId', () => {
                     // добавить обработку несуществующего айди комнаты
@@ -448,7 +456,9 @@ function initEventListeners() {
     }
 
     if (buttonMenu) {
-        buttonMenu.addEventListener('click', () => { transitionToPage("menu.html"); });
+        buttonMenu.addEventListener('click', () => {
+            transitionToPage('menu.html');
+        });
     }
 
     // window.addEventListener('beforeunload', function(e) {

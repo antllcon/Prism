@@ -1,9 +1,9 @@
 // noinspection JSPrimitiveTypeWrapperUsage
 
-import {Point} from "./model";
-import {pointsAmount} from "./const";
-import {ctx, points} from "../../script";
-import {gameState} from "../game/model"
+import { Point } from './model';
+import { POINT_STATES, POINT_TYPES, pointsAmount } from './const';
+import { ctx, points } from '../../script';
+import { gameState } from '../game/model';
 
 export function createPoints() {
     for (let i = 0; i < pointsAmount; i++) {
@@ -85,13 +85,20 @@ export function drawPoints() {
                 ctx.moveTo(point.getSize() / 2, 0);
                 ctx.lineTo(0, 0);
                 ctx.moveTo(0, 0);
-                ctx.lineTo(-point.getSize() / 2 * Math.cos(Math.PI / 3), -point.getSize() / 2 * Math.sin(Math.PI / 3));
+                ctx.lineTo(
+                    (-point.getSize() / 2) * Math.cos(Math.PI / 3),
+                    (-point.getSize() / 2) * Math.sin(Math.PI / 3)
+                );
                 ctx.moveTo(0, 0);
-                ctx.lineTo(-point.getSize() / 2 * Math.cos(-Math.PI / 3), -point.getSize() / 2 * Math.sin(-Math.PI / 3));
+                ctx.lineTo(
+                    (-point.getSize() / 2) * Math.cos(-Math.PI / 3),
+                    (-point.getSize() / 2) * Math.sin(-Math.PI / 3)
+                );
                 ctx.stroke();
                 ctx.restore();
             }
             if (point.isTypeLine()) {
+                // console.log('line');
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
                 ctx.strokeStyle = point.getColor();
@@ -107,35 +114,32 @@ export function drawPoints() {
         if (point.isInactive()) {
             point.setAngle(point.getAngle() + Math.PI / 180);
             ctx.save();
-            ctx.translate(point.getX() + point.getWidth() / 2, point.getY() + point.getHeight() / 2);
+            ctx.translate(
+                point.getX() + point.getWidth() / 2,
+                point.getY() + point.getHeight() / 2
+            );
             ctx.rotate(point.getAngle());
             ctx.fillStyle = point.getColor();
-            ctx.fillRect(-point.getWidth() / 2, -point.getHeight() / 2, point.getWidth(), point.getHeight());
+            ctx.fillRect(
+                -point.getWidth() / 2,
+                -point.getHeight() / 2,
+                point.getWidth(),
+                point.getHeight()
+            );
             ctx.restore();
         }
         if (point.isInvisible()) {
-
         }
     });
 }
 
-// export function respawnPoint(point) {
-//     if (point.id !== 0 && point.id !== 1) {
-//         point.state = POINT_STATES.INVISIBLE;
-//     }
-//     point.team = TEAM_STATES.NONE;
-//     point.activationTime = null;
-//     point.color = gray;
-//     point.height = 10;
-// }
-
 export function movePoint(point, dt) {
     if (point.getId() === 2 || point.getId() === 3) {
         if (point.getX() <= 50) {
-            point.setDirection(0); // угол 0 радиан означает движение вправо
+            point.setDirection(0);
         }
         if (point.getX() >= 1760) {
-            point.setDirection(Math.PI); // угол PI радиан означает движение влево
+            point.setDirection(Math.PI);
         }
     }
     point.moveOn(Math.cos(point.getDirection()) * point.getSpeed() * dt, 0);
@@ -143,10 +147,18 @@ export function movePoint(point, dt) {
 
 export function updateVisibilityPoints(point) {
     if (point.isTypeTrigraph()) {
-        if (5 <= point.getId() && point.getId() <= 12 && gameState.gameTime > 3) {
+        if (
+            5 <= point.getId() &&
+            point.getId() <= 12 &&
+            gameState.gameTime > 3
+        ) {
             point.setInactive();
         }
-        if (2 <= point.getId() && point.getId() <= 3 && gameState.gameTime > 6) {
+        if (
+            2 <= point.getId() &&
+            point.getId() <= 3 &&
+            gameState.gameTime > 6
+        ) {
             point.setInactive();
         }
     }

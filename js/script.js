@@ -1,13 +1,24 @@
+// в константе socket должен лежать айди игрока
+// и по каждому айди мы должны его рисовать
 import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots, initBotAnimation} from "./script/bot/bot";
-import {drawPlayer, handleInput, createPlayers, getMyPlayer, initPlayerAnimation, findPlayerBySocketId, updatePlayer} from "./script/player/player";
+import {
+    handleInput,
+    createPlayers,
+    getMyPlayer,
+    initPlayerAnimation,
+    findPlayerBySocketId,
+    updatePlayer
+} from "./script/player/player";
+import { Player } from "./script/player/model";
 import {SCORE, score} from "./script/score/model";
 import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
 import {countdown, drawBackground, updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
 import {drawCharacters} from "./view";
 import {io} from "socket.io-client";
+import {drawBonuses, initBonuses} from "./script/bonuses/bonus";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -17,15 +28,22 @@ const socket = io();
 
 export let activePlayers = [];
 export let points = [];
+export let bonuses = [];
 export let requiredBots = [2, 3];
 export let activeBots = [];
 
 const players = ['1'];
 const socket_id = '1';
 
+let lastBonusAddTime = 0;
+const bonusAddInterval = 3;
+export let readyBonuses = [];
+let bonusIndex = 0;
+
 function init() {
     connect();
     activeBots = createBots();
+    bonuses = initBonuses();
     createPoints();
     initBotAnimation();
 }
@@ -34,6 +52,7 @@ function render() {
     ctx.clearRect(0, 0, game.getWidth(), game.getHeight());
     drawBackground();
     drawScore();
+    drawBonuses();
     drawPoints();
     drawCharacters(activePlayers.concat(activeBots));
 }
@@ -42,10 +61,20 @@ function update(dt) {
     gameState.gameTime += dt;
     botMovement(dt);
     handleInput(dt);
-    // отправляем на сервер и получаем с сервера
     dataExchange();
-    checkCollisions();
+    checkCollisions(readyBonuses);
     updateEntities(dt);
+    lastBonusAddTime += dt;
+    if (lastBonusAddTime >= bonusAddInterval) {
+        if (bonusIndex < bonuses.length) {
+            readyBonuses.push(bonuses[bonusIndex]); // Добавляем бонус в readyBonuses
+            bonusIndex++; // Увеличиваем индекс для следующего бонуса
+        } else {
+            console.log("No more bonuses to add.");
+        }
+        lastBonusAddTime = 0; // Сбрасываем таймер
+    }
+
 }
 
 export function main() {
@@ -53,13 +82,12 @@ export function main() {
     let dt = (now - lastState.lastTime) / 1000.0;
     if (score.getTeam1() < 3 && score.getTeam2() < 3) {
         update(dt);
-        render();
-    } else {
+        render(dt);
+    }
+    else {
         drawBackground();
         drawFinalScore();
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
+        setTimeout(() => {window.location.href = 'index.html';}, 1500);
     }
     lastState.lastTime = now;
     requestAnimFrame(main);
@@ -78,9 +106,11 @@ function initPlayers() {
     socket.emit('requestForClients');
     socket.on('sendClients', (clients) => {
         console.log('sendClients вызван')
-        console.log(clients);
+        /*console.log(clients);*/
         activePlayers = createPlayers(clients, socket.id);
+/*
         console.log(activePlayers, 'active players')
+*/
         initPlayerAnimation()
     })
 }
@@ -93,6 +123,7 @@ function dataExchange() {
 }
 function sendDataToServer() {
     let playerAsEntity = getMyPlayer(activePlayers);
+    /*console.log(activePlayers, 'activePlayers');*/
     let transmittedPlayer = prepTransmittedPlayer(playerAsEntity);
     socket.emit('sendDataToServer', transmittedPlayer);
 }
@@ -107,8 +138,6 @@ function prepTransmittedPlayer(playerAsEntity) {
     }
 }
 function getDataFromServer() {
-    // Получили массив данных по игрокам
-    // нужно обновить всех игроков, которые не наш
     socket.on('dataFromServer', (playersFromServer) => {
         // console.log('dataFromServer on', playersFromServer);
         // console.log(socket.id, 'socket.id');

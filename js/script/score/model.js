@@ -1,7 +1,7 @@
 import {COLORS} from "../game/const";
 
 export const scoreAlphaState = {
-    scoreAlpha: 0.2
+    scoreAlpha: 0.2,
 };
 
 export class Score{
@@ -11,30 +11,30 @@ export class Score{
         this.team2 = 0;
     }
 
-    getColor(){
-        return this.color
+    getColor() {
+        return this.color;
     }
 
     getTeam1() {
-        return this.team1
+        return this.team1;
     }
     getTeam2() {
-        return this.team2
+        return this.team2;
     }
 
-    increaseTeamPurple(){
-        this.team1 ++
+    increaseTeamYellow() {
+        this.team2++;
     }
 
-    increaseTeamYellow(){
-        this.team2 ++
+    increaseTeamPurple() {
+        this.team1++;
     }
 }
 
-export let score = new Score();
+export const score = new Score();
 
 export let SCORE = {
     color: COLORS.WHITE,
     team1: 0,
-    team2: 0
-}
+    team2: 0,
+};

@@ -3,8 +3,10 @@ import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const";
 export const BOT_STATES = {
     ACTIVE: 'active',
     STUNNED: 'stunned',
-    DEAD: 'dead'
-}
+    DEAD: 'dead',
+};
+
+export const DURATION_DISABILITY = 5000;
 
 export const DEFAULT_BOTS = {
     type: "bot",
@@ -18,8 +20,7 @@ export const DEFAULT_BOTS = {
     load: false,
     count: 0,
     tick: 0,
-    direction: "left",
-    state: BOT_STATES.ACTIVE,
+    direction: "left"
 }
 // export const botStartX = canvasWidth - 50;
 // export const botStartY = canvasHeight / 2;
