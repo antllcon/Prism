@@ -68,12 +68,12 @@ function update(dt) {
     lastBonusAddTime += dt;
     if (lastBonusAddTime >= bonusAddInterval) {
         if (bonusIndex < bonuses.length) {
-            readyBonuses.push(bonuses[bonusIndex]); // Добавляем бонус в readyBonuses
-            bonusIndex++; // Увеличиваем индекс для следующего бонуса
+            readyBonuses.push(bonuses[bonusIndex]);
+            bonusIndex++;
         } else {
             console.log("No more bonuses to add.");
         }
-        lastBonusAddTime = 0; // Сбрасываем таймер
+        lastBonusAddTime = 0;
     }
 
 }
@@ -105,6 +105,7 @@ function connect() {
         // activePlayers = createPlayers(players, socket_id);
     });
 }
+
 
 function initPlayers() {
     socket.emit('requestForPlayers');

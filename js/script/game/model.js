@@ -12,7 +12,7 @@ export class Game {
     constructor() {
         this.width = canvasWidth;
         this.height = canvasHeight;
-        this.background = COLORS.DARK;
+        this.src = './src/assets/img/background.png';
         this.state = GAME_STATES.PLAY;
     }
 
@@ -23,8 +23,8 @@ export class Game {
         return this.height;
     }
 
-    getBackground() {
-        return this.background;
+    getSrc() {
+        return this.src;
     }
 
     getState() {

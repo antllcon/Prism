@@ -39,6 +39,7 @@ io.on('connection', (socket) => {
             };
             console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
+
         }
     });
 
@@ -49,6 +50,9 @@ io.on('connection', (socket) => {
     socket.on('leaveRoom', () => {
         const roomId = findRoomBySocketId(socket.id);
         leaveRoom(roomId, socket);
+        if (rooms[roomId]) {
+            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
+        }
     });
 
     
@@ -350,12 +354,12 @@ function joinRoom(roomId, socket) {
             console.log("rooms[roomId].clients.length")
             io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
             console.log(socket.id, ' joined the room ', roomId);
-            // broadcastRoomUpdate(roomId);
+            io.to(socket.id).emit('updatePlayerCards', rooms[roomId]);
+            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
         } else {
             socket.emit('wrongId');
         }
-    })
-    
+    });
 }
 function leaveRoom(roomId, socket) {
     if (rooms[roomId].clients) {
