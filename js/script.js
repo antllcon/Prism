@@ -54,8 +54,7 @@ function render() {
     drawScore();
     drawBonuses();
     drawPoints();
-    drawCharacters(activePlayers);
-    drawCharacters(activeBots);
+    drawCharacters(activePlayers.concat(activeBots));
 }
 
 function update(dt) {

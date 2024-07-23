@@ -32,17 +32,17 @@ function checkLaserBounds() {
                     rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
                     rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
                     point.setActive();
-                    point.setTeam(player.getTeam());
+                    point.setTeam(player.team);
                     point.setActivationTime(Date.now());
                 }
                 if (point.isActive()) {
-                    if (point.isTypeCross() && point.getTeam() !== player.getTeam()) {
+                    if (point.isTypeCross() && point.getTeam() !== player.team) {
                         if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
                             (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
                             player.die();
                         }
                     }
-                    if (point.isTypeTrigraph() && point.getTeam() !== player.getTeam()) {
+                    if (point.isTypeTrigraph() && point.getTeam() !== player.team) {
                         const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3];
                         angles.forEach(angle => {
                             const angleSin = Math.sin(angle);
@@ -54,7 +54,7 @@ function checkLaserBounds() {
                             }
                         });
                     }
-                    if (point.isTypeLine() && point.getTeam() !== player.getTeam()) {
+                    if (point.isTypeLine() && point.getTeam() !== player.team) {
                         if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
                             corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
                             player.die();
@@ -116,14 +116,14 @@ function checkLaserBounds() {
 function checkBorderGameBounds() {
     const player = getMyPlayer(activePlayers);
     if (player.x < 0) {
-        player.setX(game.getWidth() - player.size);
+        player.x = (game.getWidth() - player.size);
     } else if (player.x + player.size > game.getWidth()) {
-        player.setX(0);
+        player.x = (0);
     }
     if (player.y < 0) {
-        player.setY(game.getHeight() - player.size);
+        player.y = (game.getHeight() - player.size);
     } else if (player.y + player.size > game.getHeight()) {
-        player.setY(0);
+        player.y = (0);
     }
     if (player.progressBar.x < 0) {
         player.progressBar.x = game.getWidth() - player.progressBar.width;
@@ -146,15 +146,15 @@ function checkBorderGameBounds() {
     activeBots.forEach((bot) => {
         if (bot.x < 0) {
             // console.log(game.getWidth(), "getwidth bounds js")
-            bot.setX(game.getWidth() - bot.size);
+            bot.x = (game.getWidth() - bot.size);
         } else if (bot.x + bot.size > game.getWidth()) {
-            bot.setX(0);
+            bot.x = (0);
         }
     
         if (bot.y < 0) {
-            bot.setY(game.getHeight() - bot.size);
+            bot.y = (game.getHeight() - bot.size);
         } else if (bot.y + bot.size > game.getHeight()) {
-            bot.setY(0);
+            bot.y = (0);
         }
     });
 }

@@ -13,9 +13,9 @@ export class InvisibleLaserBonus extends BaseBonus {
         //время невидимости сделать
         //визуально затемнить
         const player = getMyPlayer(activePlayers);
-        player.setInvisibleLasers(true);
+        player.invisibleLasers = true;
         setTimeout(() => {
-            player.setInvisibleLasers(false);
+            player.invisibleLasers = false;
         }, 5000);
     }
 }

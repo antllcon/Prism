@@ -186,8 +186,8 @@ io.on('connection', (socket) => {
         const playerFromClient = data.player;
         if (rooms[roomId]) {
             rooms[roomId].players.forEach(player => {
-                if (player.getId() === playerFromClient.getId()) {
-                    updatePlayer(player, playerFromClient);
+                if (player.getId() === playerFromClient.id) {
+                    playerFunctions.updatePlayer(player, playerFromClient);
                 }
             });
         }

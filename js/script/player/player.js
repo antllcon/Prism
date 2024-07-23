@@ -1,15 +1,14 @@
-import {DEFAULT_PLAYERS, ABILITY_SCALE_MAX, MAX_SPEED} from "./const";
+import {DEFAULT_PLAYERS, ABILITY_SCALE_MAX, MAX_SPEED, PLAYER_STATES} from "./const";
 import {ctx, activePlayers} from "../../script";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
     if (input.isDown('LEFT') || input.isDown('a')) {
         //player.moveOn(player.speed * dt * (-1), 0);
-        player.x += player.speed * dt * (-1);
-        player.y += 0;
         //player.progressBar.updatePosition(player.speed * dt * (-1), 0);
         //updatePosition - is not a function
-        player.progressBar.updatePosition(player.speed * dt * (-1), 0);
+        player.x += player.speed * dt * (-1);
+        player.y += 0;
         player.direction = "left";
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
@@ -26,7 +25,6 @@ export function handleInput(dt) {
 
         player.x += 0;
         player.y +=  player.speed * dt;
-        player.progressBar.updatePosition(0, player.speed * dt);
 
         player.direction = "down";
     }
@@ -35,7 +33,6 @@ export function handleInput(dt) {
 
         player.x += 0;
         player.y += player.speed * dt * (-1);
-        player.progressBar.updatePosition(0, player.speed * dt * (-1));
 
         player.direction = "up";
     }
@@ -45,7 +42,7 @@ export function handleInput(dt) {
             player.speed = MAX_SPEED;
             setTimeout(() => {
                 player.abilityActive = false;
-                player.setSpeed = DEFAULT_PLAYERS.speed;
+                player.speed = DEFAULT_PLAYERS.speed;
             }, ABILITY_DURATION);
             player.abilityScale = 0;
             //вот это надо изменить
@@ -73,63 +70,84 @@ export function drawPlayer(activePlayers) {
     activePlayers.forEach(player => {
         if (player.isAlive()|| player.isStunned()) {
             ctx.fillStyle = player.getColor();
-            ctx.fillRect(player.getX(), player.getY(), player.getSize(), player.getSize());
+            ctx.fillRect(player.x, player.y, player.getSize(), player.getSize());
 
-            if (player.getLoad()) {
-                switch (player.getDirection()) {
+            if (player.load) {
+                switch (player.direction) {
                     case "up":
-                        player.setImage("./src/assets/sprites/player/up.png");
+                        player.image.src = "./src/assets/sprites/player/up.png";
                         break;
                     case "down":
-                        player.setImage("./src/assets/sprites/player/down.png");
+                        player.image.src = "./src/assets/sprites/player/down.png";
                         break;
                     case "left":
-                        player.setImage("./src/assets/sprites/player/left.png");
+                        player.image.src = "./src/assets/sprites/player/left.png";
                         break;
                     case "right":
-                        player.setImage("./src/assets/sprites/player/right.png");
+                        player.image.src = "./src/assets/sprites/player/right.png";
                         break;
                 }
                 ctx.drawImage(
-                    player.getImage(),
-                    player.getCount() * spriteSize,
+                    player.image,
+                    player.count * spriteSize,
                     0,
                     spriteSize,
                     spriteSize,
-                    player.getX() - (spriteSize / 2 - player.getSize() / 2),
-                    player.getY() - (spriteSize / 2 - player.getSize() / 2),
+                    player.x - (spriteSize / 2 - player.getSize() / 2),
+                    player.y - (spriteSize / 2 - player.getSize() / 2),
                     spriteSize,
                     spriteSize
                 );
-                player.setTick(player.getTick() + 1);
-                if (player.getTick() >= 2) {
-                    player.setCount(player.getCount() + 1);
-                    player.setTick(0);
+                player.tick = (player.tick + 1);
+                if (player.tick >= 2) {
+                    player.count = (player.count + 1);
+                    player.tick = (0);
                 }
-                if (player.getCount() === endAnimation) {
-                    player.setCount(0);
+                if (player.count === endAnimation) {
+                    player.count = (0);
                 }
             }
         }
 
-        if (player.isDead()) {
+        if (player.state === PLAYER_STATES.DEAD) {
             setTimeout(() => {
                // player.setColor(green);
-                player.setX(10);
-                player.setY(10);
-                player.renaissance();
+                player.x = (10);
+                player.y = (10);
+                player.state = PLAYER_STATES.ACTIVE;
             }, 1000);
         }
         if (
-            player.getState() === PLAYER_STATES.STUNNED &&
+            player.state === PLAYER_STATES.STUNNED &&
             player.stunnedUntil < Date.now()
         ) {
-            player.recoverFromStunned();
+            player.stunnedUntil = 0;
+            player.speed = DEFAULT_PLAYERS.speed;
+
+            if (player.state === PLAYER_STATES.DEAD || player.state === PLAYER_STATES.STUNNED) {
+                player.state = PLAYER_STATES.ACTIVE;
+            }
         }
-        if (player.getId() === mainPlayer.getId()) {
-            player.renderPB();
-            if (player.isStunned()) {
-                player.drawCountdown();
+        if (player.id === mainPlayer.id) {
+            ctx.strokeStyle = player.progressBar.progressEmptyColor;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(player.progressBar.x, player.progressBar.y, player.progressBar.width, player.progressBar.height);
+
+            ctx.fillStyle = player.progressBar.progressFillColor;
+            ctx.fillRect(
+                player.progressBar.x,
+                player.progressBar.y,
+                (player.progressBar.width * player.progressBar.progress) / ABILITY_SCALE_MAX,
+                player.progressBar.height
+            );
+            if (player.state === PLAYER_STATES.STUNNED) {
+                const remainingTime = player.stunnedUntil - Date.now();
+                const seconds = Math.floor(remainingTime / 1000);
+                const milliseconds = Math.floor((remainingTime % 1000) / 10);
+                const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
+                ctx.fillStyle = 'white';
+                ctx.font = '16px Arial';
+                ctx.fillText(countdownText, player.x, player.y - 30);
             }
         }
     });
@@ -154,8 +172,8 @@ export function resetAllPlayers() {
     for (let i = 0; i < activePlayers.length; i++) {
         activePlayers[i].setX(DEFAULT_PLAYERS.x[i]);
         activePlayers[i].setY(DEFAULT_PLAYERS.y[i]);
-        activePlayers[i].progressBar.setX(activePlayers[i].getX());
-        activePlayers[i].progressBar.setY(activePlayers[i].getY() - 60);
+        activePlayers[i].progressBar.setX(activePlayers[i].x);
+        activePlayers[i].progressBar.setY(activePlayers[i].y - 60);
         activePlayers[i].setAbilityScale(0);
         activePlayers[i].progressBar.update(activePlayers[i].getAbilityScale());
         activePlayers[i].renaissance();
@@ -184,7 +202,7 @@ export function updatePlayers(players, socketId) {
 }
 
 function updatePlayer(player, playerFromServer) {
-    playerFromServer.getX() ? player.setX(playerFromServer.getX()) : null;
-    playerFromServer.getY() ? player.setY(playerFromServer.getY()) : null;
-    playerFromServer.getState() ? player.setState(playerFromServer.getState()) : null;
+    playerFromServer.x ? player.setX(playerFromServer.x) : null;
+    playerFromServer.y ? player.setY(playerFromServer.y) : null;
+    playerFromServer.state ? player.setState(playerFromServer.state) : null;
 }
