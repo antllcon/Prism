@@ -1,13 +1,14 @@
 import {game, lastState} from "./model";
 import {COLORS, TEAM_STATES} from "./const";
 import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point"
-import {resetAllPlayers} from "../player/player"
+import {resetAllPlayers, getMyPlayer} from "../player/player"
 import {resetAllBots} from "../bot/bot"
 import {score, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
 import {main, ctx, activePlayers, activeBots, points} from "../../script";
+import {playDeathPlayer} from "../../sound/deathPlayerSound";
 
 export function drawBackground() {
     const base_image = new Image();
@@ -52,27 +53,35 @@ function resetLevel() {
     background.appendChild(scoreGif);
     if (score.getTeam1() === 0 && score.getTeam2() === 1) {
         scoreGif.src = "./src/assets/img/0-1.gif";
+        playDeathPlayer();
     }
     if (score.getTeam1() === 0 && score.getTeam2() === 2) {
         scoreGif.src = "./src/assets/img/0-2.gif";
+        playDeathPlayer();
     }
     if (score.getTeam1() === 1 && score.getTeam2() === 0) {
         scoreGif.src = "./src/assets/img/1-0.gif";
+        playDeathPlayer();
     }
     if (score.getTeam1() === 1 && score.getTeam2() === 1) {
         scoreGif.src = "./src/assets/img/1-1.gif";
+        playDeathPlayer();
     }
     if (score.getTeam1() === 1 && score.getTeam2() === 2) {
         scoreGif.src = "./src/assets/img/1-2.gif";
+        playDeathPlayer();
     }
     if (score.getTeam1() === 2 && score.getTeam2() === 0) {
         scoreGif.src = "./src/assets/img/2-0.gif";
+        playDeathPlayer();
     }
     if (score.getTeam1() === 2 && score.getTeam2() === 1) {
         scoreGif.src = "./src/assets/img/2-1.gif";
+        playDeathPlayer();
     }
     if (score.getTeam1() === 2 && score.getTeam2() === 2) {
         scoreGif.src = "./src/assets/img/2-2.gif";
+        playDeathPlayer();
     }
 
     setTimeout(() => {

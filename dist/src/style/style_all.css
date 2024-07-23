@@ -75,9 +75,7 @@ body {
     border-top: 10px solid white;
     border-left: 10px solid white;
     cursor: default;
-}
-
-.title-input-animation {
+    text-decoration: none;
     animation: 2s alternate animateTitle;
 }
 
@@ -85,7 +83,6 @@ body {
     display: flex;
     justify-content: space-between;
     position: relative;
-    background-image: url("../assets/img/border_name.png");
     background-repeat: no-repeat;
     height: 154px;
     margin-left: 60px;

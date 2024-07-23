@@ -25,7 +25,7 @@
 .menu__title {
     color: white;
     font: 700 158px/158px Font_Over;
-    cursor: default;
+    text-decoration: none;
 }
 
 .menu__title::selection {

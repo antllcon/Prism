@@ -16,7 +16,7 @@ export function drawFinalScore() {
     ctx.globalAlpha = scoreAlphaState.scoreAlpha;
     ctx.fillStyle = score.getColor();
     ctx.font = '700px Font Over';
-    ctx.fillText(`${score.getTeam1()}:${score.getTeam1()}`, 270, 750);
+    ctx.fillText(`${score.getTeam1()}:${score.getTeam2()}`, 270, 750);
     ctx.restore();
 }
 

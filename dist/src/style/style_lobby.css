@@ -202,7 +202,7 @@
 .central-part-lobby {
     display: flex;
     flex-direction: column;
-    margin-top: 195px;
+    margin-top: 150px;
     height: 380px;
     padding-left: 80px;
     padding-bottom: 40px;
@@ -215,7 +215,7 @@
     color: white;
     font: 700 120px/100px Font_Over;
     animation: 2s alternate animateChapterLobby;
-    margin: 100px 50px 50px 73px;
+    margin: 105px 50px 50px 73px;
 }
 
 .chapter__code {
