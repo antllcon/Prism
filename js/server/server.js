@@ -300,6 +300,7 @@ function joinRoom(roomId, socket) {
             socket.join(parseInt(roomId));
             socket.emit('joinedRoom', roomId);
             console.log(socket.id, ' joined the room ', roomId);
+            io.to(socket.id).emit('updatePlayerCards', rooms[roomId]);
             io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
         } else {
             socket.emit('wrongId');

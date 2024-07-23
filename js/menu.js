@@ -113,6 +113,8 @@ let buttonPlay;
 let buttonMenu;
 let buttonLeave;
 let inputRoomId;
+let currentPlayerCard;
+let countP = 0;
 
 function loadHTML(filename, callback) {
     const xhr = new XMLHttpRequest();
@@ -219,20 +221,39 @@ function addBot(button) {
             setStyleCard(2);
             setStyleCard(3);
         }, 0);
-        /* loadHTML('lobby.html', (html) => {
-                   callback(html);*/
         const playerCountElement = document.querySelector('.lobby-count-players');
         playerCountElement.textContent = `PLAYERS ${countP}/4`;
-        //});
+        return card;
+    }
+}
+
+function transitPlayer(button) {
+    let buttonGetWait = currentPlayerCard.querySelector('.get-wait');
+    countP += 1;
+    let card = addWait(buttonGetWait);
+    initCardEventListener(card);
+
+    const playerTemplate = document.getElementById('player-template');
+    const waitingCard = button.closest('.player');
+    if (playerTemplate && waitingCard) {
+        const playerCard = playerTemplate.content.cloneNode(true);
+
+        let card = playerCard.querySelector(".player")
+        waitingCard.replaceWith(playerCard);
+
+        setTimeout(() => {
+            setStyleCard(0);
+            setStyleCard(1);
+            setStyleCard(2);
+            setStyleCard(3);
+        }, 0);
+
         return card;
     }
 }
 
 function addPlayer(button) {
-    let buttonGetWait = currentPlayerCard.querySelector('.get-wait');
-    let card = addWait(buttonGetWait);
-    initCardEventListener(card);
-
+    countP += 1;
     const playerTemplate = document.getElementById('player-template');
     const waitingCard = button.closest('.player');
     if (playerTemplate && waitingCard) {
@@ -268,7 +289,10 @@ function addWait(button) {
             setStyleCard(2);
             setStyleCard(3);
         }, 0);
+        const playerCountElement = document.querySelector('.lobby-count-players');
+        playerCountElement.textContent = `PLAYERS ${countP}/4`;
 
+        console.log(countP, 'countP после уменьшения')
         return card;
     }
 }
@@ -308,7 +332,7 @@ function initCardEventListener(card, indexCount) {
 
     if (buttonGetPlayer) {
         buttonGetPlayer.addEventListener('click', function () {
-            currentPlayerCard = addPlayer(buttonGetPlayer);
+            currentPlayerCard = transitPlayer(buttonGetPlayer);
 
             if (currentPlayerCard) {
                 initCardEventListener(currentPlayerCard, indexCount);
@@ -398,7 +422,6 @@ function initCardEventListener(card, indexCount) {
                 socket.on('requestForCookie', () => {
                     sendCookie();
                 })
-                countP = transitionToLobby();
                 socket.on('joinedRoom', (roomId) => {
                     console.log("вызван button lobby")
                     globalRoomId = roomId;
@@ -436,11 +459,11 @@ function initCardEventListener(card, indexCount) {
         });
     }
 
-    if (cardBox) {
-        currentPlayerCard = loadCard('player-template');
-        loadCard('waiting-template');
-        loadCard('waiting-template');
-        loadCard('waiting-template');
+        if (cardBox) {
+            currentPlayerCard = loadCard('player-template');
+            loadCard('waiting-template');
+            loadCard('waiting-template');
+            loadCard('waiting-template');
 
             setTimeout(() => {
                 setStyleCard(0);
@@ -449,8 +472,8 @@ function initCardEventListener(card, indexCount) {
                 setStyleCard(3);
             }, 0);
 
-        initCardEventListeners();
-    }
+            initCardEventListeners();
+        }
 
         if (buttonPlay) {
             buttonPlay.addEventListener('click', () => {
@@ -486,6 +509,7 @@ function initCardEventListener(card, indexCount) {
     // })
 
 }
+
 
 function sendCookie() {
     const cookieValue = document.cookie.split('; ')
@@ -524,4 +548,28 @@ socket.on('updatePlayerLobbyInfo', (playerCount) => {
         playerCountElement.textContent = `PLAYERS ${countP}/4`;
         transitionToPage('lobby.html');
     });
+});
+
+socket.on('updatePlayerCards', (players) => {
+    console.log('мы зашли в updatePlayerCards')
+    console.log(players)
+    console.log("players in updatePlayerCards")
+
+/*    const containerCard = document.getElementById('card-container');
+    console.log(containerCard);
+    console.log("players in updatePlayerCards");*/
+    // loadHTML('lobby.html', (html) => {
+    //     callback(html);
+    // });
+    let searchString = 'PLAYER'
+    let playerCards = document.querySelectorAll('.player');
+    console.log('эй', playerCards)
+    playerCards.forEach((card) => {
+        if (!card.textContent.includes(searchString)) {
+            let getButton = card.querySelector('.button-get')
+            let cardPlayer = addPlayer(getButton);
+            initCardEventListener(cardPlayer);
+        }
+    });
+
 });
