@@ -114,39 +114,6 @@ let buttonMenu;
 let buttonLeave;
 let inputRoomId;
 
-let countP = 0;
-
-// Call this function when transitioning to the lobby page
-function transitionToLobby() {
-    console.log('мы сюда проваливаемся все еж')
-    // Load lobby.html and then initialize the lobby page
-    loadHTML('lobby.html', (html) => {
-        console.log('мы сюда тоже смотрим')
-        document.body.innerHTML = html; // Load the HTML content
-        //initLobbyPage(); // Initialize the lobby page
-        document.addEventListener('DOMContentLoaded', () => {
-            const playerCountElement = document.querySelector('.lobby-count-players');
-            console.log('Player Count Element:', playerCountElement); // Check if the element is found
-
-            // Listen for the updatePlayerLobbyInfo event
-            socket.on('updatePlayerLobbyInfo', (playerCount) => {
-                console.log('Received player count:', playerCount);
-                countP = playerCount
-                if (playerCountElement) {
-                    playerCountElement.textContent = `PLAYERS ${playerCount}/4`; // Update the text
-                    // Change styles based on player count
-                    playerCountElement.style.color = playerCount < 2 ? 'red' : 'green';
-                } else {
-                    console.error('Player Count Element not found'); // Log error if element is not found
-                }
-            });
-        });
-    });
-    return countP
-}
-
-
-
 function loadHTML(filename, callback) {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', filename);
@@ -181,15 +148,15 @@ function transitionToPage(file) {
     });
 }
 
-
-
 function loadCard(templateId) {
     const template = document.getElementById(templateId);
     if (template) {
         const cardContainer = document.getElementById('card-container');
         if (cardContainer) {
-            const card = template.content.cloneNode(true);
+            let card = template.content.cloneNode(true);
+            let cardNode = card.querySelector('.player');
             cardContainer.appendChild(card);
+            return cardNode;
         }
     }
 }
@@ -252,11 +219,35 @@ function addBot(button) {
             setStyleCard(2);
             setStyleCard(3);
         }, 0);
-       /* loadHTML('lobby.html', (html) => {
-            callback(html);*/
-            const playerCountElement = document.querySelector('.lobby-count-players');
-            playerCountElement.textContent = `PLAYERS ${countP}/4`;
+        /* loadHTML('lobby.html', (html) => {
+                   callback(html);*/
+        const playerCountElement = document.querySelector('.lobby-count-players');
+        playerCountElement.textContent = `PLAYERS ${countP}/4`;
         //});
+        return card;
+    }
+}
+
+function addPlayer(button) {
+    let buttonGetWait = currentPlayerCard.querySelector('.get-wait');
+    let card = addWait(buttonGetWait);
+    initCardEventListener(card);
+
+    const playerTemplate = document.getElementById('player-template');
+    const waitingCard = button.closest('.player');
+    if (playerTemplate && waitingCard) {
+        const playerCard = playerTemplate.content.cloneNode(true);
+
+        let card = playerCard.querySelector(".player")
+        waitingCard.replaceWith(playerCard);
+
+        setTimeout(() => {
+            setStyleCard(0);
+            setStyleCard(1);
+            setStyleCard(2);
+            setStyleCard(3);
+        }, 0);
+
         return card;
     }
 }
@@ -264,11 +255,11 @@ function addBot(button) {
 function addWait(button) {
     countP -= 1;
     const tempCard = button.closest('.player');
-    const waitTemplate = document.getElementById('wait-template');
+    const waitTemplate = document.getElementById('waiting-template');
     if (waitTemplate && tempCard) {
         const waitCard = waitTemplate.content.cloneNode(true);
 
-        let card = waitCard.querySelector(".player")
+        let card = waitCard.querySelector(".player");
         tempCard.replaceWith(waitCard);
 
         setTimeout(() => {
@@ -293,19 +284,7 @@ function loadToMainPageLink() {
 }
 
 function initCardEventListeners() {
-    let buttonGetBot = document.querySelectorAll('.get-bot');
     let playerCards = document.querySelectorAll('.player');
-
-    buttonGetBot.forEach(function(button, i) {
-        button.addEventListener('click', function() {
-            let botCard = addBot(button);
-            let waitCard = addWait(button);
-
-            if (botCard) {
-                initCardEventListener(botCard, i+1);
-            }
-        });
-    });
 
     playerCards.forEach(initCardEventListener);
 }
@@ -313,6 +292,36 @@ function initCardEventListeners() {
 function initCardEventListener(card, indexCount) {
     let navigationArrowLeft = card.querySelector('.button-left');
     let navigationArrowRight = card.querySelector('.button-right');
+    let buttonGetWait = card.querySelector('.get-wait');
+    let buttonGetBot = card.querySelector('.get-bot');
+    let buttonGetPlayer = card.querySelector('.get-player');
+
+    if (buttonGetBot) {
+        buttonGetBot.addEventListener('click', function () {
+            let botCard = addBot(buttonGetBot);
+
+            if (botCard) {
+                initCardEventListener(botCard, indexCount);
+            }
+        });
+    }
+
+    if (buttonGetPlayer) {
+        buttonGetPlayer.addEventListener('click', function () {
+            currentPlayerCard = addPlayer(buttonGetPlayer);
+
+            if (currentPlayerCard) {
+                initCardEventListener(currentPlayerCard, indexCount);
+            }
+        });
+    }
+
+    if (buttonGetWait) {
+        buttonGetWait.addEventListener('click', function() {
+            let card = addWait(buttonGetWait);
+            initCardEventListener(card);
+        });
+    }
 
     navigationArrowLeft.addEventListener('click', () => {
         cardStyles[indexCount].nameCharacter.character--;
@@ -320,14 +329,15 @@ function initCardEventListener(card, indexCount) {
             cardStyles[indexCount].nameCharacter.character = playerImages.length-1;
         }
         setStyleCard(indexCount);
-    })
+    });
+
     navigationArrowRight.addEventListener('click', () => {
         cardStyles[indexCount].nameCharacter.character++;
         if (cardStyles[indexCount].nameCharacter.character > playerImages.length-1) {
             cardStyles[indexCount].nameCharacter.character = 0;
         }
         setStyleCard(indexCount);
-    })
+    });
 }
 
 
@@ -351,11 +361,9 @@ function initCardEventListener(card, indexCount) {
             buttonLogo.addEventListener('click', () => { transitionToPage("menu.html"); });
         }
 
-        if (buttonBot) {
-            buttonBot.addEventListener('click', () => {
-                setTimeout(() => transitionToPage('with_bot.html'), 0);
-            });
-        }
+    if (buttonBot) {
+        buttonBot.addEventListener('click', () => {transitionToPage('with_bot.html')});
+    }
 
         if (buttonPlayer) {
             buttonPlayer.addEventListener('click', () => {
@@ -405,12 +413,12 @@ function initCardEventListener(card, indexCount) {
             });
         }
 
-        if (inputRoomId) {
-            inputRoomId.addEventListener('input', () => {
-                inputRoomId.value = inputRoomId.value.replace(/\D/g, '');
-                if (inputRoomId.value.length === 6) {
-                    let codeRoom = document.getElementById('input-code').value;
-                    socket.emit('joinRoom', codeRoom);
+    if (inputRoomId) {
+        inputRoomId.addEventListener('input', () => {
+            inputRoomId.value = inputRoomId.value.replace(/\D/g, '');
+            if (inputRoomId.value.length === 6) {
+                let codeRoom = document.getElementById('input-code').value;
+                socket.emit('joinRoom', codeRoom);
                 socket.on('requestForCookie', () => {
                     sendCookie();
                 })
@@ -418,21 +426,21 @@ function initCardEventListener(card, indexCount) {
                     globalRoomId = roomId;
                     transitionToPage('lobby.html');
                 });
-                    socket.on('wrongId', () => {
-                        // добавить обработку несуществующего айди комнаты
-                    });
-                }
-                if (inputRoomId.value.length > 6) {
-                    inputRoomId.value = inputRoomId.value.slice(0, 6);
-                }
-            });
-        }
+                socket.on('wrongId', () => {
+                    // добавить обработку несуществующего айди комнаты
+                });
+            }
+            if (inputRoomId.value.length > 6) {
+                inputRoomId.value = inputRoomId.value.slice(0, 6);
+            }
+        });
+    }
 
-        if (cardBox) {
-            loadCard('player-template');
-            loadCard('waiting-template');
-            loadCard('waiting-template');
-            loadCard('waiting-template');
+    if (cardBox) {
+        currentPlayerCard = loadCard('player-template');
+        loadCard('waiting-template');
+        loadCard('waiting-template');
+        loadCard('waiting-template');
 
             setTimeout(() => {
                 setStyleCard(0);
@@ -441,15 +449,14 @@ function initCardEventListener(card, indexCount) {
                 setStyleCard(3);
             }, 0);
 
-            initCardEventListeners(); // Инициализируем события для добавленных карточек
-        }
+        initCardEventListeners();
+    }
 
         if (buttonPlay) {
             buttonPlay.addEventListener('click', () => {
                 buttonPlay.textContent = 'READY';
             socket.emit('playerIsReady');
             socket.on('roomIsReady', () => {
-                console.log('room is ready отработало');
                 window.location.href = "game.html";
             })
             setTimeout(() => {
