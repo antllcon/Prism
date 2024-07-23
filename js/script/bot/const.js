@@ -1,4 +1,4 @@
-import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const.js";
+import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const";
 
 export const BOT_STATES = {
     ACTIVE: 'active',

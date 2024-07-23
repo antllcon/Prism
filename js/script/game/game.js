@@ -8,6 +8,7 @@ import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
 import {main, ctx, activePlayers, activeBots, points} from "../../script";
+import { updateAbilityScale } from "../player/progressBar/progressBar";
 
 export function drawBackground() {
     ctx.fillStyle = game.getBackground();
@@ -82,24 +83,24 @@ function resetLevel() {
 
 export function updateEntities(dt) {
     const player = getMyPlayer(activePlayers);
-    player.updateAbilityScale(dt);
+    updateAbilityScale(dt, player);
     activeBots.forEach(bot => {
-        if (bot.isDead()) {
-            if (bot.getTeam() === TEAM_STATES.PURPLE) {
+        if (bot.isDead) {
+            if (bot.team === TEAM_STATES.PURPLE) {
                 score.increaseTeamYellow()
             }
-            if (bot.getTeam() === TEAM_STATES.YELLOW) {
+            if (bot.team === TEAM_STATES.YELLOW) {
                 score.increaseTeamPurple()
             }
             resetLevel();
         }
     });
     activePlayers.forEach(player => {
-        if (player.isDead()) {
-            if (player.getTeam() === TEAM_STATES.PURPLE) {
+        if (player.isDead) {
+            if (player.team === TEAM_STATES.PURPLE) {
                 score.increaseTeamYellow()
             }
-            if (player.getTeam() === TEAM_STATES.YELLOW) {
+            if (player.team === TEAM_STATES.YELLOW) {
                 score.increaseTeamPurple()
             }
             resetLevel();
@@ -120,9 +121,6 @@ export function updateEntities(dt) {
                 point.setColor(COLORS.GRAY)
                 resetPoint(point);
             }
-        }
-        if (point.isInactive()) {
-
         }
         if (point.isInvisible()) {
             updateVisibilityPoints(point);

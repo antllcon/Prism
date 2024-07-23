@@ -1,24 +1,22 @@
-import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const';
-import { ctx } from '../../script';
-
-export class Bot {
+const BotConsts = require('./const.js');
+class Bot {
     constructor(i) {
-        this.id = DEFAULT_BOTS.id[i];
-        this.type = DEFAULT_BOTS.type;
-        this.x = DEFAULT_BOTS.x[i];
-        this.y = DEFAULT_BOTS.y[i];
-        this.size = DEFAULT_BOTS.size;
-        this.speed = DEFAULT_BOTS.speed;
-        this.team = DEFAULT_BOTS.team[i];
-        this.color = DEFAULT_BOTS.color[i];
-        this.state = DEFAULT_BOTS.state;
+        this.id = BotConsts.DEFAULT_BOTS.id[i];
+        this.type = BotConsts.DEFAULT_BOTS.type;
+        this.x = BotConsts.DEFAULT_BOTS.x[i];
+        this.y = BotConsts.DEFAULT_BOTS.y[i];
+        this.size = BotConsts.DEFAULT_BOTS.size;
+        this.speed = BotConsts.DEFAULT_BOTS.speed;
+        this.team = BotConsts.DEFAULT_BOTS.team[i];
+        this.color = BotConsts.DEFAULT_BOTS.color[i];
+        this.state = BotConsts.DEFAULT_BOTS.state;
         this.stunnedUntil = 0;
         this.name = 'Bot';
-        this.image = new Image();
-        this.load = DEFAULT_BOTS.load;
-        this.count = DEFAULT_BOTS.count;
-        this.tick = DEFAULT_BOTS.tick;
-        this.direction = DEFAULT_BOTS.direction;
+        this.image = null;
+        this.load = BotConsts.DEFAULT_BOTS.load;
+        this.count = BotConsts.DEFAULT_BOTS.count;
+        this.tick = BotConsts.DEFAULT_BOTS.tick;
+        this.direction = BotConsts.DEFAULT_BOTS.direction;
     }
     getId() {return this.id;}
     getName() {return (this.name = 'Bot');}
@@ -72,13 +70,13 @@ export class Bot {
 
     // Методы
     isAlive() {
-        return this.state === BOT_STATES.ACTIVE;
+        return this.state === BotConsts.BOT_STATES.ACTIVE;
     }
     isStunned() {
-        return this.state === BOT_STATES.STUNNED;
+        return this.state === BotConsts.BOT_STATES.STUNNED;
     }
     isDead() {
-        return this.state === BOT_STATES.DEAD;
+        return this.state === BotConsts.BOT_STATES.DEAD;
     }
 
     moveOn(x, y) {
@@ -87,16 +85,16 @@ export class Bot {
     }
 
     die() {
-        this.state = BOT_STATES.DEAD;
+        this.state = BotConsts.BOT_STATES.DEAD;
     }
 
     renaissance() {
-        this.state = BOT_STATES.ACTIVE;
+        this.state = BotConsts.BOT_STATES.ACTIVE;
     }
     makeStunned() {
-        this.stunnedUntil = Date.now() + DURATION_DISABILITY;
+        this.stunnedUntil = Date.now() + BotConsts.DURATION_DISABILITY;
         this.setSpeed(0);
-        this.setState(BOT_STATES.STUNNED);
+        this.setState(BotConsts.BOT_STATES.STUNNED);
     }
     setSpeed(value) {
         this.speed = value;
@@ -104,22 +102,11 @@ export class Bot {
 
     recoverFromStunned() {
         this.stunnedUntil = 0;
-        this.setSpeed(DEFAULT_BOTS.speed);
+        this.setSpeed(BotConsts.DEFAULT_BOTS.speed);
 
         if (this.isDead() || this.isStunned()) {
             this.renaissance();
         }
     }
-
-    drawCountdown() {
-        if (this.isStunned()) {
-            const remainingTime = this.stunnedUntil - Date.now();
-            const seconds = Math.floor(remainingTime / 1000);
-            const milliseconds = Math.floor((remainingTime % 1000) / 10);
-            const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
-            ctx.fillStyle = 'white';
-            ctx.font = '16px Arial';
-            ctx.fillText(countdownText, this.x, this.y - 30);
-        }
-    }
 }
+module.exports = Bot;

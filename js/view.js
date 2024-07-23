@@ -1,4 +1,5 @@
 import { ctx } from "./script";
+import { PLAYER_STATES, DEFAULT_PLAYERS, ABILITY_SCALE_MAX } from "./script/player/const";
 import {getMyPlayer} from "./script/player/player";
 
 export function drawCharacters(arrayCharacters) {
@@ -6,21 +7,21 @@ export function drawCharacters(arrayCharacters) {
     const spriteSize = 64;
 
     arrayCharacters.forEach(character => {
-        if (character.isAlive() || character.isStunned()) {
-            ctx.fillStyle = character.getColor();
-            ctx.fillRect(character.getX(), character.getY(), character.getSize(), character.getSize());
-            if (character.getLoad()) {
+        if (character.state === PLAYER_STATES.STUNNED || character.state === PLAYER_STATES.ACTIVE) {
+            ctx.fillStyle = character.color;
+            ctx.fillRect(character.x, character.y, character.size, character.size);
+            if (character.load) {
                 let spritePath;
-                if (character.getType() === 'bot') {
-                    switch (character.getDirection()) {
+                if (character.type === 'bot') {
+                    switch (character.direction) {
                         case "up": spritePath = "./src/assets/sprites/bot/up.png"; break;
                         case "down": spritePath = "./src/assets/sprites/bot/down.png"; break;
                         case "left": spritePath = "./src/assets/sprites/bot/left.png"; break;
                         case "right": spritePath = "./src/assets/sprites/bot/right.png"; break;
                     }
                 }
-                if (character.getType() === 'player') {
-                    switch (character.getDirection()) {
+                if (character.type === 'player') {
+                    switch (character.direction) {
                         case "up": spritePath = "./src/assets/sprites/player/up.png"; break;
                         case "down": spritePath = "./src/assets/sprites/player/down.png"; break;
                         case "left": spritePath = "./src/assets/sprites/player/left.png"; break;
@@ -29,42 +30,62 @@ export function drawCharacters(arrayCharacters) {
                 }
 
                 if (spritePath) {
-                    character.setImage(spritePath);
+                    character.image.src = spritePath;
                 }
-
                 ctx.drawImage(
-                    character.getImage(),
-                    character.getCount() * spriteSize,
+                    character.image,
+                    character.count * spriteSize,
                     0,
                     spriteSize,
                     spriteSize,
-                    character.getX() - (spriteSize / 2 - character.getSize() / 2),
-                    character.getY() - (spriteSize / 2 - character.getSize() / 2),
+                    character.x - (spriteSize / 2 - character.size / 2),
+                    character.y - (spriteSize / 2 - character.size / 2),
                     spriteSize,
                     spriteSize
                 );
-                character.setTick(character.getTick() + 1);
-                if (character.getTick() >= 2) {
-                    character.setCount(character.getCount() + 1);
-                    character.setTick(0);
+                character.tick = character.tick + 1;
+                if (character.tick >= 2) {
+                    character.count = character.count + 1;
+                    character.tick = 0;
                 }
-                if (character.getCount() === endAnimation) {
-                    character.setCount(0);
+                if (character.count=== endAnimation) {
+                    character.count = 0;
                 }
             }
         }
         if (
-            character.isStunned() &&
+            character.state === PLAYER_STATES.STUNNED &&
             character.stunnedUntil < Date.now()
         ) {
-            character.recoverFromStunned();
+            character.stunnedUntil = 0;
+            character.speed = DEFAULT_PLAYERS.speed;
+            if (character.state === PLAYER_STATES.DEAD || 
+                character.state === PLAYER_STATES.STUNNED) {
+            character.state = PLAYER_STATES.ACTIVE;
+        }
         }
         const mainPlayer = getMyPlayer(arrayCharacters);
-        if (character.getType() === 'player'){
-            if (character.isMain()) {
-                character.renderPB();
-                if (character.isStunned()) {
-                    character.drawCountdown();
+        if (character.type === 'player'){
+            if (character.main) {
+                ctx.strokeStyle = character.progressBar.progressEmptyColor;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(character.progressBar.x, character.progressBar.y, character.progressBar.width, character.progressBar.height);
+
+                ctx.fillStyle = character.progressBar.progressFillColor;
+                ctx.fillRect(
+                    character.progressBar.x,
+                    character.progressBar.y,
+                    (character.progressBar.width * character.progressBar.progress) / ABILITY_SCALE_MAX,
+                    character.progressBar.height
+                );
+                if (character.state === PLAYER_STATES.STUNNED) {
+                    const remainingTime = character.stunnedUntil - Date.now();
+                    const seconds = Math.floor(remainingTime / 1000);
+                    const milliseconds = Math.floor((remainingTime % 1000) / 10);
+                    const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
+                    ctx.fillStyle = 'white';
+                    ctx.font = '16px Arial';
+                    ctx.fillText(countdownText, character.x, character.y - 30);
                 }
             }
         }

@@ -1,10 +1,10 @@
-import { BOT_STATES, DEFAULT_BOTS } from './const.js';
-import { Bot } from './model.js';
-import { GAME } from '../game/model.js';
-import { Point } from '../point/model.js';
-import { POINT_STATES } from '../point/const.js';
-import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script.js';
-import { yellow } from '../game/const.js';
+import { BOT_STATES, DEFAULT_BOTS } from './const';
+import { Bot } from './model';
+import { GAME } from '../game/model';
+import { Point } from '../point/model';
+import { POINT_STATES } from '../point/const';
+import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script';
+import { yellow } from '../game/const';
 
 export function createBots(requiredBots) {
     //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов
@@ -19,9 +19,12 @@ export function createBots(requiredBots) {
 
 export function initBotAnimation() {
     activeBots.forEach(bot => {
-        bot.setImage("./src/assets/sprites/bot/left.png");
-        bot.getImage().onload = () => {
-            bot.setLoad(true);
+        if (bot.image === null) {
+            bot.image = new Image();
+        }
+        bot.image.src = ("./src/assets/sprites/bot/left.png");
+        bot.image.onload = () => {
+            bot.load = true;
         }
     })
 }

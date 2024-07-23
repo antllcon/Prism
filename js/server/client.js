@@ -5,6 +5,8 @@ module.exports = class Client {
         this.lastSeen = Date.now();
         this.isReady = false;
         this.inGame = false;
+        this.needForPlayer = false;
+        this.needForBot = false;
     }
 
     getSocketId() {
@@ -22,7 +24,13 @@ module.exports = class Client {
     getInGame() {
         return this.inGame;
     }
-    
+    neadForPlayer() {
+        return this.needForPlayer;
+    }
+    neadForBot() {
+        return this.needForBot;
+    }
+
     setSocketId(socketId) {
         this.socketId = socketId;
     }
@@ -40,6 +48,12 @@ module.exports = class Client {
     }
     setInGame(value) {
         this.inGame = value;
+    }
+    setNeedForPlayer() {
+        this.needForPlayer = true;
+    }
+    setNeedForBot() {
+        this.needForBot = true;
     }
 };
 

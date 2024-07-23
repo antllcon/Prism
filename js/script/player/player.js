@@ -1,36 +1,67 @@
-import {Player} from "./model.js";
-import {DEFAULT_PLAYERS} from "./const.js";
-import {ctx, activePlayers} from "../../script.js";
+import {DEFAULT_PLAYERS, ABILITY_SCALE_MAX, MAX_SPEED} from "./const";
+import {ctx, activePlayers} from "../../script";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
     if (input.isDown('LEFT') || input.isDown('a')) {
-        player.moveOn(player.getSpeed() * dt * (-1), 0);
-        player.setDirection("left");
+        //player.moveOn(player.speed * dt * (-1), 0);
+        player.x += player.speed * dt * (-1);
+        player.y += 0;
+        //player.progressBar.updatePosition(player.speed * dt * (-1), 0);
+        //updatePosition - is not a function
+        player.progressBar.updatePosition(player.speed * dt * (-1), 0);
+        player.direction = "left";
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
-        player.moveOn(player.getSpeed() * dt, 0);
-        player.setDirection("right");
+        //player.moveOn(player.speed * dt, 0);
+
+        player.x += player.speed * dt;
+        player.y += 0;
+
+
+        player.direction = "right";
     }
     if (input.isDown('DOWN') || input.isDown('s')) {
-        player.moveOn(0, player.getSpeed() * dt);
-        player.setDirection("down");
+        //player.moveOn(0, player.speed * dt);
+
+        player.x += 0;
+        player.y +=  player.speed * dt;
+        player.progressBar.updatePosition(0, player.speed * dt);
+
+        player.direction = "down";
     }
     if (input.isDown('UP') || input.isDown('w')) {
-        player.moveOn(0, player.getSpeed() * dt * (-1));
-        player.setDirection("up");
+        //player.moveOn(0, player.speed * dt * (-1));
+
+        player.x += 0;
+        player.y += player.speed * dt * (-1);
+        player.progressBar.updatePosition(0, player.speed * dt * (-1));
+
+        player.direction = "up";
     }
     if (input.isDown('f') || input.isDown('F')) {
-        player.resetAbilityScale();
+        if (player.abilityScale >= ABILITY_SCALE_MAX) {
+            player.abilityActive = true;
+            player.speed = MAX_SPEED;
+            setTimeout(() => {
+                player.abilityActive = false;
+                player.setSpeed = DEFAULT_PLAYERS.speed;
+            }, ABILITY_DURATION);
+            player.abilityScale = 0;
+            //вот это надо изменить
+            player.progressBar.progress = player.abilityScale;
+        }
     }
 }
 
 export function initPlayerAnimation() {
-   /* console.log(activePlayers)*/
     activePlayers.forEach(player => {
-        player.setImage("./src/assets/sprites/player/right.png");
-        player.getImage().onload = () => {
-            player.setLoad(true);
+        if (player.image == null) {
+            player.image = new Image();
+        }
+        player.image.src = "./src/assets/sprites/player/right.png";
+        player.image.onload = () => {
+            player.load = true;
         }
     })
 }
@@ -104,17 +135,14 @@ export function drawPlayer(activePlayers) {
     });
 }
 
-export function createPlayers(clients) {
-    let createdPlayers = [];
-    for (let i = 0; i < clients.length; i++) {
-        createdPlayers[i] = new Player(i, clients[i]);
-    }
-    return createdPlayers
-}
+
 
 export function setPlayerWithIdAsMain(id) {
-    const player = findPlayerBySocketId(id);
-    player.setMain(true);
+    activePlayers.forEach(player => {
+        if (player.id === id) {
+            player.main = true;
+        }    
+    });
 }
 
 export function getMyPlayer(players) {
@@ -137,7 +165,7 @@ export function resetAllPlayers() {
 export function findPlayerBySocketId(socketId) {
     let foundPlayer;
     activePlayers.forEach(player => {
-        if (player.getId() === socketId) {
+        if (player.id === socketId) {
             foundPlayer = player;
         }
     });
@@ -160,4 +188,3 @@ function updatePlayer(player, playerFromServer) {
     playerFromServer.getY() ? player.setY(playerFromServer.getY()) : null;
     playerFromServer.getState() ? player.setState(playerFromServer.getState()) : null;
 }
-module.exports = updatePlayer;

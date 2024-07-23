@@ -1,7 +1,6 @@
 import { Bot } from '../script/bot/model';
 import { BOT_STATES } from '../script/bot/const';
 import { getMyPlayer } from '../script/player/player';
-import { Player } from '../script/player/model';
 import { activePlayers, activeBots, points } from '../script';
 import { POINT_STATES, POINT_TYPES } from '../script/point/const';
 import { GAME, game } from '../script/game/model';
@@ -11,22 +10,22 @@ function checkLaserBounds() {
 
     points.forEach(point => {
         activePlayers.forEach(player => {
-            if (player.isInvisibleLasers()) {
+            if (player.isInvisibleLasers) {
                 return;
             }
             const sin = Math.sin(point.angle);
             const cos = Math.cos(point.angle);
 
             const playerCorners = [
-                {x: player.getX(), y: player.getY()},
-                {x: player.getX() + player.getSize(), y: player.getY()},
-                {x: player.getX(), y: player.getY() + player.getSize()},
-                {x: player.getX() + player.getSize(), y: player.getY() + player.getSize()}
+                {x: player.x, y: player.y},
+                {x: player.x + player.size, y: player.y},
+                {x: player.x, y: player.y + player.size},
+                {x: player.x + player.size, y: player.y + player.size}
             ];
 
             for (const corner of playerCorners) {
-                const dx = corner.x - point.getX();
-                const dy = corner.y - point.getY();
+                const dx = corner.x - point.x;
+                const dy = corner.y - point.y;
                 const rotatedX = cos * dx + sin * dy;
                 const rotatedY = -sin * dx + cos * dy;
                 if (point.isInactive() &&
@@ -38,8 +37,8 @@ function checkLaserBounds() {
                 }
                 if (point.isActive()) {
                     if (point.isTypeCross() && point.getTeam() !== player.getTeam()) {
-                        if ((Math.abs(rotatedX) < point.getSize() / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
-                            (Math.abs(rotatedY) < point.getSize() / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
+                        if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
+                            (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
                             player.die();
                         }
                     }
@@ -50,14 +49,14 @@ function checkLaserBounds() {
                             const angleCos = Math.cos(angle);
                             const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
                             const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
-                            if (rotatedRayX > 0 && rotatedRayX < point.getSize() / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
+                            if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
                                 player.die();
                             }
                         });
                     }
                     if (point.isTypeLine() && point.getTeam() !== player.getTeam()) {
-                        if (corner.y >= point.getY() - point.getWidth() / 2 && corner.y <= point.getY() + point.getWidth() / 2 &&
-                            corner.x >= point.getX() - point.getSize() / 2 && corner.x <= point.getX() + point.getSize() / 2) {
+                        if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
+                            corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
                             player.die();
                         }
                     }
@@ -65,14 +64,14 @@ function checkLaserBounds() {
             }
             activeBots.forEach(bot => {
                 const botCorners = [
-                    {x: bot.getX(), y: bot.getY()},
-                    {x: bot.getX() + bot.getSize(), y: bot.getY()},
-                    {x: bot.getX(), y: bot.getY() + bot.getSize()},
-                    {x: bot.getX() + bot.getSize(), y: bot.getY() + bot.getSize()}
+                    {x: bot.x, y: bot.y},
+                    {x: bot.x + bot.size, y: bot.y},
+                    {x: bot.x, y: bot.y + bot.size},
+                    {x: bot.x + bot.size, y: bot.y + bot.size}
                 ];
                 for (const corner of botCorners) {
-                    const dx = corner.x - point.getX();
-                    const dy = corner.y - point.getY();
+                    const dx = corner.x - point.x;
+                    const dy = corner.y - point.y;
                     const rotatedX = cos * dx + sin * dy;
                     const rotatedY = -sin * dx + cos * dy;
                     if (point.isInactive() &&
@@ -83,27 +82,27 @@ function checkLaserBounds() {
                         point.setActivationTime(Date.now());
                     }
                     if (point.isActive()) {
-                        if (point.isTypeCross() && point.getTeam() !== bot.getTeam()) { // Крест
-                            if ((Math.abs(rotatedX) < point.getSize() / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
-                                (Math.abs(rotatedY) < point.getSize() / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
+                        if (point.isTypeCross() && point.getTeam() !== bot.team) { // Крест
+                            if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
+                                (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
                                 bot.die();
                             }
                         }
-                        if (point.isTypeTrigraph() && point.getTeam() !== bot.getTeam()) { // Три-радиус
+                        if (point.isTypeTrigraph() && point.getTeam() !== bot.team) { // Три-радиус
                             const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
                             angles.forEach(angle => {
                                 const angleSin = Math.sin(angle);
                                 const angleCos = Math.cos(angle);
                                 const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
                                 const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
-                                if (rotatedRayX > 0 && rotatedRayX < point.getSize() / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
+                                if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
                                     bot.die();
                                 }
                             });
                         }
-                        if (point.isTypeLine() && point.getTeam() !== bot.getTeam()) {
-                            if (corner.y >= point.getY() - point.getWidth() / 2 && corner.y <= point.getY() + point.getWidth() / 2 &&
-                                corner.x >= point.getX() - point.getSize() / 2 && corner.x <= point.getX() + point.getSize() / 2) {
+                        if (point.isTypeLine() && point.getTeam() !== bot.team) {
+                            if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
+                                corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
                                 bot.die();
                             }
                         }
@@ -116,17 +115,16 @@ function checkLaserBounds() {
 
 function checkBorderGameBounds() {
     const player = getMyPlayer(activePlayers);
-    if (player.getX() < 0) {
-        player.setX(game.getWidth() - player.getSize());
-    } else if (player.getX() + player.getSize() > game.getWidth()) {
+    if (player.x < 0) {
+        player.setX(game.getWidth() - player.size);
+    } else if (player.x + player.size > game.getWidth()) {
         player.setX(0);
     }
-    if (player.getY() < 0) {
-        player.setY(game.getHeight() - player.getSize());
-    } else if (player.getY() + player.getSize() > game.getHeight()) {
+    if (player.y < 0) {
+        player.setY(game.getHeight() - player.size);
+    } else if (player.y + player.size > game.getHeight()) {
         player.setY(0);
     }
-
     if (player.progressBar.x < 0) {
         player.progressBar.x = game.getWidth() - player.progressBar.width;
     } else if (
@@ -137,7 +135,7 @@ function checkBorderGameBounds() {
     }
 
     if (player.progressBar.y < 0) {
-        player.progressBar.y = game.getHeight() - player.getSize();
+        player.progressBar.y = game.getHeight() - player.size;
     } else if (
         player.progressBar.y + player.progressBar.height >
         game.getHeight()
@@ -146,16 +144,16 @@ function checkBorderGameBounds() {
     }
 
     activeBots.forEach((bot) => {
-        if (bot.getX() < 0) {
+        if (bot.x < 0) {
             // console.log(game.getWidth(), "getwidth bounds js")
-            bot.setX(game.getWidth() - bot.getSize());
-        } else if (bot.getX() + bot.getSize() > game.getWidth()) {
+            bot.setX(game.getWidth() - bot.size);
+        } else if (bot.x + bot.size > game.getWidth()) {
             bot.setX(0);
         }
     
-        if (bot.getY() < 0) {
-            bot.setY(game.getHeight() - bot.getSize());
-        } else if (bot.getY() + bot.getSize() > game.getHeight()) {
+        if (bot.y < 0) {
+            bot.setY(game.getHeight() - bot.size);
+        } else if (bot.y + bot.size > game.getHeight()) {
             bot.setY(0);
         }
     });
@@ -168,23 +166,23 @@ function checkPlayerBotCollisions() {
     }
 
     const playerRect = {
-        x: player.getX(),
-        y: player.getY(),
-        width: player.getSize(),
-        height: player.getSize(),
+        x: player.x,
+        y: player.y,
+        width: player.size,
+        height: player.size,
     };
 
     activeBots.forEach((bot) => {
         const botRect = {
-            x: bot.getX(),
-            y: bot.getY(),
-            width: bot.getSize(),
-            height: bot.getSize(),
+            x: bot.x,
+            y: bot.y,
+            width: bot.size,
+            height: bot.size,
         };
 
         if (checkRectCollision(playerRect, botRect)) {
-            const dx = player.getX() - bot.getX();
-            const dy = player.getY() - bot.getY();
+            const dx = player.x - bot.x;
+            const dy = player.y - bot.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             const pushForce = 30;
             bot.moveOn(
@@ -208,22 +206,22 @@ function checkPlayerBotBonusCollision(bonuses) {
     const player = getMyPlayer(activePlayers);
 
     bonuses.forEach((bonus) => {
-        const dx = player.x - bonus.getX();
-        const dy = player.y - bonus.getY();
+        const dx = player.x - bonus.x;
+        const dy = player.y - bonus.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < player.size + bonus.getSize()) {
+        if (distance < player.size + bonus.size) {
             bonus.catch(player, activeBots, activePlayers);
             bonuses.splice(bonuses.indexOf(bonus), 1);
         }
     });
     activeBots.forEach((bot) => {
         bonuses.forEach((bonus) => {
-            const dx = bot.x - bonus.getX();
-            const dy = bot.y - bonus.getY();
+            const dx = bot.x - bonus.x;
+            const dy = bot.y - bonus.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < bot.size + bonus.getSize()) {
+            if (distance < bot.size + bonus.size) {
                 bonus.catch(bot, activeBots, activePlayers);
                 bonuses.splice(bonuses.indexOf(bonus), 1);
             }
