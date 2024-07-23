@@ -1,21 +1,22 @@
-// import {TEAM_STATES} from "./const";
-import {game, lastState, gameState} from "./model";
-import {Point} from "../point/model";
-import {POINT_STATES} from "../point/const";
+import {game, lastState} from "./model";
 import {COLORS, TEAM_STATES} from "./const";
-import {movePoint, resetPoint, resetPoints, respawnPoint, updateVisibilityPoints} from "../point/point"
-import {getMyPlayer, resetAllPlayers} from "../player/player"
+import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point"
+import {resetAllPlayers} from "../player/player"
 import {resetAllBots} from "../bot/bot"
-import {score, SCORE, scoreAlphaState} from "../score/model";
+import {score, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
 import {main, ctx, activePlayers, activeBots, points} from "../../script";
-import {playDeathPlayer} from "../../sound/deathPlayerSound";
 
 export function drawBackground() {
-    ctx.fillStyle = game.getBackground();
-    ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
+    const base_image = new Image();
+    base_image.onload = () => {
+        ctx.drawImage(base_image, 0, 0);
+    };
+    base_image.src = game.getSrc();
+    // ctx.fillStyle = COLORS.GRAY;
+    // ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
 }
 
 export function countdown() {
