@@ -346,6 +346,9 @@ function joinRoom(roomId, socket) {
             rooms[roomId].clients.push(new Client(socket.id, userId));
             socket.join(parseInt(roomId));
             socket.emit('joinedRoom', roomId);
+            console.log(rooms[roomId].clients.length)
+            console.log("rooms[roomId].clients.length")
+            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
             console.log(socket.id, ' joined the room ', roomId);
             // broadcastRoomUpdate(roomId);
         } else {

@@ -84,15 +84,17 @@ export function main() {
     if (score.getTeam1() < 3 && score.getTeam2() < 3) {
         update(dt);
         render(dt);
-    }
-    else {
+    } else {
         drawBackground();
         drawFinalScore();
-        setTimeout(() => {window.location.href = 'index.html';}, 1500);
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
     }
     lastState.lastTime = now;
     requestAnimFrame(main);
 }
+
 function connect() {
     socket.on('connect', () => {
         console.log('Connected to server with id:', socket.id);
@@ -115,6 +117,7 @@ function initPlayers() {
         initPlayerAnimation()
     })
 }
+
 function initBots() {
     socket.emit('requestForBots');
     socket.on('sendBots', (bots) => {
@@ -130,6 +133,7 @@ function dataExchange(dt) {
     sendDataToServer(dt);
     getDataFromServer();
 }
+
 function sendDataToServer(dt) {
     let data = {
         player: getMyPlayer(activePlayers),
@@ -138,6 +142,7 @@ function sendDataToServer(dt) {
     };
     socket.emit('sendDataToServer', data);
 }
+
 function prepTransmittedPlayer(playerAsEntity) {
     return {
         id: playerAsEntity.getId(),
@@ -148,6 +153,7 @@ function prepTransmittedPlayer(playerAsEntity) {
         state: playerAsEntity.getState()
     }
 }
+
 function getDataFromServer() {
     socket.on('dataFromServer', (data) => {
         // Получение массива данных
@@ -156,7 +162,6 @@ function getDataFromServer() {
         updateBots(data.bots);
     })
 }
-
 
 
 window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
@@ -171,6 +176,7 @@ function initEventListeners() {
     //     socket.emit('pageRefreshed');
     // });
 }
+
 function sendCookie() {
     const cookieValue = document.cookie.split('; ')
         .find(row => row.startsWith('userId='))
@@ -179,6 +185,9 @@ function sendCookie() {
     // Отправляем куки на сервер
     socket.emit('sentCookie', cookieValue);
 }
+
+
+
 
 setTimeout(fadeOutScore, 6800);
 countdown();

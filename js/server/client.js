@@ -7,6 +7,9 @@ module.exports = class Client {
         this.inGame = false;
         this.needForPlayer = false;
         this.needForBot = false;
+        this.team = '';
+        this.color = '';
+        this.name = 0;
     }
 
     getSocketId() {

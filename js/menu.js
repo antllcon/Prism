@@ -448,6 +448,18 @@ function generateId() {
     return uniqueId;
 }
 
+socket.on('updatePlayerLobbyInfo', (clientsInfo) => {
+    console.log('clientsInfo updated:', clientsInfo);
+
+    loadHTML('lobby.html', (html) => {
+        callback(html);
+        const playerCountElement = document.querySelector('.lobby-count-players');
+        playerCountElement.textContent = "PLAYERS ${clientsInfo} / 4";
+        transitionToPage('lobby.html');
+    });
+});
+
+
 loadHTML('menu.html', (html) => {
     callback(html);
     playMenuTheme();
