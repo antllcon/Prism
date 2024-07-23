@@ -98,20 +98,10 @@ function connect() {
         socket.emit('redirected');
         sendCookie();
         initPlayers();
-        updatePlayerLobbyInfo();
         // activePlayers = createPlayers(players, socket_id);
     });
 }
 
-function updatePlayerLobbyInfo(){
-    socket.on('updatePlayerLobbyInfo', (playerCount) => {
-        console.log('мы попали в событие этой херни')
-        const playerCountLobby = document.querySelector('.lobby-count-players');
-        console.log(playerCountLobby)
-
-
-    })
-}
 
 function initPlayers() {
     socket.emit('requestForClients');

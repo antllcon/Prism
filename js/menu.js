@@ -114,6 +114,39 @@ let buttonMenu;
 let buttonLeave;
 let inputRoomId;
 
+let countP = 0;
+
+// Call this function when transitioning to the lobby page
+function transitionToLobby() {
+    console.log('мы сюда проваливаемся все еж')
+    // Load lobby.html and then initialize the lobby page
+    loadHTML('lobby.html', (html) => {
+        console.log('мы сюда тоже смотрим')
+        document.body.innerHTML = html; // Load the HTML content
+        //initLobbyPage(); // Initialize the lobby page
+        document.addEventListener('DOMContentLoaded', () => {
+            const playerCountElement = document.querySelector('.lobby-count-players');
+            console.log('Player Count Element:', playerCountElement); // Check if the element is found
+
+            // Listen for the updatePlayerLobbyInfo event
+            socket.on('updatePlayerLobbyInfo', (playerCount) => {
+                console.log('Received player count:', playerCount);
+                countP = playerCount
+                if (playerCountElement) {
+                    playerCountElement.textContent = `PLAYERS ${playerCount}/4`; // Update the text
+                    // Change styles based on player count
+                    playerCountElement.style.color = playerCount < 2 ? 'red' : 'green';
+                } else {
+                    console.error('Player Count Element not found'); // Log error if element is not found
+                }
+            });
+        });
+    });
+    return countP
+}
+
+
+
 function loadHTML(filename, callback) {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', filename);
@@ -140,11 +173,15 @@ function transitionToPage(file) {
         if (file === 'lobby.html') {
             const chapterCodeElement = document.querySelector('.chapter__code');
             chapterCodeElement.textContent = globalRoomId;
+            const playerCountElement = document.querySelector('.lobby-count-players');
+            playerCountElement.textContent = `PLAYERS ${countP}/4`;
         }
 
         initEventListeners();
     });
 }
+
+
 
 function loadCard(templateId) {
     const template = document.getElementById(templateId);
@@ -199,6 +236,8 @@ function setStyleCard(index) {
 }
 
 function addBot(button) {
+    countP += 1;
+    console.log('state of countP', countP)
     const waitingCard = button.closest('.player');
     const botTemplate = document.getElementById('bot-template');
     if (botTemplate && waitingCard) {
@@ -213,12 +252,17 @@ function addBot(button) {
             setStyleCard(2);
             setStyleCard(3);
         }, 0);
-
+       /* loadHTML('lobby.html', (html) => {
+            callback(html);*/
+            const playerCountElement = document.querySelector('.lobby-count-players');
+            playerCountElement.textContent = `PLAYERS ${countP}/4`;
+        //});
         return card;
     }
 }
 
 function addWait(button) {
+    countP -= 1;
     const tempCard = button.closest('.player');
     const waitTemplate = document.getElementById('wait-template');
     if (waitTemplate && tempCard) {
@@ -286,114 +330,123 @@ function initCardEventListener(card, indexCount) {
     })
 }
 
-function initEventListeners() {
-    buttonLogo = document.getElementById('logo');
-    centralPartMenu = document.getElementById('central-part-menu');
-    buttonBot = document.getElementById('button-bot');
-    buttonPlayer = document.getElementById('button-player');
-    button1vs1 = document.getElementById('button-1vs1');
-    button2vs2 = document.getElementById('button-2vs2');
-    buttonLobby = document.getElementById('button-lobby');
-    buttonConnect = document.getElementById('button-connect');
-    buttonPlay = document.getElementById('button-play');
-    buttonMenu = document.getElementById('button-menu');
-    buttonLeave = document.getElementById('button-leave');
-    inputRoomId = document.getElementById('input-code');
-    cardBox = document.getElementById('card-container');
 
-    if (buttonLogo) {
-        buttonLogo.addEventListener('click', () => { transitionToPage("menu.html"); });
-    }
 
-    if (buttonBot) {
-        buttonBot.addEventListener('click', () => {
-            setTimeout(() => transitionToPage('with_bot.html'), 0);
-        });
-    }
+    function initEventListeners() {
+        buttonLogo = document.getElementById('logo');
+        centralPartMenu = document.getElementById('central-part-menu');
+        buttonBot = document.getElementById('button-bot');
+        buttonPlayer = document.getElementById('button-player');
+        button1vs1 = document.getElementById('button-1vs1');
+        button2vs2 = document.getElementById('button-2vs2');
+        buttonLobby = document.getElementById('button-lobby');
+        buttonConnect = document.getElementById('button-connect');
+        buttonPlay = document.getElementById('button-play');
+        buttonMenu = document.getElementById('button-menu');
+        buttonLeave = document.getElementById('button-leave');
+        inputRoomId = document.getElementById('input-code');
+        cardBox = document.getElementById('card-container');
 
-    if (buttonPlayer) {
-        buttonPlayer.addEventListener('click', () => {
-           if (!(document.cookie.indexOf('userId') > -1)) {
-                setCookie();
-                sendCookie();
-            }
-            transitionToPage('with-player.html');
-        });
-    }
+        if (buttonLogo) {
+            buttonLogo.addEventListener('click', () => { transitionToPage("menu.html"); });
+        }
 
-    if (button1vs1) {
-        button1vs1.addEventListener('click', () => {
-            window.location.href = 'game.html';
-        });
-    }
+        if (buttonBot) {
+            buttonBot.addEventListener('click', () => {
+                setTimeout(() => transitionToPage('with_bot.html'), 0);
+            });
+        }
 
-    if (button2vs2) {
-        button2vs2.addEventListener('click', () => {
-            transitionToPage('lobby.html');
-        });
-    }
+        if (buttonPlayer) {
+            buttonPlayer.addEventListener('click', () => {
+               if (!(document.cookie.indexOf('userId') > -1)) {
+                    setCookie();
+                    sendCookie();
+                }
+                transitionToPage('with-player.html');
+            });
+        }
 
-    if (buttonLobby) {
-        buttonLobby.addEventListener('click', () => {
-            socket.emit('createRoom');
-            socket.on('requestForCookie', () => {
-                sendCookie();
-            })
-            socket.on('joinedRoom', (roomId) => {
-                globalRoomId = roomId;
+        if (button1vs1) {
+            button1vs1.addEventListener('click', () => {
+                window.location.href = 'game.html';
+            });
+        }
+
+        if (button2vs2) {
+            button2vs2.addEventListener('click', () => {
                 transitionToPage('lobby.html');
             });
-        });
-    }
+        }
 
-    if (buttonConnect) {
-        buttonConnect.addEventListener('click', () => {
-            inputRoomId.classList.toggle("input-for-code");
-        });
-    }
+        if (buttonLobby) {
+            buttonLobby.addEventListener('click', () => {
 
-    if (inputRoomId) {
-        inputRoomId.addEventListener('input', () => {
-            inputRoomId.value = inputRoomId.value.replace(/\D/g, '');
-            if (inputRoomId.value.length === 6) {
-                let codeRoom = document.getElementById('input-code').value;
-                socket.emit('joinRoom', codeRoom);
-            socket.on('requestForCookie', () => {
-                sendCookie();
-            })
-            socket.on('joinedRoom', (roomId) => {
-                globalRoomId = roomId;
-                transitionToPage('lobby.html');
-            });
-                socket.on('wrongId', () => {
-                    // добавить обработку несуществующего айди комнаты
+                /*socket.on('updatePlayerLobbyInfo', (playerCount) => {
+                    console.log('Player count updated:', playerCount);
+                    countP = playerCount;
+                });*/
+                socket.emit('createRoom');
+                socket.on('requestForCookie', () => {
+                    sendCookie();
+                })
+                countP = transitionToLobby();
+                socket.on('joinedRoom', (roomId) => {
+                    console.log("вызван button lobby")
+                    globalRoomId = roomId;
+                    transitionToPage('lobby.html');
                 });
-            }
-            if (inputRoomId.value.length > 6) {
-                inputRoomId.value = inputRoomId.value.slice(0, 6);
-            }
-        });
-    }
+            });
+        }
 
-    if (cardBox) {
-        loadCard('player-template');
-        loadCard('waiting-template');
-        loadCard('waiting-template');
-        loadCard('waiting-template');
+        if (buttonConnect) {
+            buttonConnect.addEventListener('click', () => {
+                inputRoomId.classList.toggle("input-for-code");
+            });
+        }
 
-        setTimeout(() => {
-            setStyleCard(0);
-            setStyleCard(1);
-            setStyleCard(2);
-            setStyleCard(3);
-        }, 0);
+        if (inputRoomId) {
+            inputRoomId.addEventListener('input', () => {
+                inputRoomId.value = inputRoomId.value.replace(/\D/g, '');
+                if (inputRoomId.value.length === 6) {
+                    let codeRoom = document.getElementById('input-code').value;
+                    socket.emit('joinRoom', codeRoom);
+                socket.on('requestForCookie', () => {
+                    sendCookie();
+                })
+                socket.on('joinedRoom', (roomId) => {
+                    globalRoomId = roomId;
+                    transitionToPage('lobby.html');
+                });
+                    socket.on('wrongId', () => {
+                        // добавить обработку несуществующего айди комнаты
+                    });
+                }
+                if (inputRoomId.value.length > 6) {
+                    inputRoomId.value = inputRoomId.value.slice(0, 6);
+                }
+            });
+        }
 
-        initCardEventListeners(); // Инициализируем события для добавленных карточек
-    }
+        if (cardBox) {
+            loadCard('player-template');
+            loadCard('waiting-template');
+            loadCard('waiting-template');
+            loadCard('waiting-template');
 
-    if (buttonPlay) {
-        buttonPlay.addEventListener('click', () => {
-            buttonPlay.textContent = 'READY';
+            setTimeout(() => {
+                setStyleCard(0);
+                setStyleCard(1);
+                setStyleCard(2);
+                setStyleCard(3);
+            }, 0);
+
+            initCardEventListeners(); // Инициализируем события для добавленных карточек
+        }
+
+        if (buttonPlay) {
+            buttonPlay.addEventListener('click', () => {
+                buttonPlay.textContent = 'READY';
             socket.emit('playerIsReady');
             socket.on('roomIsReady', () => {
                 console.log('room is ready отработало');
@@ -454,4 +507,14 @@ loadHTML('menu.html', (html) => {
     loadToMainPageLink();
     initEventListeners();
 
+});
+socket.on('updatePlayerLobbyInfo', (playerCount) => {
+    console.log('Player count updated:', playerCount);
+    countP = playerCount;
+    loadHTML('lobby.html', (html) => {
+        callback(html);
+        const playerCountElement = document.querySelector('.lobby-count-players');
+        playerCountElement.textContent = `PLAYERS ${countP}/4`;
+        transitionToPage('lobby.html');
+    });
 });

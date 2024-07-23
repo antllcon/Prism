@@ -301,12 +301,10 @@ function joinRoom(roomId, socket) {
             socket.emit('joinedRoom', roomId);
             console.log(socket.id, ' joined the room ', roomId);
             io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
-            // broadcastRoomUpdate(roomId);
         } else {
             socket.emit('wrongId');
         }
-    })
-    
+    });
 }
 function leaveRoom(roomId, socket) {
     if (rooms[roomId]) {
