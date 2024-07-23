@@ -3,7 +3,7 @@ import { Bot } from './model.mjs';
 import { GAME } from '../game/model.mjs';
 import { Point } from '../point/model.mjs';
 import { POINT_STATES } from '../point/const.mjs';
-import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script.mjs';
+import { ctx, activeBots, requiredBots, points} from '../../script.mjs';
 import { yellow } from '../game/const.mjs';
 
 export function createBots(requiredBots) {
@@ -89,7 +89,7 @@ export function resetAllBots() {
     }
 }
 
-export function botMovement(dt) {
+export function botMovement(dt, activeBots, points) {
     activeBots.forEach((bot) => {
         let loopIndexInactive = 0;
         let loopIndexActive = 0;

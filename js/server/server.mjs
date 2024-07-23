@@ -5,6 +5,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { Client } from "./client.mjs";
 import {hello} from "../sprite.mjs";
+import { botMovement } from '../script/bot/bot.mjs';
+import { updatePlayer } from '../script/player/player.mjs';
 
 console.log(hello)
 // Получаем путь к текущему модулю
@@ -180,23 +182,31 @@ io.on('connection', (socket) => {
 
     socket.on('sendDataToServer', (data) => {
         const roomId = findRoomBySocketId(socket.id);
-        const playerFromClient = data['player'];
-        const player = findPlayerBySocketId(playerFromClient.getId());
-        updatePlayer(player, playerFromClient);
+        const playerFromClient = data.player;
+        rooms[roomId]['players'].forEach(player => {
+            if (player.getId() === playerFromClient.getId()) {
+                updatePlayer(player, playerFromClient);
+            }
+        });
+        botMovement(data.dt, rooms[roomId]['bots'], data.points);
+        let dataFromServer = {
+            bots: [],
+            players: []
+        };
+        dataFromServer.bots = rooms[roomId]['bots'];
+        dataFromServer.players = rooms[roomId]['players'];
 
-        // Обновить ботов полученными data['bots']
-
-        io.to(roomId).emit('dataFromServer', rooms[roomId]['clients']);
+        io.to(roomId).emit('dataFromServer', dataFromServer);
     });
 });
 
-function updatePlayer(player, transPlayer) {
-    player.x = transPlayer.x;
-    player.y = transPlayer.y;
-    player.team = transPlayer.team;
-    player.color = transPlayer.color;
-    player.state = transPlayer.state;
-}
+// function updatePlayer(player, transPlayer) {
+//     player.x = transPlayer.x;
+//     player.y = transPlayer.y;
+//     player.team = transPlayer.team;
+//     player.color = transPlayer.color;
+//     player.state = transPlayer.state;
+// }
 
 // function broadcastRoomUpdate(roomId) {
 //     io.to(roomId).emit('roomUpdate', rooms[roomId]);

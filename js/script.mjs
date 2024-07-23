@@ -17,7 +17,6 @@ import {countdown, drawBackground, updateEntities} from "./script/game/game.mjs"
 import {checkCollisions} from "./controller/bounds.mjs";
 import {drawCharacters} from "./view.mjs";
 import {io} from "socket.io-client";
-import {drawBonuses, initBonuses} from "./script/bonuses/bonus.ts";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -27,22 +26,16 @@ const socket = io();
 
 export let activePlayers = [];
 export let points = [];
-export let bonuses = [];
 export let requiredBots = [2, 3];
 export let activeBots = [];
 
 const players = ['1'];
 const socket_id = '1';
 
-let lastBonusAddTime = 0;
-const bonusAddInterval = 3;
-export let readyBonuses = [];
-let bonusIndex = 0;
 
 function init() {
     connect();
     activeBots = createBots(requiredBots);
-    bonuses = initBonuses();
     createPoints();
     initBotAnimation();
 }
@@ -51,7 +44,6 @@ function render() {
     ctx.clearRect(0, 0, game.getWidth(), game.getHeight());
     drawBackground();
     drawScore();
-    drawBonuses();
     drawPoints();
     drawCharacters(activePlayers.concat(activeBots));
 }
@@ -60,20 +52,9 @@ function update(dt) {
     gameState.gameTime += dt;
     botMovement(dt);
     handleInput(dt);
-    dataExchange();
-    checkCollisions(readyBonuses);
+    dataExchange(dt);
+    checkCollisions();
     updateEntities(dt);
-    lastBonusAddTime += dt;
-    if (lastBonusAddTime >= bonusAddInterval) {
-        if (bonusIndex < bonuses.length) {
-            readyBonuses.push(bonuses[bonusIndex]); // Добавляем бонус в readyBonuses
-            bonusIndex++; // Увеличиваем индекс для следующего бонуса
-        } else {
-            console.log("No more bonuses to add.");
-        }
-        lastBonusAddTime = 0; // Сбрасываем таймер
-    }
-
 }
 
 export function main() {
@@ -121,16 +102,17 @@ function initBots() {
 
 // Обмен с сервером
 
-function dataExchange() {
-    sendDataToServer();
+function dataExchange(dt) {
+    sendDataToServer(dt);
     getDataFromServer();
 }
-function sendDataToServer() {
-    let data;
-    let myPlayer = getMyPlayer(activePlayers);
-    data['player'] = myPlayer;
+function sendDataToServer(dt) {
+    let data = {
+        player: getMyPlayer(activePlayers),
+        points: points,
+        dt: dt
+    };
     // Подготовить лазеры к отправке
-    data['points'] = points;
     // Добавить лазеры и игрока в массив и отправить
     socket.emit('sendDataToServer', data);
 }
@@ -148,8 +130,8 @@ function getDataFromServer() {
     socket.on('dataFromServer', (data) => {
         // Получение массива данных
         // извлечение лазеров, ботов, игроков
-        updatePlayers(data['players'], socket.id);
-        updateBots(data['bots']);
+        updatePlayers(data.players, socket.id);
+        updateBots(data.bots);
     })
 }
 

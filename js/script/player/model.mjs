@@ -14,29 +14,7 @@ import {BOT_STATES, DEFAULT_BOTS} from "../bot/const.mjs";
 import {ctx} from "../../script.mjs";
 
 export class Player {
-    private type: string
-    private id: string;
-    private main: boolean;
-    private x: number;
-    private y: number;
-    private readonly size: number;
-    private speed: number;
-    private team: string;
-    private color: string;
-    // @ts-ignore
-    private state: PLAYER_STATES;
-    private abilityScale: number;
-    private abilityActive: boolean;
-    private progressBar: ProgressBar;
-    private stunnedUntil: number;
-    private invisibleLasers: boolean = false;
-    private image:HTMLImageElement;
-    private load: boolean;
-    private count: number;
-    private tick: number
-    private direction: string
-
-    constructor(i: number, id: string, socket_id: string) {
+    constructor(i, id, socket_id) {
         this.type = DEFAULT_PLAYERS.type;
         this.id = id;
         this.main = (socket_id === id);
@@ -61,61 +39,61 @@ export class Player {
 
     getDirection() { return this.direction; }
     getType() { return this.type; }
-    getId(): string {return this.id;}
-    getX(): number {return this.x}
-    getY(): number {return this.y;}
+    getId() {return this.id;}
+    getX() {return this.x}
+    getY() {return this.y;}
     getImage() { return this.image; }
     getLoad() { return this.load; }
-    getSize(): number {return this.size;}
-    getSpeed(): number {return this.speed;}
-    getTeam(): string {return this.team;}
+    getSize() {return this.size;}
+    getSpeed() {return this.speed;}
+    getTeam() {return this.team;}
     getTick() { return this.tick; }
     getCount() { return this.count; }
-    getColor(): string {return this.color;}
+    getColor() {return this.color;}
     // @ts-ignore
-    getState(): PLAYER_STATES {return this.state;}
-    getAbilityScale(): number {return this.abilityScale;}
-    isMain(): boolean {return this.main}
-    isAlive(): boolean {return this.state === PLAYER_STATES.ACTIVE;}
-    isDead(): boolean {return this.state === PLAYER_STATES.DEAD;}
-    isStunned(): boolean {return this.state === PLAYER_STATES.STUNNED;}
-    moveOn(x: number, y: number): void {
+    getState() {return this.state;}
+    getAbilityScale(){return this.abilityScale;}
+    isMain() {return this.main}
+    isAlive() {return this.state === PLAYER_STATES.ACTIVE;}
+    isDead() {return this.state === PLAYER_STATES.DEAD;}
+    isStunned()  {return this.state === PLAYER_STATES.STUNNED;}
+    moveOn(x, y)  {
         this.x += x;
         this.y += y;
         this.progressBar.updatePosition(x, y);
     }
-    die(): void {this.state = PLAYER_STATES.DEAD;}
-    setColor(color: string): void {this.color = color;}
-    setX(x: number): void {this.x = x;}
-    setY(y: number): void {this.y = y;}
-    setSpeed(speed: number): void {this.speed = speed;}
+    die() {this.state = PLAYER_STATES.DEAD;}
+    setColor(color) {this.color = color;}
+    setX(x) {this.x = x;}
+    setY(y) {this.y = y;}
+    setSpeed(speed) {this.speed = speed;}
     // @ts-ignore
-    setState(state: PLAYER_STATES): PLAYER_STATES {this.state = state;}
-    setImage(image: string) { this.image.src = image; }
-    setLoad(load: boolean) { this.load = load; }
-    setCount(count: number) { this.count = count; }
-    setTick(tick: number) { this.tick = tick; }
-    setDirection(direction: string) { this.direction = direction; }
-    renaissance(): void {
+    setState(state) {this.state = state;}
+    setImage(image) { this.image.src = image; }
+    setLoad(load) { this.load = load; }
+    setCount(count) { this.count = count; }
+    setTick(tick) { this.tick = tick; }
+    setDirection(direction) { this.direction = direction; }
+    renaissance() {
         this.state = PLAYER_STATES.ACTIVE;
     }
-    renderPB(): void {this.progressBar.render();}
-    setAbilityScale(value: number): void {this.abilityScale = value;}
-    updateAbilityScale(deltaTime: number): void {
+    renderPB() {this.progressBar.render();}
+    setAbilityScale(value) {this.abilityScale = value;}
+    updateAbilityScale(deltaTime) {
         this.abilityScale += ABILITY_SCALE_SPEED * deltaTime;
         this.progressBar.update(this.abilityScale);
         if (this.abilityScale >= ABILITY_SCALE_MAX) {
             this.abilityScale = ABILITY_SCALE_MAX;
         }
     }
-    resetAbilityScale(): void {
+    resetAbilityScale() {
         if (this.abilityScale >= ABILITY_SCALE_MAX) {
             this.activateAbility();
             this.abilityScale = 0;
             this.progressBar.update(this.abilityScale);
         }
     }
-    activateAbility(): void {
+    activateAbility() {
         this.abilityActive = true;
         this.setSpeed(MAX_SPEED);
         setTimeout(() => {
@@ -123,7 +101,7 @@ export class Player {
             this.setSpeed(DEFAULT_PLAYERS.speed);
         }, ABILITY_DURATION);
     }
-    makeStunned(): void {
+    makeStunned() {
         this.stunnedUntil = Date.now() + DURATION_DISABILITY;
         this.setSpeed(0);
         this.setState(PLAYER_STATES.STUNNED);
@@ -149,11 +127,11 @@ export class Player {
         }
     }
 
-    public setInvisibleLasers(state: boolean): void {
+    setInvisibleLasers(state) {
         this.invisibleLasers = state;
     }
 
-    public isInvisibleLasers(): boolean {
+    isInvisibleLasers() {
         return this.invisibleLasers;
     }
 }

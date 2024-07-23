@@ -1,4 +1,4 @@
-import {Player} from "./model.ts";
+import {Player} from "./model.mjs";
 import {DEFAULT_PLAYERS} from "./const.mjs";
 import {ctx, activePlayers} from "../../script.mjs";
 
@@ -142,7 +142,7 @@ export function findPlayerBySocketId(socketId) {
     });
     return foundPlayer;
 }
-function updatePlayer(player, playerFromServer) {
+export function updatePlayer(player, playerFromServer) {
     playerFromServer.getX() ? player.setX(playerFromServer.getX()) : null;
     playerFromServer.getY() ? player.setY(playerFromServer.getY()) : null;
     playerFromServer.getState() ? player.setState(playerFromServer.getState()) : null;

@@ -5,8 +5,8 @@ import {getMyPlayer, resetAllPlayers} from "../player/player.mjs"
 import {resetAllBots} from "../bot/bot.mjs"
 import {score, scoreAlphaState} from "../score/model.mjs";
 import {fadeOutScore} from "../score/score.mjs";
-import {playCountdown} from "../../sound/countdownAudio.js";
-import {playGameTheme} from "../../sound/gameThemeAudio.js";
+import {playCountdown} from "../../sound/countdownAudio.mjs";
+import {playGameTheme} from "../../sound/gameThemeAudio.mjs";
 import {main, ctx, activePlayers, activeBots, points} from "../../script.mjs";
 
 export function drawBackground() {

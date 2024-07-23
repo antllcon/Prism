@@ -1,7 +1,7 @@
 import { Bot } from '../script/bot/model.mjs';
 import { BOT_STATES } from '../script/bot/const.mjs';
 import { getMyPlayer } from '../script/player/player.mjs';
-import { Player } from '../script/player/model.js';
+import { Player } from '../script/player/model.mjs';
 import { activePlayers, activeBots, points } from '../script.mjs';
 import { POINT_STATES, POINT_TYPES } from '../script/point/const.mjs';
 import { GAME, game } from '../script/game/model.mjs';
@@ -204,36 +204,9 @@ function checkRectCollision(rect1, rect2) {
     );
 }
 
-function checkPlayerBotBonusCollision(bonuses) {
-    const player = getMyPlayer(activePlayers);
 
-    bonuses.forEach((bonus) => {
-        const dx = player.x - bonus.getX();
-        const dy = player.y - bonus.getY();
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < player.size + bonus.getSize()) {
-            bonus.catch(player, activeBots, activePlayers);
-            bonuses.splice(bonuses.indexOf(bonus), 1);
-        }
-    });
-    activeBots.forEach((bot) => {
-        bonuses.forEach((bonus) => {
-            const dx = bot.x - bonus.getX();
-            const dy = bot.y - bonus.getY();
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < bot.size + bonus.getSize()) {
-                bonus.catch(bot, activeBots, activePlayers);
-                bonuses.splice(bonuses.indexOf(bonus), 1);
-            }
-        });
-    });
-}
-
-export function checkCollisions(bonuses) {
+export function checkCollisions() {
     checkBorderGameBounds();
     checkLaserBounds();
     checkPlayerBotCollisions();
-    checkPlayerBotBonusCollision(bonuses);
 }

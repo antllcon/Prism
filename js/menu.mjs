@@ -1,4 +1,4 @@
-import { playMenuTheme } from './sound/menuThemeAudio.js';
+import { playMenuTheme } from './sound/menuThemeAudio.mjs';
 
 const socket = io();
 
