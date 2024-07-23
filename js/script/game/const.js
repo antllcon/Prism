@@ -1,27 +1,22 @@
-export const canvasWidth = 1820;
-export const canvasHeight = 1024;
-export const yellow = "#f8df5c";
-export const purple = "#8f23dc";
-export const gray = "#666";
-export const dark = "#333";
-export const black = "#111";
-export const white = "#FFF";
+module.exports = canvasWidth, canvasHeight, GAME_STATES, TEAM_STATES, COLORS;
+const canvasWidth = 1820; 
+const canvasHeight = 1024;
 
 
-export const GAME_STATES = {
+const GAME_STATES = {
     START: "start",
     PLAY: "play",
     VICTORY: "victory",
     PAUSE: "pause"
 }
 
-export const TEAM_STATES = {
+const TEAM_STATES = {
     NONE: "none",
     PURPLE: "purple",
     YELLOW: "yellow"
 }
 
-export const COLORS = {
+const COLORS = {
     GREEN: '#40c140',
     YELLOW: "#f8df5c",
     PURPLE: "#8f23dc",

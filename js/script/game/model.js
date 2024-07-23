@@ -1,14 +1,16 @@
-import {canvasHeight, canvasWidth, COLORS, GAME_STATES} from "./const";
+// import {canvasHeight, canvasWidth, COLORS, GAME_STATES} from "./const";
+const canvasHeight, canvasWidth, COLORS, GAME_STATES = require('./const.js');
+module.exports = lastState, gameState, Game, game, GAME;
 
-export const lastState = {
+const lastState = {
     lastTime: 0,
 };
 
-export const gameState = {
+const gameState = {
     gameTime: 0,
 };
 
-export class Game {
+class Game {
     constructor() {
         this.width = canvasWidth;
         this.height = canvasHeight;
@@ -32,9 +34,9 @@ export class Game {
     }
 }
 
-export const game = new Game();
+const game = new Game();
 
-export const GAME = {
+const GAME = {
     width: canvasWidth,
     height: canvasHeight,
     background: COLORS.DARK,

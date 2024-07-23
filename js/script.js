@@ -1,43 +1,91 @@
 // в константе socket должен лежать айди игрока
 // и по каждому айди мы должны его рисовать
-import {game, gameState, lastState} from "./script/game/model.js";
-import {drawPoints, createPoints} from "./script/point/point.js";
-import {botMovement, drawBot, createBots, initBotAnimation, updateBots} from "./script/bot/bot.js";
-import {
-    handleInput,
-    createPlayers,
-    getMyPlayer,
-    initPlayerAnimation,
-    findPlayerBySocketId,
-    updatePlayers
-} from "./script/player/player.js";
-import { Player } from "./script/player/model.js";
-import {SCORE, score} from "./script/score/model.js";
-import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score.js";
-import {countdown, drawBackground, updateEntities} from "./script/game/game.js";
-import {checkCollisions} from "./controller/bounds.js";
-import {drawCharacters} from "./view.js";
-import {io} from "socket.io-client";
-import {drawBonuses, initBonuses} from "./script/bonuses/bonus.ts";
+// import {game, gameState, lastState} from "./script/game/model.js";
+// import {drawPoints, createPoints} from "./script/point/point.js";
+// import {botMovement, drawBot, createBots, initBotAnimation, updateBots} from "./script/bot/bot.js";
+// import {
+//     handleInput,
+//     createPlayers,
+//     getMyPlayer,
+//     initPlayerAnimation,
+//     findPlayerBySocketId,
+//     updatePlayers
+// } from "./script/player/player.js";
+// import { Player } from "./script/player/model.js";
+// import {SCORE, score} from "./script/score/model.js";
+// import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score.js";
+// import {countdown, drawBackground, updateEntities} from "./script/game/game.js";
+// import {checkCollisions} from "./controller/bounds.js";
+// import {drawCharacters} from "./view.js";
+// import {io} from "socket.io-client";
+// import {drawBonuses, initBonuses} from "./script/bonuses/bonus.ts";
+
+const game = require('./script/game/model.js');
+const gameState = require('./script/game/model.js');
+const lastState = require('./script/game/model.js');
+
+const drawPoints = require('./script/point/point.js');
+const createPoints = require('./script/point/point.js');
+
+const botMovement = require('./script/point/point.js');
+const drawBot = require('./script/point/point.js');
+const createBots = require('./script/point/point.js');
+const initBotAnimation = require('./script/point/point.js');
+const updateBots = require('./script/point/point.js');
+
+const handleInput = require('./script/player/player.js');
+const createPlayers = require('./script/player/player.js');
+const getMyPlayer = require('./script/player/player.js');
+const initPlayerAnimation = require('./script/player/player.js');
+const findPlayerBySocketId = require('./script/player/player.js');
+const updatePlayers = require('./script/player/player.js');
+
+const Player = require('./script/player/model.js');
+
+const SCORE = require('./script/score/model.js');
+const score = require('./script/score/model.js');
+
+const drawFinalScore = require('./script/score/score.js');
+const drawScore = require('./script/score/score.js');
+const fadeOutScore = require('./script/score/score.js');
+
+const countdown = require('./script/game/game.js');
+const drawBackground = require('./script/game/game.js');
+const updateEntities = require('./script/game/game.js');
+
+const checkCollisions = require('./controller/bounds.js');
+
+const drawCharacters = require('./view.js');
+
+const io = require('socket.io-client');
+
+const drawBonuses = require('./script/bonuses/bonus.ts');
+const initBonuses = require('./script/bonuses/bonus.ts');
+
+
+
 
 let canvas = document.getElementById("canvas");
-export let ctx = canvas.getContext("2d");
+let ctx = canvas.getContext("2d");
 canvas.width = game.getWidth();
 canvas.height = game.getHeight();
 const socket = io();
 
-export let activePlayers = [];
-export let points = [];
-export let bonuses = [];
-export let requiredBots = [2, 3];
-export let activeBots = [];
+let activePlayers = [];
+let points = [];
+let bonuses = [];
+let requiredBots = [2, 3];
+let activeBots = [];
+
+module.exports = ctx, activePlayers, points, bonuses, requiredBots, activeBots,
+    readyBonuses, main;
 
 const players = ['1'];
 const socket_id = '1';
 
 let lastBonusAddTime = 0;
 const bonusAddInterval = 3;
-export let readyBonuses = [];
+let readyBonuses = [];
 let bonusIndex = 0;
 
 function init() {
@@ -77,7 +125,7 @@ function update(dt) {
 
 }
 
-export function main() {
+function main() {
     let now = Date.now();
     let dt = (now - lastState.lastTime) / 1000.0;
     if (score.getTeam1() < 3 && score.getTeam2() < 3) {

@@ -1,5 +1,7 @@
-import { POINT_STATES, POINT_TYPES, DEFAULT_POINTS } from './const';
-export class Point {
+// import { POINT_STATES, POINT_TYPES, DEFAULT_POINTS } from './const';
+const POINT_STATES, POINT_TYPES, DEFAULT_POINTS = require('./const.js');
+module.exports = Point;
+class Point {
     constructor(i)  {
         this.id = DEFAULT_POINTS.id[i];
         this.x = DEFAULT_POINTS.x[i];

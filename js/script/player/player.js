@@ -1,8 +1,14 @@
-import {Player} from "./model.js";
-import {DEFAULT_PLAYERS} from "./const.js";
-import {ctx, activePlayers} from "../../script.js";
+// import {Player} from "./model.js";
+// import {DEFAULT_PLAYERS} from "./const.js";
+// import {ctx, activePlayers} from "../../script.js";
+const Player = require('./model.js');
+const DEFAULT_PLAYERS = require('./const.js');
+const ctx, activePlayers = require('../../script.js');
+module.exports = handleInput, initPlayerAnimation, drawPlayer, createPlayers, 
+    setPlayerWithIdAsMain, getMyPlayer, resetAllPlayers, findPlayerBySocketId, 
+    updatePlayers, updatePlayer;
 
-export function handleInput(dt) {
+function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
     if (input.isDown('LEFT') || input.isDown('a')) {
         player.moveOn(player.getSpeed() * dt * (-1), 0);
@@ -25,7 +31,7 @@ export function handleInput(dt) {
     }
 }
 
-export function initPlayerAnimation() {
+function initPlayerAnimation() {
    /* console.log(activePlayers)*/
     activePlayers.forEach(player => {
         player.setImage("./src/assets/sprites/player/right.png");
@@ -35,7 +41,7 @@ export function initPlayerAnimation() {
     })
 }
 
-export function drawPlayer(activePlayers) {
+function drawPlayer(activePlayers) {
     const spriteSize = 64;
     const endAnimation = 9;
     const mainPlayer = getMyPlayer(activePlayers);
@@ -104,7 +110,7 @@ export function drawPlayer(activePlayers) {
     });
 }
 
-export function createPlayers(clients) {
+function createPlayers(clients) {
     let createdPlayers = [];
     for (let i = 0; i < clients.length; i++) {
         createdPlayers[i] = new Player(i, clients[i]);
@@ -112,17 +118,17 @@ export function createPlayers(clients) {
     return createdPlayers
 }
 
-export function setPlayerWithIdAsMain(id) {
+function setPlayerWithIdAsMain(id) {
     const player = findPlayerBySocketId(id);
     player.setMain(true);
 }
 
-export function getMyPlayer(players) {
+function getMyPlayer(players) {
     const mainPlayer = players.find((player) => player.main);
     return mainPlayer || {};
 }
 
-export function resetAllPlayers() {
+function resetAllPlayers() {
     for (let i = 0; i < activePlayers.length; i++) {
         activePlayers[i].setX(DEFAULT_PLAYERS.x[i]);
         activePlayers[i].setY(DEFAULT_PLAYERS.y[i]);
@@ -134,7 +140,7 @@ export function resetAllPlayers() {
     }
 }
 
-export function findPlayerBySocketId(socketId) {
+function findPlayerBySocketId(socketId) {
     let foundPlayer;
     activePlayers.forEach(player => {
         if (player.getId() === socketId) {
@@ -143,7 +149,7 @@ export function findPlayerBySocketId(socketId) {
     });
     return foundPlayer;
 }
-export function updatePlayers(players, socketId) {
+function updatePlayers(players, socketId) {
     players.forEach(playerFromServer => {
         if (playerFromServer.id !== socketId) {
             const player = findPlayerBySocketId(playerFromServer.id);

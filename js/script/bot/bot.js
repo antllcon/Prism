@@ -1,12 +1,18 @@
-import { BOT_STATES, DEFAULT_BOTS } from './const.js';
-import { Bot } from './model.js';
-import { GAME } from '../game/model.js';
-import { Point } from '../point/model.js';
-import { POINT_STATES } from '../point/const.js';
-import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script.js';
-import { yellow } from '../game/const.js';
+// import { BOT_STATES, DEFAULT_BOTS } from './const.js';
+// import { Bot } from './model.js';
+// import { GAME } from '../game/model.js';
+// import { Point } from '../point/model.js';
+// import { POINT_STATES } from '../point/const.js';
+// import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script.js';
+const BOT_STATES, DEFAULT_BOTS = require('./const.js');
+const Bot = require('./model.js');
+const GAME = require('../game/model.js');
+const Point = require('../point/model.js');
+const POINT_STATES = require('../point/const.js');
+const ctx, activeBots, requiredBots, points, readyBonuses = require('../../script.js');
+module.exports = createBots, initBotAnimation, drawBot, resetAllBots, botMovement, updateBots;
 
-export function createBots(requiredBots) {
+function createBots(requiredBots) {
     //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов
     const createdBots = [];
     let i = 0;
@@ -17,7 +23,7 @@ export function createBots(requiredBots) {
     return createdBots;
 }
 
-export function initBotAnimation() {
+function initBotAnimation() {
     activeBots.forEach(bot => {
         bot.setImage("./src/assets/sprites/bot/left.png");
         bot.getImage().onload = () => {
@@ -26,7 +32,7 @@ export function initBotAnimation() {
     })
 }
 // переписать drawcharacters
-export function drawBot() {
+function drawBot() {
 
     const endAnimation = 9;
     const spriteSize = 64;
@@ -81,7 +87,7 @@ export function drawBot() {
     });
 }
 
-export function resetAllBots() {
+function resetAllBots() {
     for (let i = 0; i < activeBots.length; i++) {
         activeBots[i].setX(DEFAULT_BOTS.x[requiredBots[i]]);
         activeBots[i].setY(DEFAULT_BOTS.y[requiredBots[i]]);
@@ -89,7 +95,7 @@ export function resetAllBots() {
     }
 }
 
-export function botMovement(dt) {
+function botMovement(dt) {
     activeBots.forEach((bot) => {
         let loopIndexInactive = 0;
         let loopIndexActive = 0;
@@ -298,7 +304,7 @@ function findBotById(bots, id) {
     });
     return foundBot;
 }
-export function updateBots(bots) {
+function updateBots(bots) {
     data[bots].foreach(botFromServer => {
         const bot = findBotById(botFromServer.id);
         updateBot(bot, botFromServer);

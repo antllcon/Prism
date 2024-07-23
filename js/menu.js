@@ -1,4 +1,5 @@
-import { playMenuTheme } from './sound/menuThemeAudio';
+// import { playMenuTheme } from './sound/menuThemeAudio';
+const playMenuTheme = require('./sound/menuThemeAudio');
 
 const socket = io();
 

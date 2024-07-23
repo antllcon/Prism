@@ -1,10 +1,12 @@
-import {COLORS} from "../game/const";
+// import {COLORS} from "../game/const";
+const COLORS = require('../game/const');
+module.exports = scoreAlphaState, Score, score, SCORE;
 
-export const scoreAlphaState = {
+const scoreAlphaState = {
     scoreAlpha: 0.2,
 };
 
-export class Score{
+class Score{
     constructor(){
         this.color = COLORS.WHITE;
         this.team1 = 0;
@@ -31,9 +33,9 @@ export class Score{
     }
 }
 
-export const score = new Score();
+const score = new Score();
 
-export let SCORE = {
+let SCORE = {
     color: COLORS.WHITE,
     team1: 0,
     team2: 0,

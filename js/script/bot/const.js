@@ -1,14 +1,16 @@
-import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const.js";
+// import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const.js";
+const canvasHeight, canvasWidth, TEAM_STATES, COLORS = require('../game/const.js');
+module.exports = BOT_STATES, DURATION_DISABILITY, DEFAULT_BOTS;
 
-export const BOT_STATES = {
+const BOT_STATES = {
     ACTIVE: 'active',
     STUNNED: 'stunned',
     DEAD: 'dead',
 };
 
-export const DURATION_DISABILITY = 5000;
+const DURATION_DISABILITY = 5000;
 
-export const DEFAULT_BOTS = {
+const DEFAULT_BOTS = {
     id: [0, 1, 2, 3],
     type: "bot",
     x: [50, 50, canvasWidth - 50, canvasWidth - 50],
@@ -23,5 +25,3 @@ export const DEFAULT_BOTS = {
     tick: 0,
     direction: "left"
 }
-// export const botStartX = canvasWidth - 50;
-// export const botStartY = canvasHeight / 2;

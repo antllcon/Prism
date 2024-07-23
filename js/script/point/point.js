@@ -1,11 +1,16 @@
 // noinspection JSPrimitiveTypeWrapperUsage
 
-import { Point } from './model';
-import { POINT_STATES, POINT_TYPES, pointsAmount } from './const';
-import { ctx, points } from '../../script';
-import { gameState } from '../game/model';
+// import { Point } from './model';
+// import { POINT_STATES, POINT_TYPES, pointsAmount } from './const';
+// import { ctx, points } from '../../script';
+// import { gameState } from '../game/model';
+const Point = require('./model.js');
+const POINT_STATES, POINT_TYPES, pointsAmount = require('./const.js');
+const ctx, points = require('../../script.js');
+const gameState = require('../game/model.js');
+modeule.exports = createPoints, resetPoints, drawPoints, movePoint, updateVisibilityPoints;
 
-export function createPoints() {
+function createPoints() {
     for (let i = 0; i < pointsAmount; i++) {
         points[i] = new Point(i);
     }
@@ -30,11 +35,11 @@ export function createPoints() {
 //     };
 // }
 
-export function resetPoints() {
+function resetPoints() {
     createPoints();
 }
 
-export function resetPoint(point) {
+function resetPoint(point) {
     let id = point.getId();
     point = new Point(id);
     // const defaultPoint = DEFAULT_POINTS[index];
@@ -52,7 +57,7 @@ export function resetPoint(point) {
     // point.speed = defaultPoint.speed;
 }
 
-export function drawPoints() {
+function drawPoints() {
     points.forEach(point => {
         if (point.isActive()) {
             // console.log(point);
@@ -133,7 +138,7 @@ export function drawPoints() {
     });
 }
 
-export function movePoint(point, dt) {
+function movePoint(point, dt) {
     if (point.getId() === 2 || point.getId() === 3) {
         if (point.getX() <= 50) {
             point.setDirection(0);
@@ -145,7 +150,7 @@ export function movePoint(point, dt) {
     point.moveOn(Math.cos(point.getDirection()) * point.getSpeed() * dt, 0);
 }
 
-export function updateVisibilityPoints(point) {
+function updateVisibilityPoints(point) {
     if (point.isTypeTrigraph()) {
         if (
             5 <= point.getId() &&

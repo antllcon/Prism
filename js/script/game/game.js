@@ -1,20 +1,31 @@
-import {game, lastState} from "./model";
-import {COLORS, TEAM_STATES} from "./const";
-import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point"
-import {getMyPlayer, resetAllPlayers} from "../player/player"
-import {resetAllBots} from "../bot/bot"
-import {score, scoreAlphaState} from "../score/model";
-import {fadeOutScore} from "../score/score";
-import {playCountdown} from "../../sound/countdownAudio";
-import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main, ctx, activePlayers, activeBots, points} from "../../script";
+// import {game, lastState} from "./model";
+// import {COLORS, TEAM_STATES} from "./const";
+// import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point"
+// import {getMyPlayer, resetAllPlayers} from "../player/player"
+// import {resetAllBots} from "../bot/bot"
+// import {score, scoreAlphaState} from "../score/model";
+// import {fadeOutScore} from "../score/score";
+// import {playCountdown} from "../../sound/countdownAudio";
+// import {playGameTheme} from "../../sound/gameThemeAudio";
+// import {main, ctx, activePlayers, activeBots, points} from "../../script";
+const game, lastState = require('./model.js');
+const COLORS, TEAM_STATES = require('./const.js');
+const movePoint, resetPoint, resetPoints, updateVisibilityPoints = require('../point/point.js');
+const getMyPlayer, resetAllPlayers = require('../player/player.js');
+const resetAllBots = require('../bot/bot.js');
+const score, scoreAlphaState = require('../score/model.js');
+const fadeOutScore = require('../score/score.js');
+const playCountdown = require('../../sound/countdownAudio.js');
+const playGameTheme = require('../../sound/gameThemeAudio');
+const main, ctx, activePlayers, activeBots, points = require('../../script');
+module.exports = drawBackground, countdown, updateEntities;
 
-export function drawBackground() {
+function drawBackground() {
     ctx.fillStyle = game.getBackground();
     ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
 }
 
-export function countdown() {
+function countdown() {
     //let inputTime = Date.now(); // возможно вообще не нужен
     const background = document.createElement('div');
     const countdownGif = document.createElement('img');
@@ -80,7 +91,7 @@ function resetLevel() {
     setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
 }
 
-export function updateEntities(dt) {
+function updateEntities(dt) {
     const player = getMyPlayer(activePlayers);
     player.updateAbilityScale(dt);
     activeBots.forEach(bot => {

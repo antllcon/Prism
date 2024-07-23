@@ -1,7 +1,10 @@
-import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const.js';
-import { ctx } from '../../script.js';
+// import { BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY } from './const.js';
+// import { ctx } from '../../script.js';
+const BOT_STATES, DEFAULT_BOTS, DURATION_DISABILITY = require('./const.js');
+const ctx = require('../../script.js');
+module.exports = Bot;
 
-export class Bot {
+class Bot {
     constructor(i) {
         this.id = DEFAULT_BOTS.id[i];
         this.type = DEFAULT_BOTS.type;

@@ -1,14 +1,17 @@
-import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const";
+// import {canvasHeight, canvasWidth, TEAM_STATES, COLORS} from "../game/const";
+const canvasHeight, canvasWidth, TEAM_STATES, COLORS = require('../game/const.js');
+module.exports = PLAYER_STATES, DURATION_DISABILITY, DEFAULT_PLAYERS, ABILITY_SCALE_SPEED,
+    MAX_SPEED, ABILITY_SCALE_MAX, ABILITY_DURATION, ABILITY_SPEED_MULTIPLAYER;
 
-export const PLAYER_STATES = {
+const PLAYER_STATES = {
     ACTIVE: 'active',
     STUNNED: 'stunned',
     DEAD: 'dead',
 };
 
-export const DURATION_DISABILITY = 5000;
+const DURATION_DISABILITY = 5000;
 
-export const DEFAULT_PLAYERS = {
+const DEFAULT_PLAYERS = {
     type: "player",
     x: [50, 50, canvasWidth - 50, canvasWidth - 50],
     y: [
@@ -29,8 +32,8 @@ export const DEFAULT_PLAYERS = {
     isAllowedToJostle: false,
 };
 
-export const ABILITY_SCALE_SPEED = 10;
-export const MAX_SPEED = 1200;
-export const ABILITY_SCALE_MAX = 50;
-export const ABILITY_DURATION = 10000;
-export const ABILITY_SPEED_MULTIPLAYER = 3;
+const ABILITY_SCALE_SPEED = 10;
+const MAX_SPEED = 1200;
+const ABILITY_SCALE_MAX = 50;
+const ABILITY_DURATION = 10000;
+const ABILITY_SPEED_MULTIPLAYER = 3;

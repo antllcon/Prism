@@ -1,11 +1,19 @@
-import { Bot } from '../script/bot/model';
-import { BOT_STATES } from '../script/bot/const';
-import { getMyPlayer } from '../script/player/player';
-import { Player } from '../script/player/model';
-import { activePlayers, activeBots, points } from '../script';
-import { POINT_STATES, POINT_TYPES } from '../script/point/const';
-import { GAME, game } from '../script/game/model';
-import { SIZE as SIZE_PB } from '../script/player/progressBar/progressBar';
+// import { Bot } from '../script/bot/model';
+// import { BOT_STATES } from '../script/bot/const';
+// import { getMyPlayer } from '../script/player/player';
+// import { Player } from '../script/player/model';
+// import { activePlayers, activeBots, points } from '../script';
+// import { POINT_STATES, POINT_TYPES } from '../script/point/const';
+// import { GAME, game } from '../script/game/model';
+// import { SIZE as SIZE_PB } from '../script/player/progressBar/progressBar';
+const Bot = require('../script/bot/model.js');
+const BOT_STATES = require('../script/bot/const.js');
+const getMyPlayer = require('../script/player/player.js');
+const Player = require('../script/player/model.js');
+const activePlayers, activeBots, points = rquire('../script.js');
+const POINT_STATES, POINT_TYPES = require('../script/point/const.js');
+const GAME, game = require('../script/game/model.js');
+module.exports = checkCollisions;
 
 function checkLaserBounds() {
 
@@ -231,7 +239,7 @@ function checkPlayerBotBonusCollision(bonuses) {
     });
 }
 
-export function checkCollisions(bonuses) {
+function checkCollisions(bonuses) {
     checkBorderGameBounds();
     checkLaserBounds();
     checkPlayerBotCollisions();

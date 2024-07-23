@@ -1,4 +1,7 @@
 const updatePlayer = require('../script/player/player.js');
+const { createBots } = require('../script/bot/bot.js');
+const { requiredBots } = require('../script.js');
+const { createPlayers, findPlayerBySocketId } = require('../script/player/player.js');
 
 const express = require('express');
 const app = express();
@@ -9,9 +12,7 @@ const io = require('socket.io')(http);
 
 const Client = require('./client.js');
 const Player = require('./player.js');
-const { createBots } = require('../script/bot/bot.js');
-const { requiredBots } = require('../script.js');
-const { createPlayers, findPlayerBySocketId } = require('../script/player/player.js');
+
 const RECONNECT_TIMEOUT = 60 * 1000; // 60 секунд
 const staticDistPath = path.resolve(path.dirname(__dirname), '../dist');
 app.use(express.static(staticDistPath));

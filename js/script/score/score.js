@@ -1,8 +1,11 @@
-import {scoreAlphaState} from "./model";
-import {score} from "./model";
-import {ctx} from "../../script";
+// import {scoreAlphaState} from "./model";
+// import {score} from "./model";
+// import {ctx} from "../../script";
+const scoreAlphaState, score = require('./model');
+const ctx = require('../../script');
+module.exports = drawScore, drawFinalScore, fadeOutScore;
 
-export function drawScore() {
+function drawScore() {
     ctx.save();
     ctx.globalAlpha = scoreAlphaState.scoreAlpha;
     ctx.fillStyle = score.getColor();
@@ -11,7 +14,7 @@ export function drawScore() {
     ctx.restore();
 }
 
-export function drawFinalScore() {
+function drawFinalScore() {
     ctx.save();
     ctx.globalAlpha = scoreAlphaState.scoreAlpha;
     ctx.fillStyle = score.getColor();
@@ -20,7 +23,7 @@ export function drawFinalScore() {
     ctx.restore();
 }
 
-export function fadeOutScore() {
+function fadeOutScore() {
     // Уменьшаем уровень прозрачности каждые 100 миллисекунд
     const fadeOutInterval = setInterval(() => {
         scoreAlphaState.scoreAlpha -= 0.02; // Регулируйте значение для изменения скорости исчезания

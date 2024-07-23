@@ -1,7 +1,9 @@
-import { ctx } from "./script";
-import {getMyPlayer} from "./script/player/player";
-
-export function drawCharacters(arrayCharacters) {
+// import { ctx } from "./script";
+// import {getMyPlayer} from "./script/player/player";
+const ctx = require('./script.js');
+const getMyPlayer = require('./script/player/player');
+modeule.exports = drawCharacters;
+function drawCharacters(arrayCharacters) {
     const endAnimation = 9;
     const spriteSize = 64;
 
