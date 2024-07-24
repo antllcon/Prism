@@ -399,9 +399,6 @@ function initEventListeners() {
                 console.log('room is ready отработало');
                 window.location.href = "game.html";
             })
-            setTimeout(() => {
-                window.location.href = "game.html";
-            }, 1000);
         });
     }
 

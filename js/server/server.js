@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
     socket.on('playerIsReady', () => {
         const roomId  = findRoomBySocketId(socket.id);
         const client = findClientBySocketId(roomId, socket.id);
-        if (client.getIsReady()) {
+        if (!client.getIsReady()) {
             client.setReady();
         } else {
             client.setNotReady();
@@ -93,6 +93,8 @@ io.on('connection', (socket) => {
             }
         })
         if (amountReadyClients === rooms[roomId].clients.length) {
+            console.log(rooms[roomId].clients, 'clients');
+            console.log('клиентов нет');
             io.to(parseInt(roomId)).emit('roomIsReady')
         }
     })
