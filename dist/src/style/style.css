@@ -4,11 +4,25 @@
 }
 
 body {
-    background-image: url('../assets/img/fon.gif');
+    background-image: url('../assets/img/fon.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    width: 100%;
     overflow-y: hidden;
     overflow-x: hidden;
 }
 
+.canvas-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
 .canvas {
-    margin: 120px 120px 120px 120px;
+    margin: 0 auto;
+    width: 75%;
+    height: 75%;
 }
