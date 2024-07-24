@@ -41,13 +41,11 @@ function init() {
     connect();
     //console.log(activeBots);
    // console.log('activeBots');
-
     createPoints();
 }
 
 function render() {
     ctx.clearRect(0, 0, game.getWidth(), game.getHeight());
-    drawBackground();
     drawScore();
     drawBonuses();
     drawPoints();
