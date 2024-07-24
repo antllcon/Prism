@@ -1,4 +1,3 @@
-import {BaseBonus} from "./BaseBonus";
 import {StopBonus} from "./StopOppositeTeamBonus";
 import {AvailableBonus, BonusType} from "./types";
 import {DeactivatePointsBonus} from "./DeactivatePointsBonus";
@@ -13,7 +12,7 @@ export const BONUS_TYPES: BonusType[] = [
     { type: 'invisibleLaser', class: InvisibleLaserBonus, size: 30, color: '#ff7300' ,  team: 'neutral' },
 ];
 
-// появление каждые 30 секунд
+// появление каждые 30 секунд,
 // а еще нужно поправить движение бота, сначала убегание, потом захват бонуса
 
 export const AVAILABLE_BONUSES: AvailableBonus[] = [

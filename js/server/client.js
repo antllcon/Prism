@@ -10,6 +10,7 @@ module.exports = class Client {
         this.team = '';
         this.color = '';
         this.name = 0;
+        this.position = null;
     }
 
     getSocketId() {

@@ -51,6 +51,7 @@ function resetLevel() {
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(scoreGif);
+
     if (score.getTeam1() === 0 && score.getTeam2() === 1) {
         scoreGif.src = "./src/assets/img/0-1.gif";
     }

@@ -205,8 +205,6 @@ function setStyleCard(index) {
 }
 
 function addBot(button) {
-    countP += 1;
-    console.log('state of countP', countP)
     const waitingCard = button.closest('.player');
     const botTemplate = document.getElementById('bot-template');
     if (botTemplate && waitingCard) {
@@ -221,15 +219,14 @@ function addBot(button) {
             setStyleCard(2);
             setStyleCard(3);
         }, 0);
-        const playerCountElement = document.querySelector('.lobby-count-players');
-        playerCountElement.textContent = `PLAYERS ${countP}/4`;
+
         return card;
     }
 }
 
 function transitPlayer(button) {
     let buttonGetWait = currentPlayerCard.querySelector('.get-wait');
-    countP += 1;
+
     let card = addWait(buttonGetWait);
     initCardEventListener(card);
 
@@ -253,7 +250,6 @@ function transitPlayer(button) {
 }
 
 function addPlayer(button) {
-    countP += 1;
     const playerTemplate = document.getElementById('player-template');
     const waitingCard = button.closest('.player');
     if (playerTemplate && waitingCard) {
@@ -268,13 +264,11 @@ function addPlayer(button) {
             setStyleCard(2);
             setStyleCard(3);
         }, 0);
-
         return card;
     }
 }
 
 function addWait(button) {
-    countP -= 1;
     const tempCard = button.closest('.player');
     const waitTemplate = document.getElementById('waiting-template');
     if (waitTemplate && tempCard) {
@@ -289,10 +283,7 @@ function addWait(button) {
             setStyleCard(2);
             setStyleCard(3);
         }, 0);
-        const playerCountElement = document.querySelector('.lobby-count-players');
-        playerCountElement.textContent = `PLAYERS ${countP}/4`;
 
-        console.log(countP, 'countP после уменьшения')
         return card;
     }
 }
@@ -331,11 +322,11 @@ function initCardEventListener(card, indexCount) {
     }
 
     if (buttonGetPlayer) {
-        buttonGetPlayer.addEventListener('click', function () {
+        buttonGetPlayer.addEventListener('click', () => {
             currentPlayerCard = transitPlayer(buttonGetPlayer);
-
+            console.log(indexCount, 'INDEX COUNT')
             if (currentPlayerCard) {
-                initCardEventListener(currentPlayerCard, indexCount);
+               initCardEventListener(currentPlayerCard, indexCount);
             }
         });
     }
@@ -414,10 +405,7 @@ function initCardEventListener(card, indexCount) {
         if (buttonLobby) {
             buttonLobby.addEventListener('click', () => {
 
-                /*socket.on('updatePlayerLobbyInfo', (playerCount) => {
-                    console.log('Player count updated:', playerCount);
-                    countP = playerCount;
-                });*/
+
                 socket.emit('createRoom');
                 socket.on('requestForCookie', () => {
                     sendCookie();
@@ -460,7 +448,7 @@ function initCardEventListener(card, indexCount) {
     }
 
         if (cardBox) {
-            currentPlayerCard = loadCard('player-template');
+            loadCard('waiting-template');
             loadCard('waiting-template');
             loadCard('waiting-template');
             loadCard('waiting-template');
@@ -527,21 +515,62 @@ function setCookie() {
     console.log(document.cookie, '   cookie set');
 }
 function generateId() {
-    let uniqueId = Math.random().toString().slice(-6);
-    uniqueId = parseInt(uniqueId);
-    return uniqueId;
+    return Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
 }
 
 socket.on('updatePlayerLobbyInfo', (clientsInfo) => {
-    console.log('clientsInfo updated:', clientsInfo);
-
+    // console.log('clientsInfo updated:', Array(...clientsInfo), Array(...clientsInfo).length);
+    //console.log(clientsInfo.pop(), 'clientsInfo.pop()')
     loadHTML('lobby.html', (html) => {
         callback(html);
-        const playerCountElement = document.querySelector('.lobby-count-players');
-        playerCountElement.textContent = "PLAYERS ${clientsInfo} / 4";
-        transitionToPage('lobby.html');
+        // transitionToPage('lobby.html');
+        let playerCountElement = document.querySelector('.lobby-count-players');
+        playerCountElement.textContent = `PLAYERS ${clientsInfo.length} / 4`;
+        const chapterCodeElement = document.querySelector('.chapter__code');
+        chapterCodeElement.textContent = globalRoomId;
+
+        initEventListeners();
+        initPlayerInfo(clientsInfo);
+        // clientsInfo.forEach((client) => {
+        //     if (client.socketId === socket.id) {
+        //         currentPlayerCard = card;
+        //         console.log(currentPlayerCard, 'ura');
+        //     }
+        // });
     });
 });
+
+function initPlayerInfo(clientsInfo) {
+    let cards = document.querySelectorAll('.player');
+    clientsInfo.forEach((client, i) => {
+        if (client.position === null) {
+            let card = cards[i];
+            let buttonWithBot = card.querySelector('.get-bot');
+            if (buttonWithBot) {
+                addPlayer(buttonWithBot);
+                console.log(i, 'НОМЕР КАРТОЧКИ')
+                socket.emit('changeLobbyPosition', i);
+            }
+        } else {
+            let card = cards[client.position]
+            let buttonWithBot = card.querySelector('.get-bot');
+            if (buttonWithBot) {
+                addPlayer(buttonWithBot);
+            }
+        }
+    });
+    cards = document.querySelectorAll('.player');
+    clientsInfo.forEach((client, i) => {
+        let card = cards[i];
+        if (client.socketId === socket.id) {
+            currentPlayerCard = card;
+        }
+    });
+
+
+
+}
+
 
 
 loadHTML('menu.html', (html) => {
@@ -551,25 +580,17 @@ loadHTML('menu.html', (html) => {
     initEventListeners();
 
 });
-socket.on('updatePlayerLobbyInfo', (playerCount) => {
-    console.log('Player count updated:', playerCount);
-    countP = playerCount;
-    loadHTML('lobby.html', (html) => {
-        callback(html);
-        const playerCountElement = document.querySelector('.lobby-count-players');
-        playerCountElement.textContent = `PLAYERS ${countP}/4`;
-        transitionToPage('lobby.html');
-    });
-});
 
+
+/*
 socket.on('updatePlayerCards', (players) => {
     console.log('мы зашли в updatePlayerCards')
     console.log(players)
     console.log("players in updatePlayerCards")
 
-/*    const containerCard = document.getElementById('card-container');
+/!*    const containerCard = document.getElementById('card-container');
     console.log(containerCard);
-    console.log("players in updatePlayerCards");*/
+    console.log("players in updatePlayerCards");*!/
     // loadHTML('lobby.html', (html) => {
     //     callback(html);
     // });
@@ -584,4 +605,4 @@ socket.on('updatePlayerCards', (players) => {
         }
     });
 
-});
+});*/

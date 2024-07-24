@@ -55,7 +55,16 @@ io.on('connection', (socket) => {
         }
     });
 
-    
+    socket.on('changeLobbyPosition', (position) => {
+        const roomId = findRoomBySocketId(socket.id);
+        rooms[roomId].clients.forEach((client) => {
+            if (client.socketId === socket.id) {
+                client.position = position;
+                console.log(client, 'client')
+            }
+        })
+        io.to(parseInt(roomId)).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
+    })
 
     // socket.on('requestOnDataFromServer', () => {
     //     socket.emit('dataFromServer', players);
@@ -352,10 +361,9 @@ function joinRoom(roomId, socket) {
             socket.emit('joinedRoom', roomId);
             console.log(rooms[roomId].clients.length)
             console.log("rooms[roomId].clients.length")
-            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
-            console.log(socket.id, ' joined the room ', roomId);
-            io.to(socket.id).emit('updatePlayerCards', rooms[roomId]);
-            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
+           // console.log(socket.id, ' joined the room ', roomId);
+            //io.to(socket.id).emit('updatePlayerCards', rooms[roomId]);
+            io.to(parseInt(roomId)).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
         } else {
             socket.emit('wrongId');
         }
