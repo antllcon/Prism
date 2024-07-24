@@ -2,13 +2,13 @@ const BotFunctions = require('./bot/bot.js');
 const botFunctions = new BotFunctions;
 const PlayerFunctions = require('./player/player.js');
 const playerFunctions = new PlayerFunctions;
+const createBonuses = require('./bonuses/bonusFunctions.js')
 
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const path = require('path');
 const io = require('socket.io')(http);
-
 
 const Client = require('./client.js');
 const Player = require('./player.js');
@@ -35,7 +35,8 @@ io.on('connection', (socket) => {
             rooms[roomId] = {
                 clients: [],
                 players: [],
-                bots: []
+                bots: [],
+                bonuses: []
             };
             console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
@@ -135,6 +136,21 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('requestForBonuses', () => {
+        console.log("requestForBonuses")
+        const roomId = findRoomBySocketId(socket.id);
+        if (rooms[roomId]) {
+            const client = findClientBySocketId(roomId, socket.id);
+            client.setNeedForPlayer();//?
+           // rooms[roomId].bonuses = playerFunctions.createPlayers(clientsSockets);
+            rooms[roomId].bonuses = createBonuses();
+            console.log( rooms[roomId].bonuses)
+            console.log("requestForBonuses 2")
+        }
+    })
+
+
+
     socket.on('redirected', () => {
         console.log('произошел redirect');
         socket.emit('requestForCookie');
@@ -221,7 +237,7 @@ io.on('connection', (socket) => {
 
 // Запуск сервера
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 7050;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

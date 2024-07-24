@@ -1,5 +1,5 @@
 const BaseBonus = require("./BaseBonus");
-const { points } = require("../../script");
+//const { points } = require("../../script");
 
 class DeactivatePointsBonus extends BaseBonus {
     constructor(x, y, size, color, team) {
@@ -7,14 +7,14 @@ class DeactivatePointsBonus extends BaseBonus {
         this.type = 'deactivatePoints';
     }
 
-    catch(entity) {
+  /*  catch(entity) {
         super.catch(entity);
         points.forEach(point => {
             if (point.isActive()) {
                 point.deactivate();
             }
         });
-    }
+    }*/
 }
 
 module.exports = DeactivatePointsBonus;

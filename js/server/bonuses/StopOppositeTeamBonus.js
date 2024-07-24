@@ -1,16 +1,11 @@
 const BaseBonus = require("./BaseBonus");
-const { BOT_STATES } = require("../bot/const");
-const { PLAYER_STATES, DURATION_DISABILITY } = require("../player/const");
-
 class StopBonus extends BaseBonus {
     constructor(x, y, size, color, team) {
         super(x, y, size, color, team);
         this.type = 'stopBot';
     }
-
-    catch(entity, activeBots, activePlayers) {
+   /* catch(entity, activeBots, activePlayers) {
         super.catch(entity);
-
         if (entity.team === 'purple') {
             activeBots.forEach(bot => {
                 if (bot.team !== entity.team && bot.team !== 'purple') {
@@ -19,7 +14,6 @@ class StopBonus extends BaseBonus {
                     bot.state = BOT_STATES.STUNNED;
                 }
             });
-
             activePlayers.forEach(player => {
                 if (player.team !== entity.team) {
                     player.stunnedUntil = Date.now() + DURATION_DISABILITY;
@@ -35,7 +29,6 @@ class StopBonus extends BaseBonus {
                     bot.state = BOT_STATES.STUNNED;
                 }
             });
-
             activePlayers.forEach(player => {
                 if (player.team !== entity.team) {
                     player.stunnedUntil = Date.now() + DURATION_DISABILITY;
@@ -44,7 +37,6 @@ class StopBonus extends BaseBonus {
                 }
             });
         }
-    }
+    }*/
 }
-
 module.exports = StopBonus;
