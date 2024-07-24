@@ -182,7 +182,7 @@ export function botMovement(dt) {
         }
 
         function moveBotRandom() {
-            let angle = 2 * Math.PI; // МОЖНО ПОТОМ
+            let angle = Math.PI; // МОЖНО ПОТОМ
             const speed = bot.getSpeed() * dt;
             const dx = speed * Math.cos(angle);
             const dy = speed * Math.sin(angle);

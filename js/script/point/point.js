@@ -2,7 +2,6 @@ import {Point} from "./model";
 import {DEFAULT_POINTS, POINT_TYPES, pointsAmount} from "./const";
 import {ctx, points} from "../../script";
 import {GAME_TIME} from "../game/const";
-import {DEFAULT_BOTS} from "../bot/const";
 
 export function createPoints() {
     for (let i = 0; i < pointsAmount; i++) {
@@ -12,19 +11,15 @@ export function createPoints() {
 
 export function resetPoints() {
     for (let i = 0; i < points.length; i++) {
-        points[i].setX(DEFAULT_POINTS.x[i]);
-        points[i].setY(DEFAULT_BOTS.y[i]);
-        points[i].setState(DEFAULT_POINTS.state[i]);
+        points[i].setState(DEFAULT_POINTS.state);
     }
 }
-
 
 export function initPointAnimation() {
     points.forEach(point => {
         point.setImage("./src/assets/sprites/point/line-point.png");
         point.getImage().onload = () => {
             point.setLoad(true);
-            console.log(point.getLoad());
         };
     });
 }
@@ -110,17 +105,17 @@ export function drawPoints() {
 }
 
 
-export function movePoint(dt) {
-    if (point.getId() === 2 || point.getId() === 3) {
-        if (point.getX() <= 50) {
-            point.setDirection(0); // угол 0 радиан означает движение вправо
-        }
-        if (point.getX() >= 1760) {
-            point.setDirection(Math.PI); // угол PI радиан означает движение влево
-        }
-    }
-    point.moveOn(Math.cos(point.getDirection()) * point.getSpeed() * dt, 0);
-}
+// export function movePoint(dt) {
+//     if (point.getId() === 2 || point.getId() === 3) {
+//         if (point.getX() <= 50) {
+//             point.setDirection(0); // угол 0 радиан означает движение вправо
+//         }
+//         if (point.getX() >= 1760) {
+//             point.setDirection(Math.PI); // угол PI радиан означает движение влево
+//         }
+//     }
+//     point.moveOn(Math.cos(point.getDirection()) * point.getSpeed() * dt, 0);
+// }
 
 export function updateVisibilityPoints(point) {
     if (point.isTypeTrigraph()) {

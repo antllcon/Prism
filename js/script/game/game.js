@@ -25,7 +25,7 @@ function resetLevel() {
     //scoreGif.src = getScoreGifUrl(teamOneScore, teamTwoScore);
 
     if (score.getTeamOne() === 0 && score.getTeamTwo() === 1) {
-        scoreGif.src = "./src/assets/img/0-1.gif";
+        scoreGif.src = "./src/assets/img/0-3.gif";
     }
     if (score.getTeamOne() === 0 && score.getTeamTwo() === 2) {
         scoreGif.src = "./src/assets/img/0-2.gif";
@@ -61,15 +61,13 @@ function resetLevel() {
     setTimeout(fadeOutScore, 6800);
 }
 
-function backgroundTemplate(background, gif) {
+export function backgroundTemplate(background, gif) {
     document.body.appendChild(background);
     background.classList.add("background-countdown");
     background.appendChild(gif);
 }
 
 let existCountdown = true;
-let existRound = true;
-
 
 export function updateEntities(dt, now) {
     if (game.getState() === GAME_STATES.start) {
@@ -128,19 +126,18 @@ export function updateEntities(dt, now) {
     }
     // должно переходить в pause
     if (game.getState() === GAME_STATES.round) {
-        console.log(score.getTeamOne(), score.getTeamTwo());
+        // console.log("Раунд закончился", score.getTeamOne(), score.getTeamTwo());
         if (score.isVictoryScore()) {
             setTimeout(() => {
                 game.setState(GAME_STATES.victory);
             }, 1500);
         } else {
+            console.log("готов");
             resetLevel();
         }
     }
     if (game.getState() === GAME_STATES.victory) {
-        drawBackground();
         drawFinalScore();
-        //window.location.href = 'index.html';
         // должно показывать счет и переходить на index
     }
 }
