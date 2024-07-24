@@ -7,8 +7,10 @@ import {score, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main, ctx, activePlayers, activeBots, points} from "../../script";
+import {main, ctx, activePlayers, activeBots, points, socket} from "../../script";
 import { updateAbilityScale } from "../player/progressBar/progressBar";
+import { BOT_STATES } from "../bot/const";
+import { PLAYER_STATES } from "../player/const";
 
 export function drawBackground() {
     ctx.fillStyle = game.getBackground();
@@ -34,8 +36,18 @@ export function countdown() {
 }
 
 function resetLevel() {
-    resetAllPlayers();
-    resetAllBots();
+    socket.emit('resetPlayers')
+    socket.on('playersReset', (players) => {
+        let playersFromServer = [];
+        playersFromServer = players;
+        activePlayers = playersFromServer;
+        console.log(JSON.stringify(activePlayers, null, 2));
+    })
+    socket.emit('resetBots')
+    socket.on('botsReset', (bots) => {
+        activeBots = [];
+        activeBots = bots;
+    })
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
     // Сбрасываем параметры всех точек
@@ -70,6 +82,8 @@ function resetLevel() {
     if (score.getTeam1() === 2 && score.getTeam2() === 2) {
         scoreGif.src = "./src/assets/img/2-2.gif";
     }
+    console.log(score.getTeam1(), 'score team 1');
+    console.log(score.getTeam2(), 'score team 2');
 
     setTimeout(() => {
         background.remove();
@@ -83,29 +97,33 @@ function resetLevel() {
 
 export function updateEntities(dt) {
     const player = getMyPlayer(activePlayers);
+    let isSomeoneDead = false;
     updateAbilityScale(dt, player);
     activeBots.forEach(bot => {
-        if (bot.isDead) {
+        if (bot.state === BOT_STATES.DEAD) {
             if (bot.team === TEAM_STATES.PURPLE) {
                 score.increaseTeamYellow()
             }
             if (bot.team === TEAM_STATES.YELLOW) {
                 score.increaseTeamPurple()
             }
-            resetLevel();
+            isSomeoneDead = true;
         }
     });
     activePlayers.forEach(player => {
-        if (player.isDead) {
+        if (player.state === PLAYER_STATES.DEAD) {
             if (player.team === TEAM_STATES.PURPLE) {
                 score.increaseTeamYellow()
             }
             if (player.team === TEAM_STATES.YELLOW) {
                 score.increaseTeamPurple()
             }
-            resetLevel();
+            isSomeoneDead = true;
         }
     });
+    if (isSomeoneDead) {
+        resetLevel();
+    }
     points.forEach(point => {
         if (point.isActive()) {
             if (Date.now() - point.getActivationTime() < point.getExistTime()) {
