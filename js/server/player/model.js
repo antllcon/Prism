@@ -49,7 +49,11 @@ class Player {
 
     isAlive() { return this.state === PlayerConsts.PLAYER_STATES.ACTIVE; }
     isDead() { return this.state === PlayerConsts.PLAYER_STATES.DEAD; }
-    moveOn(x, y) { this.x += x; this.y += y; }
+    moveOn(x, y) {
+        this.x += x;
+        this.y += y;
+        //this.progressBar.updatePosition(x, y)
+    }
     die() { this.state = PlayerConsts.PLAYER_STATES.DEAD; }
     setColor(color) { this.color = color; }
     renaissance() { this.state = PlayerConsts.PLAYER_STATES.ACTIVE; }

@@ -1,40 +1,45 @@
-import {DEFAULT_PLAYERS, ABILITY_SCALE_MAX, MAX_SPEED, PLAYER_STATES} from "./const";
+import {DEFAULT_PLAYERS, ABILITY_SCALE_MAX, MAX_SPEED, PLAYER_STATES, ABILITY_DURATION} from "./const";
 import {ctx, activePlayers} from "../../script";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
     if (input.isDown('LEFT') || input.isDown('a')) {
-        //player.moveOn(player.speed * dt * (-1), 0);
-        //player.progressBar.updatePosition(player.speed * dt * (-1), 0);
-        //updatePosition - is not a function
+
         player.x += player.speed * dt * (-1);
         player.y += 0;
         player.direction = "left";
+
+        player.progressBar.x = player.x;
+        player.progressBar.y = player.y - 50;
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
-        //player.moveOn(player.speed * dt, 0);
+
 
         player.x += player.speed * dt;
         player.y += 0;
-
-
         player.direction = "right";
+
+        player.progressBar.x = player.x;
+        player.progressBar.y = player.y - 50;
     }
     if (input.isDown('DOWN') || input.isDown('s')) {
-        //player.moveOn(0, player.speed * dt);
 
         player.x += 0;
         player.y +=  player.speed * dt;
 
         player.direction = "down";
+
+        player.progressBar.x = player.x;
+        player.progressBar.y = player.y - 50;
     }
     if (input.isDown('UP') || input.isDown('w')) {
-        //player.moveOn(0, player.speed * dt * (-1));
 
         player.x += 0;
         player.y += player.speed * dt * (-1);
-
+        player.progressBar.x = player.x;
+        player.progressBar.y = player.y - 50;
         player.direction = "up";
+
     }
     if (input.isDown('f') || input.isDown('F')) {
         if (player.abilityScale >= ABILITY_SCALE_MAX) {

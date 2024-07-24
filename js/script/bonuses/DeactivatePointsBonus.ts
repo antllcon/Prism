@@ -9,6 +9,7 @@ export class DeactivatePointsBonus extends BaseBonus {
     }
 
     public catch(entity: { id: string; team: string }): void {
+        console.log('произошел catch для DeactivatePointsBonus');
         super.catch(entity);
         points.forEach(point => {
             if (point.isActive()) {
