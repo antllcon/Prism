@@ -173,12 +173,10 @@ function updatePlayer(player, transPlayer) {
 
 // Запуск сервера
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3003;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
-
-
 
 function generateId() {
     let uniqueId = Math.random().toString().slice(-6);

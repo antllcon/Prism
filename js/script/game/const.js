@@ -1,17 +1,14 @@
+
 export const canvasWidth = 1820;
 export const canvasHeight = 1024;
 export const yellow = "#f8df5c";
 export const purple = "#8f23dc";
-export const gray = "#666";
-export const dark = "#333";
-export const black = "#111";
-export const white = "#FFF";
 
 export const GAME_STATES = {
-    START: "start",
-    PLAY: "play",
-    VICTORY: "victory",
-    PAUSE: "pause"
+    start: "start",
+    play: "play",
+    victory: "victory",
+    round: "round"
 }
 
 export const TEAM_STATES = {
@@ -28,3 +25,11 @@ export const COLORS = {
     BLACK: "#111",
     WHITE: "#FFF",
 }
+
+export const LAST_TIME = {
+    lastTime: 0
+};
+
+export const GAME_TIME = {
+    gameTime: 0
+};

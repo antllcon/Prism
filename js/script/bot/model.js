@@ -125,6 +125,9 @@ export class Bot {
         return this.state === BOT_STATES.DEAD;
     }
 
+    isStunned() {
+        return this.state === BOT_STATES.STUNNED;
+    }
 
     moveOn(x, y) {
         this.x += x;

@@ -1,6 +1,5 @@
 import {PLAYER_STATES, DEFAULT_PLAYERS} from "./const";
 
-
 export class Player {
     constructor(i, id, socket_id) {
         this.type = DEFAULT_PLAYERS.type;
@@ -13,11 +12,6 @@ export class Player {
         this.team = DEFAULT_PLAYERS.team[i];
         this.color = DEFAULT_PLAYERS.color[i];
         this.state = DEFAULT_PLAYERS.state;
-        this.image = new Image();
-        this.load = DEFAULT_PLAYERS.load;
-        this.count = DEFAULT_PLAYERS.count;
-        this.tick = DEFAULT_PLAYERS.tick;
-        this.direction = DEFAULT_PLAYERS.direction;
         this.image = new Image();
         this.load = DEFAULT_PLAYERS.load;
         this.count = DEFAULT_PLAYERS.count;
@@ -51,6 +45,7 @@ export class Player {
 
     isAlive() { return this.state === PLAYER_STATES.ACTIVE; }
     isDead() { return this.state === PLAYER_STATES.DEAD; }
+    isStunned() { return this.state === PLAYER_STATES.STUNNED; }
     moveOn(x, y) { this.x += x; this.y += y; }
     die() { this.state = PLAYER_STATES.DEAD; }
     setColor(color) { this.color = color; }
@@ -72,3 +67,4 @@ export class Player {
         this.state = state;
     }
 }
+

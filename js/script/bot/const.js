@@ -10,16 +10,18 @@ export const DEFAULT_BOTS = {
     type: "bot",
     x: [50, 50, canvasWidth - 50, canvasWidth - 50],
     y: [canvasHeight / 3, canvasHeight * 2 / 3, canvasHeight / 3, canvasHeight * 2 / 3],
-    size: 10,
-    speed: 300,
+    size: 24,
+    speed: 200,
     team: [TEAM_STATES.PURPLE, TEAM_STATES.PURPLE, TEAM_STATES.YELLOW, TEAM_STATES.YELLOW],
     color: [COLORS.PURPLE, COLORS.PURPLE, COLORS.YELLOW, COLORS.YELLOW],
     state: BOT_STATES.ACTIVE,
     load: false,
     count: 0,
     tick: 0,
-    direction: "left",
-    state: BOT_STATES.ACTIVE,
+    direction: "left"
 }
 // export const botStartX = canvasWidth - 50;
 // export const botStartY = canvasHeight / 2;
+
+
+/// 1428 809

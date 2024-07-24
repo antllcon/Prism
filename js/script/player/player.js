@@ -31,7 +31,6 @@ export function handleInput(dt) {
 }
 
 export function initPlayerAnimation() {
-    console.log('зашли в инит плеерс анимейшн');
 
     activePlayers.forEach(player => {
         player.setImage("./src/assets/sprites/player/right.png");
@@ -40,29 +39,13 @@ export function initPlayerAnimation() {
         };
     });
 }
-//
-// export function drawPlayer(activePlayers) {
-//     const spriteSize = 64;
-//     const endAnimation = 9;
-//
-//     activePlayers.forEach(player => {
-//
-//         if (player.isDead()) {
-//             setTimeout(() => {
-//                 player.setX(10);
-//                 player.setY(10);
-//                 player.renaissance();
-//             }, 1000);
-//         }
-//     });
-// }
 
 export function createPlayers(clients, myId) {
     let createdPlayers = [];
     for (let i = 0; i < clients.length; i++) {
         createdPlayers[i] = new Player(i, clients[i], myId);
     }
-    return createdPlayers
+    return createdPlayers;
 }
 
 export function getMyPlayer(players) {
@@ -70,7 +53,7 @@ export function getMyPlayer(players) {
     return mainPlayer || {};
 }
 
-export function resetAllPlayers() {
+export function resetPlayers() {
     for (let i = 0; i < activePlayers.length; i++) {
         activePlayers[i].setX(DEFAULT_PLAYERS.x[i]);
         activePlayers[i].setY(DEFAULT_PLAYERS.y[i]);

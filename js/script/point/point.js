@@ -1,7 +1,8 @@
 import {Point} from "./model";
-import {pointsAmount} from "./const";
+import {DEFAULT_POINTS, POINT_TYPES, pointsAmount} from "./const";
 import {ctx, points} from "../../script";
-import {gameState} from "../game/model";
+import {GAME_TIME} from "../game/const";
+import {DEFAULT_BOTS} from "../bot/const";
 
 export function createPoints() {
     for (let i = 0; i < pointsAmount; i++) {
@@ -10,34 +11,30 @@ export function createPoints() {
 }
 
 export function resetPoints() {
-    createPoints();
+    for (let i = 0; i < points.length; i++) {
+        points[i].setX(DEFAULT_POINTS.x[i]);
+        points[i].setY(DEFAULT_BOTS.y[i]);
+        points[i].setState(DEFAULT_POINTS.state[i]);
+    }
 }
 
-export function resetPoint(point) {
-    let id = point.getId();
-    point = new Point(id);
-    // const defaultPoint = DEFAULT_POINTS[index];
-    // point.id = defaultPoint.id;
-    // point.y = defaultPoint.y;
-    // point.width = defaultPoint.width;
-    // point.height = defaultPoint.height;
-    // point.size = defaultPoint.size;
-    // point.type = defaultPoint.type;
-    // point.team = defaultPoint.team;
-    // point.color = defaultPoint.color;
-    // point.existTime = defaultPoint.existTime;
-    // point.activationTime = null;
-    // point.state = POINT_STATES.INACTIVE;
-    // point.speed = defaultPoint.speed;
+
+export function initPointAnimation() {
+    points.forEach(point => {
+        point.setImage("./src/assets/sprites/point/line-point.png");
+        point.getImage().onload = () => {
+            point.setLoad(true);
+            console.log(point.getLoad());
+        };
+    });
 }
 
 export function drawPoints() {
+    let spriteSize = 50;
+    // let endAnimation = 1;
     points.forEach(point => {
         if (point.isActive()) {
-            // console.log(point);
-            // console.log(point.isTypeTrigraph());
             if (point.isTypeCross()) {
-                // console.log('cross');
                 point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
@@ -53,7 +50,6 @@ export function drawPoints() {
                 ctx.restore();
             }
             if (point.isTypeTrigraph()) {
-                // console.log('trigraph');
                 point.setAngle(point.getAngle() + Math.PI / 180);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
@@ -81,34 +77,40 @@ export function drawPoints() {
                 ctx.stroke();
                 ctx.restore();
             }
-
         }
         if (point.isInactive()) {
             point.setAngle(point.getAngle() + Math.PI / 180);
             ctx.save();
-            ctx.translate(point.getX() + point.getWidth() / 2, point.getY() + point.getHeight() / 2);
+            ctx.translate(point.getX(), point.getY());
             ctx.rotate(point.getAngle());
-            ctx.fillStyle = point.getColor();
-            ctx.fillRect(-point.getWidth() / 2, -point.getHeight() / 2, point.getWidth(), point.getHeight());
-            ctx.restore();
-        }
-        if (point.isInvisible()) {
-
+            if (point.getLoad()) {
+                let spritePath;
+                switch (point.getType()) {
+                    case POINT_TYPES.CROSS:
+                        spritePath = "./src/assets/sprites/point/cross-point.png";
+                        break;
+                    case POINT_TYPES.TRIGRAPH:
+                        spritePath = "./src/assets/sprites/point/triradius-point.png";
+                        break;
+                    case POINT_TYPES.LINE:
+                        spritePath = "./src/assets/sprites/point/line-point.png";
+                        break;
+                }
+                if (spritePath) {
+                    point.setImage(spritePath);
+                }
+                ctx.drawImage(point.getImage(), -spriteSize  / 2, -spriteSize / 2);
+            } else {
+                ctx.fillStyle = point.getColor();
+                ctx.fillRect(-point.getWidth() / 2, -point.getHeight() / 2, point.getWidth(), point.getHeight());
+            }
+            ctx.restore()
         }
     });
 }
 
-// export function respawnPoint(point) {
-//     if (point.id !== 0 && point.id !== 1) {
-//         point.state = POINT_STATES.INVISIBLE;
-//     }
-//     point.team = TEAM_STATES.NONE;
-//     point.activationTime = null;
-//     point.color = gray;
-//     point.height = 10;
-// }
 
-export function movePoint(point, dt) {
+export function movePoint(dt) {
     if (point.getId() === 2 || point.getId() === 3) {
         if (point.getX() <= 50) {
             point.setDirection(0); // угол 0 радиан означает движение вправо
@@ -122,14 +124,14 @@ export function movePoint(point, dt) {
 
 export function updateVisibilityPoints(point) {
     if (point.isTypeTrigraph()) {
-        if (5 <= point.getId() && point.getId() <= 12 && gameState.gameTime > 3) {
+        if (5 <= point.getId() && point.getId() <= 12 && GAME_TIME.gameTime > 3) {
             point.setInactive();
         }
-        if (2 <= point.getId() && point.getId() <= 3 && gameState.gameTime > 6) {
+        if (2 <= point.getId() && point.getId() <= 3 && GAME_TIME.gameTime > 6) {
             point.setInactive();
         }
     }
-    if (point.isTypeCross && gameState.gameTime > 15) {
+    if (point.isTypeCross && GAME_TIME.gameTime > 15) {
         point.setInactive();
     }
 }

@@ -7,9 +7,6 @@ export function drawCharacters(arrayCharacters) {
 
     arrayCharacters.forEach(character => {
         if (character.isAlive()) {
-            ctx.fillStyle = character.getColor();
-            ctx.fillRect(character.getX(), character.getY(), character.getSize(), character.getSize());
-
             if (character.getLoad()) {
                 let spritePath;
                 if (character.getType() === 'bot') {
@@ -52,6 +49,9 @@ export function drawCharacters(arrayCharacters) {
                 if (character.getCount() === endAnimation) {
                     character.setCount(0);
                 }
+            } else {
+                ctx.fillStyle = character.getColor();
+                ctx.fillRect(character.getX(), character.getY(), character.getSize(), character.getSize());
             }
         }
     });
