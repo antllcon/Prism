@@ -38,7 +38,7 @@ export function drawFinalScore() {
 
     setTimeout(() => {
         window.location.href = "index.html";
-    }, 5000)
+    }, 4500)
 }
 
 // export function getScoreGifUrl(teamOneScore, teamTwoScore) {

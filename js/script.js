@@ -11,7 +11,7 @@ import {
     updatePlayer
 } from "./script/player/player";
 import {drawScore, fadeOutScore} from "./script/score/score";
-import {drawBackground, updateEntities} from "./script/game/game";
+import {updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
 import {drawCharacters} from "./view";
 import {io} from "socket.io-client";

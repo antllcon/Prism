@@ -25,7 +25,7 @@ function resetLevel() {
     //scoreGif.src = getScoreGifUrl(teamOneScore, teamTwoScore);
 
     if (score.getTeamOne() === 0 && score.getTeamTwo() === 1) {
-        scoreGif.src = "./src/assets/img/0-3.gif";
+        scoreGif.src = "./src/assets/img/0-1.gif";
     }
     if (score.getTeamOne() === 0 && score.getTeamTwo() === 2) {
         scoreGif.src = "./src/assets/img/0-2.gif";
