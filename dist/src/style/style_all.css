@@ -75,10 +75,8 @@ body {
     border-top: 10px solid white;
     border-left: 10px solid white;
     cursor: default;
-}
-
-.title-input-animation {
     animation: 2s alternate animateTitle;
+    text-decoration: none;
 }
 
 .name-game-lobby {

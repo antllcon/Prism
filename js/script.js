@@ -2,14 +2,7 @@ import {GAME_TIME, LAST_TIME} from "./script/game/const";
 import {game} from "./script/game/model";
 import {drawPoints, createPoints, initPointAnimation} from "./script/point/point";
 import {botMovement, createBots, initBotAnimation} from "./script/bot/bot";
-import {
-    handleInput,
-    createPlayers,
-    getMyPlayer,
-    initPlayerAnimation,
-    findPlayerBySocketId,
-    updatePlayer
-} from "./script/player/player";
+import {handleInput, createPlayers, getMyPlayer, initPlayerAnimation, findPlayerBySocketId, updatePlayer} from "./script/player/player";
 import {drawScore, fadeOutScore} from "./script/score/score";
 import {updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";

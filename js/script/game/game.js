@@ -5,15 +5,16 @@ import {resetPlayers} from "../player/player"
 import {resetBots} from "../bot/bot"
 import {score} from "../score/model";
 import {fadeOutScore, drawFinalScore} from "../score/score";
-import {ctx, activePlayers, activeBots, points} from "../../script";
+import {activePlayers, activeBots, points} from "../../script";
 import {DEFAULT_POINTS, pointHeightActivationSize} from "../point/const";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
+import {playDeathPlayer} from "../../sound/deathPlayerSound";
 
-export function drawBackground() {
-    ctx.fillStyle = game.getBackground();
-    ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
-}
+// export function drawBackground() {
+//     ctx.fillStyle = game.getBackground();
+//     ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
+// }
 
 function resetLevel() {
     const background = document.createElement("div");
@@ -107,6 +108,7 @@ export function updateEntities(dt, now) {
                 if (player.getTeam() === TEAM_STATES.PURPLE) {
                     score.increaseTeamTwo();
                 } else if (player.getTeam() === TEAM_STATES.YELLOW) {
+                    playDeathPlayer();
                     score.increaseTeamOne();
                 }
                 console.log("Все игроки мертвы!");
@@ -119,6 +121,7 @@ export function updateEntities(dt, now) {
                 if (bot.getTeam() === TEAM_STATES.PURPLE) {
                     score.increaseTeamTwo();
                 } else if (bot.getTeam() === TEAM_STATES.YELLOW) {
+                    playDeathPlayer();
                     score.increaseTeamOne();
                 }
                 console.log("Боты умерли");
@@ -151,12 +154,12 @@ export function countdown() {
     const countdownGif = document.createElement("img");
     backgroundTemplate(background, countdownGif);
     countdownGif.src = "./src/assets/img/cat.gif";
-    // playCountdown(); - музыка
-    // playGameTheme(); - музыка
+    playCountdown();
+    playGameTheme();
     // if (dt < 1) { // костыль
     //     // if (countdownTimeExist >= 0) {
     //     //     countdownTimeExist -= 1;
-    // } else
+    // }
     setTimeout(() => {
         background.remove();
         countdownGif.remove();

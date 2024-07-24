@@ -2,6 +2,7 @@ import {getMyPlayer} from "../script/player/player";
 import {activePlayers, activeBots, points} from "../script";
 import {game} from "../script/game/model";
 import {PLAYER_STATES} from "../script/player/const";
+import {playLaserAppearance} from "../sound/laserAppearanceAudio";
 
 function checkLaserBounds() {
 
@@ -35,7 +36,7 @@ function checkLaserBounds() {
                     if (point.isInactive() &&
                         rotatedX > -point.getWidth() && rotatedX < point.getWidth() &&
                         rotatedY > -point.getHeight() && rotatedY < point.getHeight()) {
-                        //laserAppearanceAudio.play();
+                        playLaserAppearance();
                         point.setActive();
                         // point.team = PLAYER.team; // Убедитесь, что присваивается команда игрока
                         point.setTeam(player.getTeam());
@@ -100,7 +101,7 @@ function checkLaserBounds() {
                         if (point.isInactive() &&
                             rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
                             rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
-                            //laserAppearanceAudio.play();
+                            playLaserAppearance();
                             point.setActive();
                             point.setTeam(bot.getTeam()); // Убедитесь, что присваивается команда бота
                             point.setActivationTime(Date.now());

@@ -484,5 +484,4 @@ loadHTML('menu.html', (html) => {
     playMenuTheme();
     loadToMainPageLink();
     initEventListeners();
-
 });
