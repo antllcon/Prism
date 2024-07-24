@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
                 bots: [],
                 bonuses: []
             };
-            console.log('Room created with id: ', roomId);
+            //console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
             rooms[roomId].bonuses = createBonuses();
         }
@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('произошел disconnect');
+        //console.log('произошел disconnect');
         socket.emit('requestForCookie');
         socket.on('sentCookie', (userId) => {
             let roomId = findRoomByUserId(socket.id);
@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
     socket.on('playerIsReady', () => {
         const roomId  = findRoomBySocketId(socket.id);
         const client = findClientBySocketId(roomId, socket.id);
-        if (client.getIsReady()) {
+        if (!client.getIsReady()) {
             client.setReady();
         } else {
             client.setNotReady();
@@ -93,6 +93,8 @@ io.on('connection', (socket) => {
             }
         })
         if (amountReadyClients === rooms[roomId].clients.length) {
+            console.log(rooms[roomId].clients, 'clients');
+            console.log('клиентов нет');
             io.to(parseInt(roomId)).emit('roomIsReady')
         }
     })
@@ -266,7 +268,7 @@ io.on('connection', (socket) => {
 
 // Запуск сервера
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

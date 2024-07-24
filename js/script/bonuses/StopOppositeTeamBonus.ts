@@ -11,7 +11,7 @@ export class StopBonus extends BaseBonus {
 //@ts-ignore
     public catch(entity: { id: string, team: string }, activeBots, activePlayers): void {
         super.catch(entity);
-        console.log('произошел catch для StopBonus');
+        //console.log('произошел catch для StopBonus');
         if (entity.team === 'purple') {
 //@ts-ignore
             activeBots.forEach(bot => {

@@ -11,7 +11,7 @@ export class ChangeColorBonus extends BaseBonus {
 
     public catch(entity: { id: string; team: string }): void {
         super.catch(entity);
-        console.log('произошел catch для ChangeColorBonus');
+        //console.log('произошел catch для ChangeColorBonus');
         points.forEach(point => {
             if (point.getColor() === 'yellow') {
                     point.setColor('purple');

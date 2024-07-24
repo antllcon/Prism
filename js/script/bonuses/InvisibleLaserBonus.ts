@@ -13,7 +13,7 @@ export class InvisibleLaserBonus extends BaseBonus {
         super.catch(entity);
         //время невидимости сделать
         //визуально затемнить
-        console.log('произошел catch для InvisibleLaserBonus');
+        //console.log('произошел catch для InvisibleLaserBonus');
         const player = getMyPlayer(activePlayers);
         player.invisibleLasers = true;
         setTimeout(() => {

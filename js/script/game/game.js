@@ -8,14 +8,10 @@ import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
 import {main, ctx, activePlayers, activeBots, points, socket} from "../../script";
-import { updateAbilityScale } from "../player/progressBar/progressBar";
-import { BOT_STATES } from "../bot/const";
-import { PLAYER_STATES } from "../player/const";
-
-export function drawBackground() {
-    ctx.fillStyle = game.getBackground();
-    ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
-}
+import {updateAbilityScale} from "../player/progressBar/progressBar";
+import {BOT_STATES} from "../bot/const";
+import {PLAYER_STATES} from "../player/const";
+import {DEFAULT_POINTS, pointHeightActivationSize} from "../point/const";
 
 export function countdown() {
     //let inputTime = Date.now(); // возможно вообще не нужен
@@ -36,18 +32,16 @@ export function countdown() {
 }
 
 function resetLevel() {
-   /* socket.emit('resetPlayers')
-    socket.on('playersReset', (players) => {
-        activePlayers.forEach((activePlayer) => {
-            activePlayer
-        })
-    })*/
+    /* socket.emit('resetPlayers')
+     socket.on('playersReset', (players) => {
+         activePlayers.forEach((activePlayer) => {
+             activePlayer
+         })
+     })*/
 
     resetAllPlayers();
     resetAllBots();
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
-
-    resetPoints();
 
     let background = document.createElement("div");
     let scoreGif = document.createElement("img");
@@ -78,12 +72,13 @@ function resetLevel() {
     if (score.getTeam1() === 2 && score.getTeam2() === 2) {
         scoreGif.src = "./src/assets/img/2-2.gif";
     }
-    console.log(score.getTeam1(), 'score team 1');
-    console.log(score.getTeam2(), 'score team 2');
+    //console.log(score.getTeam1(), 'score team 1');
+    //console.log(score.getTeam2(), 'score team 2');
 
     setTimeout(() => {
         background.remove();
         scoreGif.remove();
+        resetPoints();
         lastState.lastTime = Date.now();
         main();
     }, 2000)
@@ -91,7 +86,7 @@ function resetLevel() {
     setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
 }
 
-export function updateEntities(dt) {
+export function updateEntities(dt, now) {
     const player = getMyPlayer(activePlayers);
     let isSomeoneDead = false;
     updateAbilityScale(dt, player);
@@ -122,26 +117,24 @@ export function updateEntities(dt) {
     }
     points.forEach(point => {
         if (point.isActive()) {
-            if (Date.now() - point.getActivationTime() < point.getExistTime()) {
+            if (now - point.getActivationTime() < point.getExistTime()) {
                 if (point.getTeam() === TEAM_STATES.PURPLE) {
                     point.setColor(COLORS.PURPLE);
                 }
                 if (point.getTeam() === TEAM_STATES.YELLOW) {
                     point.setColor(COLORS.YELLOW);
                 }
-                point.setHeight(10);
-                point.setWidth(10);
+                point.setHeight(pointHeightActivationSize);
             } else {
                 point.setInactive();
-                point.setColor(COLORS.GRAY)
-                resetPoint(point);
             }
         }
+        if (point.isInactive()) {
+            point.setColor(DEFAULT_POINTS.color);
+            point.setHeight(DEFAULT_POINTS.height);
+        }
         if (point.isInvisible()) {
-            updateVisibilityPoints(point);
+            // updateVisibilityPoints(point);
         }
-        if (point.isActive() || point.isInactive()) {
-            movePoint(point, dt);
-        }
-    })
+    });
 }

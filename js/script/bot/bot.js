@@ -38,7 +38,7 @@ export function drawBot() {
         if (bot.state === BOT_STATES.ACTIVE || bot.state === BOT_STATES.STUNNED) {
             ctx.fillStyle = bot.color;
             ctx.fillRect(bot.x, bot.y, bot.size, bot.size);
-            console.log(bot.count);
+            //console.log(bot.count);
             if (bot.load === true) {
                 switch (bot.direction) {
                     case "up":
@@ -117,9 +117,9 @@ export function updateBots(activeBots, bots) {
     //     const bot = findBotById(botFromServer.id);
     //     updateBot(bot, botFromServer);
     // })
-    console.log(activeBots, 'before');
+    //console.log(activeBots, 'before');
     activeBots = bots;
-    console.log(activeBots, 'after');
+    //console.log(activeBots, 'after');
 }
 function updateBot(bot, botFromServer) {
     botFromServer.y ? bot.setY(botFromServer.y) : null;
