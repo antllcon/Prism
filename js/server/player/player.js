@@ -49,9 +49,9 @@ class PlayerFunctions {
     }
     
     updatePlayer(player, playerFromServer) {
-        playerFromServer.getX() ? player.setX(playerFromServer.getX()) : null;
-        playerFromServer.getY() ? player.setY(playerFromServer.getY()) : null;
-        playerFromServer.getState() ? player.setState(playerFromServer.getState()) : null;
+        playerFromServer.x ? player.setX(playerFromServer.x) : null;
+        playerFromServer.y ? player.setY(playerFromServer.y) : null;
+        playerFromServer.state ? player.setState(playerFromServer.state) : null;
     }
 }
 

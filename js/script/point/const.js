@@ -1,7 +1,7 @@
 import {COLORS, TEAM_STATES} from "../game/const";
 import {canvasWidth, canvasHeight} from "../game/const"
 
-export const pointsAmount = 13;
+export const pointsAmount = 2;
 export const POINT_STATES = {
     ACTIVE: 'active',
     INACTIVE: 'inactive',

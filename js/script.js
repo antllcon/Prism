@@ -1,5 +1,3 @@
-// в константе socket должен лежать айди игрока
-// и по каждому айди мы должны его рисовать
 import {game, gameState, lastState} from "./script/game/model";
 import {drawPoints, createPoints} from "./script/point/point";
 import {botMovement, drawBot, createBots, initBotAnimation, updateBots} from "./script/bot/bot";
@@ -19,6 +17,7 @@ import {checkCollisions} from "./controller/bounds";
 import {drawCharacters} from "./view";
 import {io} from "socket.io-client";
 import {drawBonuses, initBonuses} from "./script/bonuses/bonus";
+import {BaseBonus} from "./script/bonuses/BaseBonus";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -29,23 +28,21 @@ const socket = io();
 export let activePlayers = [];
 export let points = [];
 export let bonuses = [];
+export let readyBonuses = [];
 export let requiredBots = [2, 3];
 export let activeBots = [];
 
 
 let lastBonusAddTime = 0;
 const bonusAddInterval = 3;
-export let readyBonuses = [];
 let bonusIndex = 0;
 
 function init() {
     connect();
-    activeBots = createBots(requiredBots);
-    console.log(activeBots);
-    console.log('activeBots');
-    bonuses = initBonuses();
+    //console.log(activeBots);
+   // console.log('activeBots');
+
     createPoints();
-    initBotAnimation();
 }
 
 function render() {
@@ -54,8 +51,7 @@ function render() {
     drawScore();
     drawBonuses();
     drawPoints();
-    drawCharacters(activePlayers);
-    drawCharacters(activeBots);
+    drawCharacters(activePlayers.concat(activeBots));
 }
 
 function update(dt) {
@@ -65,10 +61,14 @@ function update(dt) {
     dataExchange(dt);
     checkCollisions(readyBonuses);
     updateEntities(dt);
+
+
+    //отрисовка через readybonuses
     lastBonusAddTime += dt;
     if (lastBonusAddTime >= bonusAddInterval) {
         if (bonusIndex < bonuses.length) {
             readyBonuses.push(bonuses[bonusIndex]);
+            console.log("+1 в readybonuses")
             bonusIndex++;
         } else {
             console.log("No more bonuses to add.");
@@ -102,8 +102,25 @@ function connect() {
         sendCookie();
         initPlayers();
         initBots();
-        // activePlayers = createPlayers(players, socket_id);
+        initServerBonuses();
     });
+}
+
+
+//initBotAnimation(); bonuses
+
+function initServerBonuses()
+{
+    socket.emit('requestForBonuses');
+    socket.on('sendBonuses', (serverBonuses) => {
+        console.log('sendBonuses вызван')
+        bonuses = serverBonuses;
+        console.log(bonuses, 'before classes')
+
+        bonuses = initBonuses(bonuses);
+        console.log(bonuses)
+
+    })
 }
 
 
@@ -111,10 +128,10 @@ function initPlayers() {
     socket.emit('requestForPlayers');
     console.log('sendPlayers не вызван');
     socket.on('sendPlayers', (players) => {
-        console.log('sendPlayers вызван')
+        //console.log('sendPlayers вызван')
         activePlayers = players;
         setPlayerWithIdAsMain(socket.id);
-        console.log(players, 'players from sendPlayers');
+        //console.log(players, 'players from sendPlayers');
         initPlayerAnimation()
     })
 }
@@ -122,7 +139,7 @@ function initPlayers() {
 function initBots() {
     socket.emit('requestForBots');
     socket.on('sendBots', (bots) => {
-        console.log(bots, 'bots from sendBots');
+        //console.log(bots, 'bots from sendBots');
         activeBots = bots;
         initBotAnimation();
     })
@@ -139,6 +156,7 @@ function sendDataToServer(dt) {
     let data = {
         player: getMyPlayer(activePlayers),
         points: points,
+        bonuses: readyBonuses,
         dt: dt
     };
     socket.emit('sendDataToServer', data);
@@ -160,7 +178,7 @@ function getDataFromServer() {
         // Получение массива данных
         // извлечение лазеров, ботов, игроков
         updatePlayers(data.players, socket.id);
-        updateBots(data.bots);
+        activeBots = data.bots;
     })
 }
 

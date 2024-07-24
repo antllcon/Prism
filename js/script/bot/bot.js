@@ -35,264 +35,75 @@ export function drawBot() {
     const spriteSize = 64;
 
     activeBots.forEach((bot) => {
-        if (bot.isAlive() || bot.isStunned()) {
-            ctx.fillStyle = bot.getColor();
-            ctx.fillRect(bot.getX(), bot.getY(), bot.getSize(), bot.getSize());
-            console.log(bot.getCount());
-            if (bot.getLoad() === true) {
-                switch (bot.getDirection()) {
+        if (bot.state === BOT_STATES.ACTIVE || bot.state === BOT_STATES.STUNNED) {
+            ctx.fillStyle = bot.color;
+            ctx.fillRect(bot.x, bot.y, bot.size, bot.size);
+            console.log(bot.count);
+            if (bot.load === true) {
+                switch (bot.direction) {
                     case "up":
-                        bot.setImage("./src/assets/sprites/bot/up.png");
+                        bot.image.src = "./src/assets/sprites/bot/up.png";
                         break;
                     case "down":
-                        bot.setImage("./src/assets/sprites/bot/down.png");
+                        bot.src = ("./src/assets/sprites/bot/down.png");
                         break;
                     case "left":
-                        bot.setImage("./src/assets/sprites/bot/left.png");
+                        bot.src = ("./src/assets/sprites/bot/left.png");
                         break;
                     case "right":
-                        bot.setImage("./src/assets/sprites/bot/right.png");
+                        bot.src = ("./src/assets/sprites/bot/right.png");
                         break;
                 }
                 ctx.drawImage(
-                    bot.getImage(),
-                    spriteSize * bot.getCount(),
+                    bot.image,
+                    spriteSize * bot.count,
                     0,
                     spriteSize,
                     spriteSize,
-                    bot.getX() - (spriteSize / 2 - bot.getSize() / 2),
-                    bot.getY() - (spriteSize / 2 - bot.getSize() / 2),
+                    bot.x - (spriteSize / 2 - bot.getSize() / 2),
+                    bot.y - (spriteSize / 2 - bot.getSize() / 2),
                     spriteSize,
                     spriteSize
                 );
-                bot.setTick(bot.getTick() + 1);
-                if (bot.getTick() >= 2) {
-                    bot.setCount(bot.getCount() + 1);
-                    bot.setTick(0);
+                bot.tick = (bot.tick + 1);
+                if (bot.tick >= 2) {
+                    bot.count = (bot.count + 1);
+                    bot.tick = (0);
                 }
             }
-            if (bot.getCount() === endAnimation) {
-                bot.setCount(0);
+            if (bot.count === endAnimation) {
+                bot.count = (0);
             }
         }
-        if (bot.isStunned() && bot.stunnedUntil < Date.now()) {
-            bot.recoverFromStunned();
+        if (bot.state === BOT_STATES.STUNNED && bot.stunnedUntil < Date.now()) {
+            bot.stunnedUntil = 0;
+            bot.speed = (DEFAULT_BOTS.speed);
+
+            if (bot.state === BOT_STATES.DEAD || bot.state === BOT_STATES.STUNNED) {
+                bot.state = BOT_STATES.ACTIVE;
         }
-        if (bot.isStunned()) {
-            bot.drawCountdown();
+        }
+        if (bot.state === BOT_STATES.STUNNED) {
+            const remainingTime = bot.stunnedUntil - Date.now();
+            const seconds = Math.floor(remainingTime / 1000);
+            const milliseconds = Math.floor((remainingTime % 1000) / 10);
+            const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
+            ctx.fillStyle = 'white';
+            ctx.font = '16px Arial';
+            ctx.fillText(countdownText, bot.x, bot.y - 30);
         }
     });
 }
 
 export function resetAllBots() {
     for (let i = 0; i < activeBots.length; i++) {
-        activeBots[i].setX(DEFAULT_BOTS.x[requiredBots[i]]);
-        activeBots[i].setY(DEFAULT_BOTS.y[requiredBots[i]]);
-        activeBots[i].renaissance();
+        activeBots[i].x = (DEFAULT_BOTS.x[requiredBots[i]]);
+        activeBots[i].y = (DEFAULT_BOTS.y[requiredBots[i]]);
+        activeBots[i].state = BOT_STATES.ACTIVE;
     }
 }
 
-export function botMovement(dt) {
-    activeBots.forEach((bot) => {
-        let loopIndexInactive = 0;
-        let loopIndexActive = 0;
-        let idInactive;
-        let dxMinInactive;
-        let dyMinInactive;
-        let hypMinInactive;
 
-        let idActive;
-        let dxMinActive;
-        let dyMinActive;
-        let hypMinActive;
-        let inRangeOfLaser;
-
-        let dxInactive;
-        let dxActive;
-        let dyInactive;
-        let dyActive;
-        findNearestPoint();
-        if (inRangeOfLaser) {
-            moveBotOutOfLaserSpiral();
-        }
-        moveBotToLaser();
-        getRightDirection();
-
-        function findNearestPoint() {
-            points.forEach((point) => {
-                findInactivePointAndCompare(point);
-                findActivePointInArea(point);
-            });
-        }
-
-        function findInactivePointAndCompare(point) {
-            if (point.isInactive()) {
-                if (loopIndexInactive === 0) {
-                    idInactive = 0;
-                    dxMinInactive = point.getX() - bot.getX();
-                    dyMinInactive = point.getY() - bot.getY();
-                    hypMinInactive = Math.sqrt(
-                        dxMinInactive ** 2 + dyMinInactive ** 2
-                    );
-                }
-                let dy;
-                let dx;
-
-                if (
-                    Math.abs(point.getY() + (GAME.height - bot.getY())) <
-                    Math.abs(point.getY() - bot.getY())
-                ) {
-                    dy = point.getY() + (GAME.height - bot.getY());
-                } else {
-                    dy = point.getY() - bot.getY();
-                }
-                if (
-                    Math.abs(point.getX() + (GAME.width - bot.getX())) <
-                    Math.abs(point.getX() - bot.getX())
-                ) {
-                    dx = point.getX() + (GAME.width - bot.getX());
-                } else {
-                    dx = point.getX() - bot.getX();
-                }
-                const hyp = Math.sqrt(dx ** 2 + dy ** 2);
-                if (hyp < hypMinInactive) {
-                    idInactive = point.id;
-                    dxMinInactive = dx;
-                    dyMinInactive = dy;
-                    hypMinInactive = hyp;
-                }
-                loopIndexInactive++;
-            }
-        }
-
-        function findActivePointInArea(point) {
-            if (point.isActive()) {
-                if (loopIndexActive === 0) {
-                    idInactive = 0;
-                    dxMinActive = point.getX() - bot.getX();
-                    dyMinActive = point.getY() - bot.getY();
-                    hypMinActive = Math.sqrt(
-                        dxMinActive ** 2 + dyMinActive ** 2
-                    );
-                }
-                const dx = point.getX() - bot.getX();
-                const dy = point.getY() - bot.getY();
-                const hyp = Math.sqrt(dx ** 2 + dy ** 2);
-                if (hyp < hypMinActive) {
-                    idActive = point.getId();
-                    dxMinActive = dx;
-                    dyMinActive = dy;
-                    hypMinActive = hyp;
-                }
-                inRangeOfLaser =
-                    hypMinActive - bot.getSize() * Math.sqrt(2) <
-                    point.getSize() / 2;
-                loopIndexActive++;
-            }
-        }
-
-        function moveBotToLaser() {
-            dxInactive =
-                ((bot.getSpeed() * dxMinInactive) / hypMinInactive) * dt;
-            dyInactive =
-                ((bot.getSpeed() * dyMinInactive) / hypMinInactive) * dt;
-        }
-
-        function moveBotOutOfLaserSpiral() {
-            const angle = Math.atan2(dyMinActive, dxMinActive);
-            const radialSpeed = bot.getSpeed() * dt;
-            const angularSpeed = (bot.getSpeed() * dt) / hypMinActive;
-            dxActive =
-                angularSpeed * Math.sin(angle) * hypMinActive -
-                radialSpeed * Math.cos(angle);
-            dyActive =
-                -1 *
-                (radialSpeed * Math.sin(angle) +
-                    angularSpeed * Math.cos(angle) * hypMinActive);
-        }
-
-        function getRightDirection() {
-            let closestBonus = null;
-            let closestDistance = Infinity;
-
-            readyBonuses.forEach((bonus) => {
-                const dx = bot.x - bonus.getX();
-                const dy = bot.y - bonus.getY();
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestBonus = bonus;
-                }
-            });
-
-            if (closestBonus) {
-                const dxBonus = closestBonus.getX() - bot.x;
-                const dyBonus = closestBonus.getY() - bot.y;
-                const angleToBonus = Math.atan2(dyBonus, dxBonus);
-                const speed = bot.getSpeed() * dt;
-
-                bot.moveOn(
-                    speed * Math.cos(angleToBonus),
-                    speed * Math.sin(angleToBonus)
-                );
-            } else {
-            if (inRangeOfLaser) {
-                if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
-                    if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
-                        bot.moveOn(dxActive + dxInactive, dyActive + dyInactive);
-                    } else {
-                        const angle = Math.atan2(dyActive + dyInactive, dxActive + dxInactive);
-                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
-                    }
-                }
-                if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive < 0)) {
-                    if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive) ** 2) < bot.getSpeed() * dt) {
-                        bot.moveOn(dxActive + dxInactive, dyActive);
-                    } else {
-                        const angle = Math.atan2(dyActive, dxActive + dxInactive);
-                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
-                    }
-                }
-                if ((dxActive * dxInactive < 0) && (dyActive * dyInactive >= 0)) {
-                    if (Math.sqrt((dxActive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
-                        bot.moveOn(dxActive, dyActive + dyInactive);
-                    } else {
-                        const angle = Math.atan2(dyActive + dyInactive, dxActive);
-                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
-                    }
-                }
-                if ((dxActive * dxInactive < 0) && (dyActive * dyInactive < 0)) {
-                    if (Math.sqrt((dxActive) ** 2 + (dyActive) ** 2) < bot.getSpeed() * dt) {
-                        bot.moveOn(dxActive, dyActive);
-                    } else {
-                        const angle = Math.atan2(dyActive, dxActive);
-                        bot.moveOn(bot.getSpeed() * dt * Math.cos(angle), bot.getSpeed() * dt * Math.sin(angle));
-                    }
-                }
-            } else {
-                bot.moveOn(dxInactive, dyInactive);
-            }
-            updateBotDirection(bot, dxInactive, dyInactive); // Добавляем обновление направления
-        }
-
-        function updateBotDirection(bot, dx, dy) {
-            if (Math.abs(dx) > Math.abs(dy)) {
-                if (dx > 0) {
-                    bot.setDirection("right");
-                } else {
-                    bot.setDirection("left");
-                }
-            } else {
-                if (dy > 0) {
-                    bot.setDirection("down");
-                } else {
-                    bot.setDirection("up");
-                }
-            }
-        }}
-    });
-}
 function findBotById(bots, id) {
     let foundBot;
     bots.forEach(bot => {
@@ -301,11 +112,14 @@ function findBotById(bots, id) {
     });
     return foundBot;
 }
-export function updateBots(bots) {
-    data[bots].foreach(botFromServer => {
-        const bot = findBotById(botFromServer.id);
-        updateBot(bot, botFromServer);
-    })
+export function updateBots(activeBots, bots) {
+    // data[bots].foreach(botFromServer => {
+    //     const bot = findBotById(botFromServer.id);
+    //     updateBot(bot, botFromServer);
+    // })
+    console.log(activeBots, 'before');
+    activeBots = bots;
+    console.log(activeBots, 'after');
 }
 function updateBot(bot, botFromServer) {
     botFromServer.y ? bot.setY(botFromServer.y) : null;

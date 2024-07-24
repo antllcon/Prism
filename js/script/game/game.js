@@ -121,7 +121,8 @@ export function updateEntities(dt) {
                 if (point.getTeam() === TEAM_STATES.YELLOW) {
                     point.setColor(COLORS.YELLOW);
                 }
-                point.setHeight(5);
+                point.setHeight(10);
+                point.setWidth(10);
             } else {
                 point.setInactive();
                 point.setColor(COLORS.GRAY)

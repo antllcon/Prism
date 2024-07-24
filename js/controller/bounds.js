@@ -32,17 +32,17 @@ function checkLaserBounds() {
                     rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
                     rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
                     point.setActive();
-                    point.setTeam(player.getTeam());
+                    point.setTeam(player.team);
                     point.setActivationTime(Date.now());
                 }
                 if (point.isActive()) {
-                    if (point.isTypeCross() && point.getTeam() !== player.getTeam()) {
+                    if (point.isTypeCross() && point.getTeam() !== player.team) {
                         if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
                             (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
-                            player.die();
+                            player.state = BOT_STATES.DEAD;
                         }
                     }
-                    if (point.isTypeTrigraph() && point.getTeam() !== player.getTeam()) {
+                    if (point.isTypeTrigraph() && point.getTeam() !== player.team) {
                         const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3];
                         angles.forEach(angle => {
                             const angleSin = Math.sin(angle);
@@ -54,7 +54,7 @@ function checkLaserBounds() {
                             }
                         });
                     }
-                    if (point.isTypeLine() && point.getTeam() !== player.getTeam()) {
+                    if (point.isTypeLine() && point.getTeam() !== player.team) {
                         if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
                             corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
                             player.die();
@@ -78,14 +78,14 @@ function checkLaserBounds() {
                         rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
                         rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
                         point.setActive();
-                        point.setTeam(bot.getTeam()); // Убедитесь, что присваивается команда бота
+                        point.setTeam(bot.team);
                         point.setActivationTime(Date.now());
                     }
                     if (point.isActive()) {
                         if (point.isTypeCross() && point.getTeam() !== bot.team) { // Крест
                             if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
                                 (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
-                                bot.die();
+                                bot.state = BOT_STATES.DEAD;
                             }
                         }
                         if (point.isTypeTrigraph() && point.getTeam() !== bot.team) { // Три-радиус
@@ -96,14 +96,14 @@ function checkLaserBounds() {
                                 const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
                                 const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
                                 if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
-                                    bot.die();
+                                    bot.state = BOT_STATES.DEAD;
                                 }
                             });
                         }
                         if (point.isTypeLine() && point.getTeam() !== bot.team) {
                             if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
                                 corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
-                                bot.die();
+                                bot.state = BOT_STATES.DEAD;
                             }
                         }
                     }
@@ -116,14 +116,14 @@ function checkLaserBounds() {
 function checkBorderGameBounds() {
     const player = getMyPlayer(activePlayers);
     if (player.x < 0) {
-        player.setX(game.getWidth() - player.size);
+        player.x = (game.getWidth() - player.size);
     } else if (player.x + player.size > game.getWidth()) {
-        player.setX(0);
+        player.x = (0);
     }
     if (player.y < 0) {
-        player.setY(game.getHeight() - player.size);
+        player.y = (game.getHeight() - player.size);
     } else if (player.y + player.size > game.getHeight()) {
-        player.setY(0);
+        player.y = (0);
     }
     if (player.progressBar.x < 0) {
         player.progressBar.x = game.getWidth() - player.progressBar.width;
@@ -146,15 +146,15 @@ function checkBorderGameBounds() {
     activeBots.forEach((bot) => {
         if (bot.x < 0) {
             // console.log(game.getWidth(), "getwidth bounds js")
-            bot.setX(game.getWidth() - bot.size);
+            bot.x = (game.getWidth() - bot.size);
         } else if (bot.x + bot.size > game.getWidth()) {
-            bot.setX(0);
+            bot.x = 0;
         }
     
         if (bot.y < 0) {
-            bot.setY(game.getHeight() - bot.size);
+            bot.y = (game.getHeight() - bot.size);
         } else if (bot.y + bot.size > game.getHeight()) {
-            bot.setY(0);
+            bot.y = 0;
         }
     });
 }
@@ -185,10 +185,9 @@ function checkPlayerBotCollisions() {
             const dy = player.y - bot.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             const pushForce = 30;
-            bot.moveOn(
-                (-dx / distance) * pushForce,
-                (-dy / distance) * pushForce
-            );
+            
+            bot.x += (-dx / distance) * pushForce;
+            bot.y += (-dy / distance) * pushForce;
         }
     });
 }
@@ -206,22 +205,22 @@ function checkPlayerBotBonusCollision(bonuses) {
     const player = getMyPlayer(activePlayers);
 
     bonuses.forEach((bonus) => {
-        const dx = player.x - bonus.x;
-        const dy = player.y - bonus.y;
+        const dx = player.x - bonus.getX();
+        const dy = player.y - bonus.getY();
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < player.size + bonus.size) {
+        if (distance < player.size + bonus.getSize()) {
             bonus.catch(player, activeBots, activePlayers);
             bonuses.splice(bonuses.indexOf(bonus), 1);
         }
     });
     activeBots.forEach((bot) => {
         bonuses.forEach((bonus) => {
-            const dx = bot.x - bonus.x;
-            const dy = bot.y - bonus.y;
+            const dx = bot.x - bonus.getX();
+            const dy = bot.y - bonus.getY();
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < bot.size + bonus.size) {
+            if (distance < bot.size + bonus.getSize()) {
                 bonus.catch(bot, activeBots, activePlayers);
                 bonuses.splice(bonuses.indexOf(bonus), 1);
             }

@@ -1,5 +1,6 @@
 const BotConsts = require('./const.js');
 const Bot = require('./model.js');
+const GAME_CONSTS = require('../consts.js')
 
 class BotFunctions {
     createBots(requiredBots) {
@@ -15,13 +16,13 @@ class BotFunctions {
     
     resetAllBots() {
         for (let i = 0; i < activeBots.length; i++) {
-            activeBots[i].setX(BotConsts.DEFAULT_BOTS.x[requiredBots[i]]);
-            activeBots[i].setY(BotConsts.DEFAULT_BOTS.y[requiredBots[i]]);
-            activeBots[i].renaissance();
+            activeBots[i].x = BotConsts.DEFAULT_BOTS.x[requiredBots[i]];
+            activeBots[i].y = BotConsts.DEFAULT_BOTS.y[requiredBots[i]];
+            activeBots[i].state = BotConsts.BOT_STATES.ACTIVE;
         }
     }
     
-    botMovement(dt, activeBots, points) {
+    botMovement(dt, activeBots, points, readyBonuses) {
         activeBots.forEach((bot) => {
             let loopIndexInactive = 0;
             let loopIndexActive = 0;
@@ -55,11 +56,11 @@ class BotFunctions {
             }
     
             function findInactivePointAndCompare(point) {
-                if (point.isInactive()) {
+                if (point.state === GAME_CONSTS.POINT_STATES.INACTIVE) {
                     if (loopIndexInactive === 0) {
                         idInactive = 0;
-                        dxMinInactive = point.getX() - bot.getX();
-                        dyMinInactive = point.getY() - bot.getY();
+                        dxMinInactive = point.x - bot.getX();
+                        dyMinInactive = point.y - bot.getY();
                         hypMinInactive = Math.sqrt(
                             dxMinInactive ** 2 + dyMinInactive ** 2
                         );
@@ -68,20 +69,20 @@ class BotFunctions {
                     let dx;
     
                     if (
-                        Math.abs(point.getY() + (canvasHeight - bot.getY())) <
-                        Math.abs(point.getY() - bot.getY())
+                        Math.abs(point.y + (GAME_CONSTS.canvasHeight - bot.getY())) <
+                        Math.abs(point.y - bot.getY())
                     ) {
-                        dy = point.getY() + (canvasHeight - bot.getY());
+                        dy = point.y + (GAME_CONSTS.canvasHeight - bot.getY());
                     } else {
-                        dy = point.getY() - bot.getY();
+                        dy = point.y - bot.getY();
                     }
                     if (
-                        Math.abs(point.getX() + (canvasWidth - bot.getX())) <
-                        Math.abs(point.getX() - bot.getX())
+                        Math.abs(point.x + (GAME_CONSTS.canvasWidth - bot.getX())) <
+                        Math.abs(point.x - bot.getX())
                     ) {
-                        dx = point.getX() + (canvasWidth - bot.getX());
+                        dx = point.x + (GAME_CONSTS.canvasWidth - bot.getX());
                     } else {
-                        dx = point.getX() - bot.getX();
+                        dx = point.x - bot.getX();
                     }
                     const hyp = Math.sqrt(dx ** 2 + dy ** 2);
                     if (hyp < hypMinInactive) {
@@ -95,27 +96,27 @@ class BotFunctions {
             }
     
             function findActivePointInArea(point) {
-                if (point.isActive()) {
+                if (point.state === GAME_CONSTS.POINT_STATES.ACTIVE) {
                     if (loopIndexActive === 0) {
                         idInactive = 0;
-                        dxMinActive = point.getX() - bot.getX();
-                        dyMinActive = point.getY() - bot.getY();
+                        dxMinActive = point.x - bot.getX();
+                        dyMinActive = point.y - bot.getY();
                         hypMinActive = Math.sqrt(
                             dxMinActive ** 2 + dyMinActive ** 2
                         );
                     }
-                    const dx = point.getX() - bot.getX();
-                    const dy = point.getY() - bot.getY();
+                    const dx = point.x - bot.getX();
+                    const dy = point.y - bot.getY();
                     const hyp = Math.sqrt(dx ** 2 + dy ** 2);
                     if (hyp < hypMinActive) {
-                        idActive = point.getId();
+                        idActive = point.id;
                         dxMinActive = dx;
                         dyMinActive = dy;
                         hypMinActive = hyp;
                     }
                     inRangeOfLaser =
                         hypMinActive - bot.getSize() * Math.sqrt(2) <
-                        point.getSize() / 2;
+                        point.size / 2;
                     loopIndexActive++;
                 }
             }
@@ -145,8 +146,8 @@ class BotFunctions {
                 let closestDistance = Infinity;
     
                 readyBonuses.forEach((bonus) => {
-                    const dx = bot.x - bonus.getX();
-                    const dy = bot.y - bonus.getY();
+                    const dx = bot.x - bonus.x;
+                    const dy = bot.y - bonus.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
     
                     if (distance < closestDistance) {
@@ -155,18 +156,21 @@ class BotFunctions {
                     }
                 });
     
-                if (closestBonus) {
-                    const dxBonus = closestBonus.getX() - bot.x;
-                    const dyBonus = closestBonus.getY() - bot.y;
+                if (closestBonus && (closestDistance < hypMinActive)) {
+                    // Проверка, куда ближе
+                    // резуальтат проверки: если ближе бонус, завершаем тело if
+                    // если ближе поинт, идем в else
+                    const dxBonus = closestBonus.x - bot.x;
+                    const dyBonus = closestBonus.y - bot.y;
                     const angleToBonus = Math.atan2(dyBonus, dxBonus);
-                    const speed = bot.getSpeed() * dt;
+                    const speed = bot.speed * dt;
     
                     bot.moveOn(
                         speed * Math.cos(angleToBonus),
                         speed * Math.sin(angleToBonus)
                     );
                 } else {
-                if (inRangeOfLaser) {
+                if (inRangeOfLaser ) {
                     if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
                         if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
                             bot.moveOn(dxActive + dxInactive, dyActive + dyInactive);
