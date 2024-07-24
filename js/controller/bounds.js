@@ -78,7 +78,7 @@ function checkLaserBounds() {
                         rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
                         rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
                         point.setActive();
-                        point.setTeam(bot.getTeam());
+                        point.setTeam(bot.team);
                         point.setActivationTime(Date.now());
                     }
                     if (point.isActive()) {
@@ -115,8 +115,6 @@ function checkLaserBounds() {
 
 function checkBorderGameBounds() {
     const player = getMyPlayer(activePlayers);
-    console.log(player)
-    console.log('player in checkBorderGameBounds')
     if (player.x < 0) {
         player.x = (game.getWidth() - player.size);
     } else if (player.x + player.size > game.getWidth()) {
@@ -150,13 +148,13 @@ function checkBorderGameBounds() {
             // console.log(game.getWidth(), "getwidth bounds js")
             bot.x = (game.getWidth() - bot.size);
         } else if (bot.x + bot.size > game.getWidth()) {
-            bot.x = (0);
+            bot.x = 0;
         }
     
         if (bot.y < 0) {
             bot.y = (game.getHeight() - bot.size);
         } else if (bot.y + bot.size > game.getHeight()) {
-            bot.y = (0);
+            bot.y = 0;
         }
     });
 }

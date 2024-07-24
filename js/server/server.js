@@ -54,12 +54,6 @@ io.on('connection', (socket) => {
         leaveRoom(roomId, socket);
     });
 
-    
-
-    // socket.on('requestOnDataFromServer', () => {
-    //     socket.emit('dataFromServer', players);
-    // })
-
     socket.on('disconnect', () => {
         console.log('произошел disconnect');
         socket.emit('requestForCookie');
@@ -210,7 +204,7 @@ io.on('connection', (socket) => {
             });
         }
         if (rooms[roomId]) {
-            botFunctions.botMovement(data.dt, rooms[roomId].bots, data.points);
+            botFunctions.botMovement(data.dt, rooms[roomId].bots, data.points, data.bonuses);
         }
         let dataFromServer = {
             bots: [],
@@ -222,7 +216,7 @@ io.on('connection', (socket) => {
             dataFromServer.players = rooms[roomId].players;
         }
 
-        io.to(roomId).emit('dataFromServer', dataFromServer);
+        io.to(parseInt(roomId)).emit('dataFromServer', dataFromServer);
     });
 });
 

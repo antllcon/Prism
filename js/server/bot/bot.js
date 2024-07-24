@@ -22,7 +22,7 @@ class BotFunctions {
         }
     }
     
-    botMovement(dt, activeBots, points) {
+    botMovement(dt, activeBots, points, readyBonuses) {
         activeBots.forEach((bot) => {
             let loopIndexInactive = 0;
             let loopIndexActive = 0;
@@ -142,32 +142,35 @@ class BotFunctions {
             }
     
             function getRightDirection() {
-                // let closestBonus = null;
-                // let closestDistance = Infinity;
+                let closestBonus = null;
+                let closestDistance = Infinity;
     
-                // readyBonuses.forEach((bonus) => {
-                //     const dx = bot.x - bonus.getX();
-                //     const dy = bot.y - bonus.getY();
-                //     const distance = Math.sqrt(dx * dx + dy * dy);
+                readyBonuses.forEach((bonus) => {
+                    const dx = bot.x - bonus.x;
+                    const dy = bot.y - bonus.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
     
-                //     if (distance < closestDistance) {
-                //         closestDistance = distance;
-                //         closestBonus = bonus;
-                //     }
-                // });
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestBonus = bonus;
+                    }
+                });
     
-                // if (closestBonus) {
-                //     const dxBonus = closestBonus.getX() - bot.x;
-                //     const dyBonus = closestBonus.getY() - bot.y;
-                //     const angleToBonus = Math.atan2(dyBonus, dxBonus);
-                //     const speed = bot.getSpeed() * dt;
+                if (closestBonus && (closestDistance < hypMinActive)) {
+                    // Проверка, куда ближе
+                    // резуальтат проверки: если ближе бонус, завершаем тело if
+                    // если ближе поинт, идем в else
+                    const dxBonus = closestBonus.x - bot.x;
+                    const dyBonus = closestBonus.y - bot.y;
+                    const angleToBonus = Math.atan2(dyBonus, dxBonus);
+                    const speed = bot.speed * dt;
     
-                //     bot.moveOn(
-                //         speed * Math.cos(angleToBonus),
-                //         speed * Math.sin(angleToBonus)
-                //     );
-                // } else {
-                if (inRangeOfLaser) {
+                    bot.moveOn(
+                        speed * Math.cos(angleToBonus),
+                        speed * Math.sin(angleToBonus)
+                    );
+                } else {
+                if (inRangeOfLaser ) {
                     if ((dxActive * dxInactive >= 0) && (dyActive * dyInactive >= 0)) {
                         if (Math.sqrt((dxActive + dxInactive) ** 2 + (dyActive + dyInactive) ** 2) < bot.getSpeed() * dt) {
                             bot.moveOn(dxActive + dxInactive, dyActive + dyInactive);
@@ -221,7 +224,7 @@ class BotFunctions {
                     }
                 }
             }}
-        );
+        });
     }
     findBotById(bots, id) {
         let foundBot;

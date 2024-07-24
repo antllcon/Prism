@@ -39,7 +39,6 @@ let bonusIndex = 0;
 
 function init() {
     connect();
-    activeBots = createBots(requiredBots);
     //console.log(activeBots);
    // console.log('activeBots');
 
@@ -154,7 +153,7 @@ function sendDataToServer(dt) {
     let data = {
         player: getMyPlayer(activePlayers),
         points: points,
-        bonuses: bonuses,
+        bonuses: readyBonuses,
         dt: dt
     };
     socket.emit('sendDataToServer', data);
@@ -174,7 +173,7 @@ function getDataFromServer() {
         // Получение массива данных
         // извлечение лазеров, ботов, игроков
         updatePlayers(data.players, socket.id);
-        updateBots(data.bots);
+        activeBots = data.bots;
     })
 }
 
