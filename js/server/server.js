@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 
 let rooms = {};
 let players = [];
-let requiredBots = [1];
+let requiredBots = [2];
 
 
 io.on('connection', (socket) => {

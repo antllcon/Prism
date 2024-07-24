@@ -35,7 +35,7 @@ const DEFAULT_BOTS = {
     type: "bot",
     x: [50, 50, canvasWidth - 50, canvasWidth - 50],
     y: [canvasHeight / 3, canvasHeight * 2 / 3, canvasHeight / 3, canvasHeight * 2 / 3],
-    size: 10,
+    size: 30,
     speed: 300,
     team: [TEAM_STATES.PURPLE, TEAM_STATES.PURPLE, TEAM_STATES.YELLOW, TEAM_STATES.YELLOW],
     color: [COLORS.PURPLE, COLORS.PURPLE, COLORS.YELLOW, COLORS.YELLOW],
