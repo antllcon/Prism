@@ -7,6 +7,8 @@ import {score} from "../score/model";
 import {fadeOutScore, drawFinalScore} from "../score/score";
 import {ctx, activePlayers, activeBots, points} from "../../script";
 import {DEFAULT_POINTS, pointHeightActivationSize} from "../point/const";
+import {playCountdown} from "../../sound/countdownAudio";
+import {playGameTheme} from "../../sound/gameThemeAudio";
 
 export function drawBackground() {
     ctx.fillStyle = game.getBackground();
