@@ -57,9 +57,10 @@ export function botMovement(dt) {
             moveBotOutOfLaserSpiral();
         }
 
-        if (!idInactive) {
+        if (!idInactive && !idActive) {
             moveBotRandom();
-        } else {
+        }
+        if (idInactive || idActive) {
             moveBotToLaser();
             getRightDirection();
             moveBotToLaser();
@@ -182,8 +183,8 @@ export function botMovement(dt) {
         }
 
         function moveBotRandom() {
-            let angle = Math.PI; // МОЖНО ПОТОМ
-            const speed = bot.getSpeed() * dt;
+            let angle = 0; // МОЖНО ПОТОМ
+            const speed = 0;
             const dx = speed * Math.cos(angle);
             const dy = speed * Math.sin(angle);
             bot.moveOn(dx, dy);
