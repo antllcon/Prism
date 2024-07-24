@@ -78,7 +78,7 @@ function checkLaserBounds() {
                         rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
                         rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
                         point.setActive();
-                        point.setTeam(bot.getTeam()); // Убедитесь, что присваивается команда бота
+                        point.setTeam(bot.getTeam());
                         point.setActivationTime(Date.now());
                     }
                     if (point.isActive()) {
@@ -115,6 +115,8 @@ function checkLaserBounds() {
 
 function checkBorderGameBounds() {
     const player = getMyPlayer(activePlayers);
+    console.log(player)
+    console.log('player in checkBorderGameBounds')
     if (player.x < 0) {
         player.x = (game.getWidth() - player.size);
     } else if (player.x + player.size > game.getWidth()) {
@@ -205,22 +207,22 @@ function checkPlayerBotBonusCollision(bonuses) {
     const player = getMyPlayer(activePlayers);
 
     bonuses.forEach((bonus) => {
-        const dx = player.x - bonus.x;
-        const dy = player.y - bonus.y;
+        const dx = player.x - bonus.getX();
+        const dy = player.y - bonus.getY();
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < player.size + bonus.size) {
+        if (distance < player.size + bonus.getSize()) {
             bonus.catch(player, activeBots, activePlayers);
             bonuses.splice(bonuses.indexOf(bonus), 1);
         }
     });
     activeBots.forEach((bot) => {
         bonuses.forEach((bonus) => {
-            const dx = bot.x - bonus.x;
-            const dy = bot.y - bonus.y;
+            const dx = bot.x - bonus.getX();
+            const dy = bot.y - bonus.getY();
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < bot.size + bonus.size) {
+            if (distance < bot.size + bonus.getSize()) {
                 bonus.catch(bot, activeBots, activePlayers);
                 bonuses.splice(bonuses.indexOf(bonus), 1);
             }

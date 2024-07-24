@@ -17,6 +17,7 @@ import {checkCollisions} from "./controller/bounds";
 import {drawCharacters} from "./view";
 import {io} from "socket.io-client";
 import {drawBonuses, initBonuses} from "./script/bonuses/bonus";
+import {BaseBonus} from "./script/bonuses/BaseBonus";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -27,20 +28,20 @@ const socket = io();
 export let activePlayers = [];
 export let points = [];
 export let bonuses = [];
+export let readyBonuses = [];
 export let requiredBots = [2, 3];
 export let activeBots = [];
 
 
 let lastBonusAddTime = 0;
 const bonusAddInterval = 3;
-export let readyBonuses = [];
 let bonusIndex = 0;
 
 function init() {
     connect();
     activeBots = createBots(requiredBots);
-    console.log(activeBots);
-    console.log('activeBots');
+    //console.log(activeBots);
+   // console.log('activeBots');
 
     createPoints();
 }
@@ -68,6 +69,7 @@ function update(dt) {
     if (lastBonusAddTime >= bonusAddInterval) {
         if (bonusIndex < bonuses.length) {
             readyBonuses.push(bonuses[bonusIndex]); // Добавляем бонус в readyBonuses
+            console.log("+1 в readybonuses")
             bonusIndex++;
         } else {
             console.log("No more bonuses to add.");
@@ -113,11 +115,12 @@ function initServerBonuses()
     socket.emit('requestForBonuses');
     socket.on('sendBonuses', (serverBonuses) => {
         console.log('sendBonuses вызван')
-        console.log(bots, 'bots from sendBots');
         bonuses = serverBonuses;
-      //  setPlayerWithIdAsMain(socket.id);
-      //  console.log(players, 'players from sendPlayers');
-      //  initBotAnimation();
+        console.log(bonuses, 'before classes')
+
+        bonuses = initBonuses(bonuses);
+        console.log(bonuses)
+
     })
 }
 
@@ -125,17 +128,17 @@ function initPlayers() {
     socket.emit('requestForPlayers');
     console.log('sendPlayers не вызван');
     socket.on('sendPlayers', (players) => {
-        console.log('sendPlayers вызван')
+        //console.log('sendPlayers вызван')
         activePlayers = players;
         setPlayerWithIdAsMain(socket.id);
-        console.log(players, 'players from sendPlayers');
+        //console.log(players, 'players from sendPlayers');
         initPlayerAnimation()
     })
 }
 function initBots() {
     socket.emit('requestForBots');
     socket.on('sendBots', (bots) => {
-        console.log(bots, 'bots from sendBots');
+        //console.log(bots, 'bots from sendBots');
         activeBots = bots;
         initBotAnimation();
     })
@@ -151,6 +154,7 @@ function sendDataToServer(dt) {
     let data = {
         player: getMyPlayer(activePlayers),
         points: points,
+        bonuses: bonuses,
         dt: dt
     };
     socket.emit('sendDataToServer', data);

@@ -40,6 +40,8 @@ io.on('connection', (socket) => {
             };
             console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
+            rooms[roomId].bonuses = createBonuses();
+            console.log( rooms[roomId].bonuses, ' rooms[roomId].bonuses в момент создания createRoom')
         }
     });
 
@@ -143,7 +145,9 @@ io.on('connection', (socket) => {
             const client = findClientBySocketId(roomId, socket.id);
             client.setNeedForPlayer();//?
            // rooms[roomId].bonuses = playerFunctions.createPlayers(clientsSockets);
-            rooms[roomId].bonuses = createBonuses();
+            /*rooms[roomId].bonuses = createBonuses();*/
+            console.log(rooms[roomId].bonuses, 'rooms[roomId].bonuses in requestForBonuses')
+            socket.emit("sendBonuses", rooms[roomId].bonuses);
         }
     })
 
