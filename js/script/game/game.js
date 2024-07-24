@@ -36,18 +36,13 @@ export function countdown() {
 }
 
 function resetLevel() {
-    /*socket.emit('resetPlayers')
+   /* socket.emit('resetPlayers')
     socket.on('playersReset', (players) => {
-        let playersFromServer = [];
-        playersFromServer = players;
-        activePlayers = playersFromServer;
-        console.log(JSON.stringify(activePlayers, null, 2));
-    })
-    socket.emit('resetBots')
-    socket.on('botsReset', (bots) => {
-        activeBots = [];
-        activeBots = bots;
+        activePlayers.forEach((activePlayer) => {
+            activePlayer
+        })
     })*/
+
     resetAllPlayers();
     resetAllBots();
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
