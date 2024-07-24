@@ -1,12 +1,17 @@
 import {Point} from "./model";
 import {pointsAmount} from "./const";
-import {ctx, points} from "../../script";
+import {ctx, points, requiredBots} from "../../script";
 import {gameState} from "../game/model";
+import {Bot} from "../bot/model";
 
 export function createPoints() {
-    for (let i = 0; i < pointsAmount; i++) {
-        points[i] = new Point(i);
-    }
+    let createdPoints = [];
+    let i = 0;
+    requiredBots.forEach(placeId => {
+        createdPoints[i] = new Point(placeId);
+        i++;
+    });
+    return createdPoints;
 }
 
 export function resetPoints() {
