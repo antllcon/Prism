@@ -23,7 +23,7 @@ let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
 canvas.width = game.getWidth();
 canvas.height = game.getHeight();
-const socket = io();
+export const socket = io();
 
 export let activePlayers = [];
 export let points = [];

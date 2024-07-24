@@ -17,13 +17,13 @@ class PlayerFunctions {
     
     resetAllPlayers(activePlayers) {
         for (let i = 0; i < activePlayers.length; i++) {
-            activePlayers[i].setX(PlayerConsts.DEFAULT_PLAYERS.x[i]);
-            activePlayers[i].setY(PlayerConsts.DEFAULT_PLAYERS.y[i]);
-            activePlayers[i].progressBar.setX(activePlayers[i].getX());
-            activePlayers[i].progressBar.setY(activePlayers[i].getY() - 60);
-            activePlayers[i].setAbilityScale(0);
-            activePlayers[i].progressBar.update(activePlayers[i].getAbilityScale());
-            activePlayers[i].renaissance();
+            activePlayers[i].x = (PlayerConsts.DEFAULT_PLAYERS.x[i]);
+            activePlayers[i].y = (PlayerConsts.DEFAULT_PLAYERS.y[i]);
+            activePlayers[i].progressBar.x = (activePlayers[i].x);
+            activePlayers[i].progressBar.y = (activePlayers[i].y - 60);
+            activePlayers[i].abilityScale = 0;
+            activePlayers[i].progressBar.progress = 0;
+            activePlayers[i].state = PlayerConsts.PLAYER_STATES.ACTIVE;
         }
     }
     
