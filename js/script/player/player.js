@@ -10,7 +10,7 @@ export function handleInput(dt) {
         player.direction = "left";
 
         player.progressBar.x = player.x;
-        player.progressBar.y = player.y - 50;
+        player.progressBar.y = player.y - 60;
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
 
@@ -20,7 +20,7 @@ export function handleInput(dt) {
         player.direction = "right";
 
         player.progressBar.x = player.x;
-        player.progressBar.y = player.y - 50;
+        player.progressBar.y = player.y - 60;
     }
     if (input.isDown('DOWN') || input.isDown('s')) {
 
@@ -30,14 +30,14 @@ export function handleInput(dt) {
         player.direction = "down";
 
         player.progressBar.x = player.x;
-        player.progressBar.y = player.y - 50;
+        player.progressBar.y = player.y - 60;
     }
     if (input.isDown('UP') || input.isDown('w')) {
 
         player.x += 0;
         player.y += player.speed * dt * (-1);
         player.progressBar.x = player.x;
-        player.progressBar.y = player.y - 50;
+        player.progressBar.y = player.y - 60;
         player.direction = "up";
 
     }
