@@ -16,9 +16,9 @@ class BotFunctions {
     
     resetAllBots() {
         for (let i = 0; i < activeBots.length; i++) {
-            activeBots[i].setX(BotConsts.DEFAULT_BOTS.x[requiredBots[i]]);
-            activeBots[i].setY(BotConsts.DEFAULT_BOTS.y[requiredBots[i]]);
-            activeBots[i].renaissance();
+            activeBots[i].x = BotConsts.DEFAULT_BOTS.x[requiredBots[i]];
+            activeBots[i].y = BotConsts.DEFAULT_BOTS.y[requiredBots[i]];
+            activeBots[i].state = BotConsts.BOT_STATES.ACTIVE;
         }
     }
     

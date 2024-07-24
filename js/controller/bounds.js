@@ -39,7 +39,7 @@ function checkLaserBounds() {
                     if (point.isTypeCross() && point.getTeam() !== player.team) {
                         if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
                             (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
-                            player.die();
+                            player.state = BOT_STATES.DEAD;
                         }
                     }
                     if (point.isTypeTrigraph() && point.getTeam() !== player.team) {
@@ -85,7 +85,7 @@ function checkLaserBounds() {
                         if (point.isTypeCross() && point.getTeam() !== bot.team) { // Крест
                             if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
                                 (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
-                                bot.die();
+                                bot.state = BOT_STATES.DEAD;
                             }
                         }
                         if (point.isTypeTrigraph() && point.getTeam() !== bot.team) { // Три-радиус
@@ -96,14 +96,14 @@ function checkLaserBounds() {
                                 const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
                                 const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
                                 if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
-                                    bot.die();
+                                    bot.state = BOT_STATES.DEAD;
                                 }
                             });
                         }
                         if (point.isTypeLine() && point.getTeam() !== bot.team) {
                             if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
                                 corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
-                                bot.die();
+                                bot.state = BOT_STATES.DEAD;
                             }
                         }
                     }
@@ -185,10 +185,9 @@ function checkPlayerBotCollisions() {
             const dy = player.y - bot.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             const pushForce = 30;
-            bot.moveOn(
-                (-dx / distance) * pushForce,
-                (-dy / distance) * pushForce
-            );
+            
+            bot.x += (-dx / distance) * pushForce;
+            bot.y += (-dy / distance) * pushForce;
         }
     });
 }
