@@ -112,6 +112,7 @@ export function drawPoints() {
 
         }
         if (point.isInactive()) {
+            console.log(point.getAngle())
             point.setAngle(point.getAngle() + Math.PI / 180);
             ctx.save();
             ctx.translate(
