@@ -144,8 +144,6 @@ io.on('connection', (socket) => {
             client.setNeedForPlayer();//?
            // rooms[roomId].bonuses = playerFunctions.createPlayers(clientsSockets);
             rooms[roomId].bonuses = createBonuses();
-            console.log( rooms[roomId].bonuses)
-            console.log("requestForBonuses 2")
         }
     })
 
@@ -215,6 +213,7 @@ io.on('connection', (socket) => {
             players: []
         };
         if (rooms[roomId]) {
+            console.log(rooms[roomId].bots);
             dataFromServer.bots = rooms[roomId].bots;
             dataFromServer.players = rooms[roomId].players;
         }
@@ -237,7 +236,7 @@ io.on('connection', (socket) => {
 
 // Запуск сервера
 
-const PORT = process.env.PORT || 7050;
+const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
