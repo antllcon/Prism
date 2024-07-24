@@ -36,7 +36,7 @@ export function countdown() {
 }
 
 function resetLevel() {
-    socket.emit('resetPlayers')
+    /*socket.emit('resetPlayers')
     socket.on('playersReset', (players) => {
         let playersFromServer = [];
         playersFromServer = players;
@@ -47,10 +47,11 @@ function resetLevel() {
     socket.on('botsReset', (bots) => {
         activeBots = [];
         activeBots = bots;
-    })
+    })*/
+    resetAllPlayers();
+    resetAllBots();
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
-    // Сбрасываем параметры всех точек
     resetPoints();
 
     let background = document.createElement("div");

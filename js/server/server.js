@@ -234,21 +234,21 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('resetPlayers', () => {
-        console.log('ПОЛУЧИЛИ РЕСЕТ');
-        const roomId = findRoomBySocketId(socket.id);
-        playerFunctions.resetAllPlayers(rooms[roomId].players);
-        console.log(rooms[roomId].players, 'players');
-        socket.emit('playersReset', rooms[roomId].players);
-    })
+    // socket.on('resetPlayers', () => {
+    //     console.log('ПОЛУЧИЛИ РЕСЕТ');
+    //     const roomId = findRoomBySocketId(socket.id);
+    //     playerFunctions.resetAllPlayers(rooms[roomId].players);
+    //     console.log(rooms[roomId].players, 'players');
+    //     socket.emit('playersReset', rooms[roomId].players);
+    // })
 
-    socket.on('resetBots', () => {
-        console.log('ПОЛУЧИЛИ РЕСЕТ');
-        const roomId = findRoomBySocketId(socket.id);
-        botFunctions.resetAllBots(requiredBots, rooms[roomId].bots);
-        console.log(rooms[roomId].bots, 'bots');
-        socket.emit('botsReset', rooms[roomId].bots);
-    })
+    // socket.on('resetBots', () => {
+    //     console.log('ПОЛУЧИЛИ РЕСЕТ');
+    //     const roomId = findRoomBySocketId(socket.id);
+    //     botFunctions.resetAllBots(requiredBots, rooms[roomId].bots);
+    //     console.log(rooms[roomId].bots, 'bots');
+    //     socket.emit('botsReset', rooms[roomId].bots);
+    // })
 
 });
 
