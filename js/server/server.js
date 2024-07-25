@@ -101,8 +101,7 @@ io.on('connection', (socket) => {
         const client = findClientBySocketId(roomId, socket.id);
         if (!client.getIsReady()) {
             client.setReady();
-        }
-        if (client.getIsReady()) {
+        } else {
             client.setNotReady();
         }
         let amountReadyClients = 0;
