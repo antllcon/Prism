@@ -1,7 +1,7 @@
 import {COLORS, TEAM_STATES} from "../game/const";
 import {canvasWidth, canvasHeight} from "../game/const"
 
-export const pointsAmount = 13;
+export const pointsAmount = 2;
 export const POINT_STATES = {
     ACTIVE: 'active',
     INACTIVE: 'inactive',
@@ -25,8 +25,8 @@ export let DEFAULT_POINTS = {
     ],
     width: 10,
     height: 10,
-    size: [600, 600, 350, 350, 2000, 500, 400, 400, 400, 400, 400, 400, 400],
-    type: [POINT_TYPES.LINE, POINT_TYPES.LINE, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.CROSS,
+    size: [600, 600, 350, 350, 300, 500, 400, 400, 400, 400, 400, 400, 400],
+    type: [POINT_TYPES.LINE, POINT_TYPES.LINE, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH,  POINT_TYPES.TRIGRAPH,
         POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH,
         POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH, POINT_TYPES.TRIGRAPH
     ],

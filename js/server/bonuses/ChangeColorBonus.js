@@ -5,8 +5,9 @@ class ChangeColorBonus extends BaseBonus {
         super(x, y, size, color, team);
         this.type = 'changeColor';
     }
-/*    catch(entity) {
+   /* catch(entity) {
         super.catch(entity);
+
         points.forEach(point => {
             if (point.getColor() === 'yellow') {
                 point.setColor('purple');

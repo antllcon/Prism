@@ -76,12 +76,15 @@ export function drawBot() {
             }
         }
         if (bot.state === BOT_STATES.STUNNED && bot.stunnedUntil < Date.now()) {
+            startStunTimer(bot, DURATION_DISABILITY);
             bot.stunnedUntil = 0;
             bot.speed = (DEFAULT_BOTS.speed);
 
-            if (bot.state === BOT_STATES.DEAD || bot.state === BOT_STATES.STUNNED) {
+            if (bot.state === BOT_STATES.DEAD) {
                 bot.state = BOT_STATES.ACTIVE;
         }
+
+
         }
         if (bot.state === BOT_STATES.STUNNED) {
             const remainingTime = bot.stunnedUntil - Date.now();

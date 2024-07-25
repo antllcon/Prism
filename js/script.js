@@ -124,6 +124,7 @@ function initPlayers() {
         main();
     });
 }
+
 function initBots() {
     socket.emit('requestForBots');
     socket.on('sendBots', (bots) => {

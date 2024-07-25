@@ -81,17 +81,17 @@ export function drawCharacters(arrayCharacters) {
                     (character.progressBar.width * character.progressBar.progress) / ABILITY_SCALE_MAX,
                     character.progressBar.height
                 );
-                // обратный отсчет
-                if (character.state === PLAYER_STATES.STUNNED) {
-                    const remainingTime = character.stunnedUntil - Date.now();
-                    const seconds = Math.floor(remainingTime / 1000);
-                    const milliseconds = Math.floor((remainingTime % 1000) / 10);
-                    const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
-                    ctx.fillStyle = 'white';
-                    ctx.font = '16px Arial';
-                    ctx.fillText(countdownText, character.x, character.y - 30);
-                }
             }
+        }
+        // обратный отсчет
+        if (character.state === PLAYER_STATES.STUNNED) {
+            const remainingTime = character.stunnedUntil - Date.now();
+            const seconds = Math.floor(remainingTime / 1000);
+            const milliseconds = Math.floor((remainingTime % 1000) / 10);
+            const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
+            ctx.fillStyle = 'white';
+            ctx.font = '16px Arial';
+            ctx.fillText(countdownText, character.x, character.y - 30);
         }
     });
 }

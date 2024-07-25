@@ -215,6 +215,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('updateEntityParams', (entity) => {
+
         const roomId = findRoomBySocketId(socket.id)
         if (entity.type === 'bot') {
             rooms[roomId].bots.forEach((bot) => {
@@ -222,15 +223,22 @@ io.on('connection', (socket) => {
                     bot.x = entity.x;
                     bot.y = entity.y;
                     bot.state = entity.state;
+                    bot.stunnedUntil = entity.stunnedUntil;
+                    bot.speed = entity.speed;
+                    bot.invisibleLasers = entity.invisibleLasers;
                 }
             })
         }
+
         if (entity.type === 'player') {
             rooms[roomId].players.forEach((player) => {
                 if (entity.id === player.id) {
                     player.x = entity.x;
                     player.y = entity.y;
                     player.state = entity.state;
+                    player.stunnedUntil = entity.stunnedUntil;
+                    player.speed = entity.speed;
+                    player.invisibleLasers = entity.invisibleLasers;
                 }
             })
         }
@@ -250,7 +258,7 @@ io.on('connection', (socket) => {
         botFunctions.resetAllBots(requiredBots, rooms[roomId].bots);
         console.log(rooms[roomId].bots, 'bots');
         socket.emit('botsReset', rooms[roomId].bots);
-    })*/
+      })*/
 
 });
 

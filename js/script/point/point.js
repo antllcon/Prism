@@ -3,6 +3,8 @@
 import { Point } from './model';
 import { POINT_TYPES, pointsAmount } from './const';
 import { ctx, points } from '../../script';
+import {DEFAULT_POINTS} from "./const";
+
 
 export function createPoints() {
     for (let i = 0; i < pointsAmount; i++) {

@@ -24,7 +24,7 @@ const bonuses = {
     ],
     AVAILABLE_BONUSES: [
         { type: 'base', count: 5 },
-        { type: 'stopBot', count: 2 },
+        { type: 'stopOppositeTeamBonus', count: 2 },
         { type: 'deactivatePoints', count: 2 },
         { type: 'changeColor', count: 2 },
         { type: 'invisibleLaser', count: 2 }
