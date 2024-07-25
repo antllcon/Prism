@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 
 let rooms = {};
 let players = [];
-let requiredBots = [2];
+let requiredBots = [2, 3];
 
 
 io.on('connection', (socket) => {
@@ -255,7 +255,7 @@ io.on('connection', (socket) => {
 /*    socket.on('resetBots', () => {
         console.log('ПОЛУЧИЛИ РЕСЕТ');
         const roomId = findRoomBySocketId(socket.id);
-        botFunctions.resetAllBots(requiredBots, rooms[roomId].bots);
+        botFunctions.resetBots(requiredBots, rooms[roomId].bots);
         console.log(rooms[roomId].bots, 'bots');
         socket.emit('botsReset', rooms[roomId].bots);
       })*/

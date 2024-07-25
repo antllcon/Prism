@@ -1,0 +1,1 @@
+export const VICTORY_SCORE = 3;
