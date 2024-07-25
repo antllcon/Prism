@@ -53,6 +53,8 @@ export function drawCharacters(arrayCharacters) {
                 }
             }
         }
+        // updateEntities
+        // исправить
         if (
             character.state === PLAYER_STATES.STUNNED &&
             character.stunnedUntil < Date.now()
@@ -64,7 +66,8 @@ export function drawCharacters(arrayCharacters) {
             character.state = PLAYER_STATES.ACTIVE;
         }
         }
-        const mainPlayer = getMyPlayer(arrayCharacters);
+
+        // в рендер
         if (character.type === 'player'){
             if (character.main) {
                 ctx.strokeStyle = character.progressBar.progressEmptyColor;
@@ -78,16 +81,17 @@ export function drawCharacters(arrayCharacters) {
                     (character.progressBar.width * character.progressBar.progress) / ABILITY_SCALE_MAX,
                     character.progressBar.height
                 );
-                if (character.state === PLAYER_STATES.STUNNED) {
-                    const remainingTime = character.stunnedUntil - Date.now();
-                    const seconds = Math.floor(remainingTime / 1000);
-                    const milliseconds = Math.floor((remainingTime % 1000) / 10);
-                    const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
-                    ctx.fillStyle = 'white';
-                    ctx.font = '16px Arial';
-                    ctx.fillText(countdownText, character.x, character.y - 30);
-                }
             }
+        }
+        // обратный отсчет
+        if (character.state === PLAYER_STATES.STUNNED) {
+            const remainingTime = character.stunnedUntil - Date.now();
+            const seconds = Math.floor(remainingTime / 1000);
+            const milliseconds = Math.floor((remainingTime % 1000) / 10);
+            const countdownText = `${seconds}.${milliseconds.toString().padStart(2, '0')}`;
+            ctx.fillStyle = 'white';
+            ctx.font = '16px Arial';
+            ctx.fillText(countdownText, character.x, character.y - 30);
         }
     });
 }

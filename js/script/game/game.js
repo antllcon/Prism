@@ -1,24 +1,17 @@
 import {game, lastState} from "./model";
 import {COLORS, TEAM_STATES} from "./const";
 import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point"
-import {resetAllPlayers} from "../player/player"
+import {getMyPlayer, resetAllPlayers} from "../player/player"
 import {resetAllBots} from "../bot/bot"
 import {score, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main, ctx, activePlayers, activeBots, points} from "../../script";
-import { updateAbilityScale } from "../player/progressBar/progressBar";
-
-export function drawBackground() {
-    const base_image = new Image();
-    base_image.onload = () => {
-        ctx.drawImage(base_image, 0, 0);
-    };
-    base_image.src = game.getSrc();
-    // ctx.fillStyle = COLORS.GRAY;
-    // ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
-}
+import {main, ctx, activePlayers, activeBots, points, socket} from "../../script";
+import {updateAbilityScale} from "../player/progressBar/progressBar";
+import {BOT_STATES} from "../bot/const";
+import {PLAYER_STATES} from "../player/const";
+import {DEFAULT_POINTS, pointHeightActivationSize} from "../point/const";
 
 export function countdown() {
     //let inputTime = Date.now(); // возможно вообще не нужен
@@ -43,15 +36,11 @@ function resetLevel() {
     resetAllBots();
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
-    // Сбрасываем параметры всех точек
-    resetPoints();
-
     let background = document.createElement("div");
     let scoreGif = document.createElement("img");
     document.body.appendChild(background);
     background.classList.add('background-countdown');
     background.appendChild(scoreGif);
-
     if (score.getTeam1() === 0 && score.getTeam2() === 1) {
         scoreGif.src = "./src/assets/img/0-1.gif";
     }
@@ -80,6 +69,7 @@ function resetLevel() {
     setTimeout(() => {
         background.remove();
         scoreGif.remove();
+        resetPoints();
         lastState.lastTime = Date.now();
         main();
     }, 2000)
@@ -87,53 +77,55 @@ function resetLevel() {
     setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
 }
 
-export function updateEntities(dt) {
+export function updateEntities(dt, now) {
     const player = getMyPlayer(activePlayers);
+    let isSomeoneDead = false;
     updateAbilityScale(dt, player);
     activeBots.forEach(bot => {
-        if (bot.isDead) {
+        if (bot.state === BOT_STATES.DEAD) {
             if (bot.team === TEAM_STATES.PURPLE) {
                 score.increaseTeamYellow()
             }
             if (bot.team === TEAM_STATES.YELLOW) {
                 score.increaseTeamPurple()
             }
-            resetLevel();
+            isSomeoneDead = true;
         }
     });
     activePlayers.forEach(player => {
-        if (player.isDead) {
+        if (player.state === PLAYER_STATES.DEAD) {
             if (player.team === TEAM_STATES.PURPLE) {
                 score.increaseTeamYellow()
             }
             if (player.team === TEAM_STATES.YELLOW) {
                 score.increaseTeamPurple()
             }
-            resetLevel();
+            isSomeoneDead = true;
         }
     });
+    if (isSomeoneDead) {
+        resetLevel();
+    }
     points.forEach(point => {
         if (point.isActive()) {
-            if (Date.now() - point.getActivationTime() < point.getExistTime()) {
+            if (now - point.getActivationTime() < point.getExistTime()) {
                 if (point.getTeam() === TEAM_STATES.PURPLE) {
                     point.setColor(COLORS.PURPLE);
                 }
                 if (point.getTeam() === TEAM_STATES.YELLOW) {
                     point.setColor(COLORS.YELLOW);
                 }
-                point.setHeight(10);
-                point.setWidth(10);
+                point.setHeight(pointHeightActivationSize);
             } else {
                 point.setInactive();
-                point.setColor(COLORS.GRAY)
-                resetPoint(point);
             }
         }
+        if (point.isInactive()) {
+            point.setColor(DEFAULT_POINTS.color);
+            point.setHeight(DEFAULT_POINTS.height);
+        }
         if (point.isInvisible()) {
-            updateVisibilityPoints(point);
+            // updateVisibilityPoints(point);
         }
-        if (point.isActive() || point.isInactive()) {
-            movePoint(point, dt);
-        }
-    })
+    });
 }

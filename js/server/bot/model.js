@@ -18,6 +18,7 @@ class Bot {
         this.count = BotConsts.DEFAULT_BOTS.count;
         this.tick = BotConsts.DEFAULT_BOTS.tick;
         this.direction = BotConsts.DEFAULT_BOTS.direction;
+        this.invisibleLaser = false;
     }
     getId() {return this.id;}
     getName() {return (this.name = 'Bot');}

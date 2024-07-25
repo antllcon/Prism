@@ -20,6 +20,7 @@ export class Bot {
         this.count = DEFAULT_BOTS.count;
         this.tick = DEFAULT_BOTS.tick;
         this.direction = DEFAULT_BOTS.direction;
+        this.invisibleLasers = undefined;
     }
     getId() {return this.id;}
     getName() {return (this.name = 'Bot');}

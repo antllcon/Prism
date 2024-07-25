@@ -30,3 +30,11 @@ export const COLORS = {
     BLACK: "#111",
     WHITE: "#FFF",
 }
+
+export const LAST_TIME = {
+    lastTime: 0
+};
+
+export const GAME_TIME = {
+    gameTime: 0
+};
