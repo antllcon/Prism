@@ -17,6 +17,7 @@ export class Player {
         this.count = DEFAULT_PLAYERS.count;
         this.tick = DEFAULT_PLAYERS.tick;
         this.direction = DEFAULT_PLAYERS.direction;
+        this.invisibleLasers = false;
     }
 
     // Геттеры и сеттеры

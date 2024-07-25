@@ -171,7 +171,7 @@ function checkBorderGameBounds() {
     });
 }
 
-export function checkCollisions() {
+export function checkCollisions(bonuses) {
     checkBorderGameBounds();
     checkLaserBounds();
 }

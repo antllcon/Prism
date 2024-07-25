@@ -3,32 +3,32 @@ import {COLORS} from "../game/const";
 export class Score {
     constructor() {
         this.color = COLORS.WHITE;
-        this.teamOne = 0;
-        this.teamTwo = 0;
+        this.teamPurple = 0;
+        this.teamYellow = 0;
     }
 
     getColor() {
         return this.color
     }
 
-    getTeamOne() {
-        return this.teamOne
+    getTeamPurple() {
+        return this.teamPurple
     }
 
-    getTeamTwo() {
-        return this.teamTwo
+    getTeamYellow() {
+        return this.teamYellow
     }
 
-    increaseTeamOne() {
-        this.teamOne++
+    increaseTeamPurple() {
+        this.teamPurple++
     }
 
-    increaseTeamTwo() {
-        this.teamTwo++
+    increaseTeamYellow() {
+        this.teamYellow++
     }
 
     isVictoryScore() {
-        return this.teamOne >= VICTORY_SCORE || this.teamTwo >= VICTORY_SCORE;
+        return this.teamPurple >= VICTORY_SCORE || this.teamYellow >= VICTORY_SCORE;
     }
 }
 

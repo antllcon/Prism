@@ -29,6 +29,7 @@ export class Game {
     setBackground(image) {
         this.background = image;
     }
+    
     setState(state) {
         this.state = state;
     }

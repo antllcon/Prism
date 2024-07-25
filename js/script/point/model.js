@@ -19,9 +19,9 @@ export class Point {
         this.speed = DEFAULT_POINTS.speed;
         this.direction = DEFAULT_POINTS.direction;
         this.image = new Image();
-        this.load = DEFAULT_PLAYERS.load;
-        this.count = DEFAULT_PLAYERS.count;
-        this.tick = DEFAULT_PLAYERS.tick;
+        this.load = DEFAULT_POINTS.load;
+        this.count = DEFAULT_POINTS.count;
+        this.tick = DEFAULT_POINTS.tick;
     }
 
     getId() {

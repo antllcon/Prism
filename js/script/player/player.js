@@ -1,6 +1,6 @@
 import {Player} from "./model";
 import {DEFAULT_PLAYERS} from "./const";
-import {activePlayers} from "../../script";
+import {activePlayers, requiredPlayers} from "../../script";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
@@ -40,11 +40,22 @@ export function initPlayerAnimation() {
     });
 }
 
-export function createPlayers(clients, myId) {
+// export function createPlayers(clients, myId) {
+//     let createdPlayers = [];
+//     for (let i = 0; i < clients.length; i++) {
+//         createdPlayers[i] = new Player(i, clients[i], myId);
+//     }
+//     return createdPlayers;
+// }
+
+export function createPlayers() {
+    //в requiredBots передается массив с позициями(placeId), на которых надо создать ботов
     let createdPlayers = [];
-    for (let i = 0; i < clients.length; i++) {
-        createdPlayers[i] = new Player(i, clients[i], myId);
-    }
+    let i = 0;
+    requiredPlayers.forEach(placeId => {
+        createdPlayers[i] = new Player(placeId);
+        i++;
+    });
     return createdPlayers;
 }
 

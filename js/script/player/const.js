@@ -20,3 +20,11 @@ export const DEFAULT_PLAYERS = {
     tick: 0,
     direction: "right"
 }
+
+
+export const ABILITY_SCALE_SPEED = 10;
+export const MAX_SPEED = 1200;
+export const ABILITY_SCALE_MAX = 50;
+export const ABILITY_DURATION = 10000;
+export const ABILITY_SPEED_MULTIPLAYER = 3;
+export const DURATION_DISABILITY = 2000;
