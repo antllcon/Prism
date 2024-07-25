@@ -3,6 +3,7 @@ import { ctx } from '../../script';
 
 export class Bot {
     constructor(i) {
+        this.position = i;
         this.id = DEFAULT_BOTS.id[i];
         this.type = DEFAULT_BOTS.type;
         this.x = DEFAULT_BOTS.x[i];

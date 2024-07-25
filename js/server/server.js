@@ -9,9 +9,11 @@ const http = require('http').createServer(app);
 const path = require('path');
 const io = require('socket.io')(http);
 
+const POSITIONS = [0, 1, 2, 3]
 
 const Client = require('./client.js');
 const Player = require('./player.js');
+const Bot = require("./bot/model");
 
 const RECONNECT_TIMEOUT = 60 * 1000; // 60 секунд
 const staticDistPath = path.resolve(path.dirname(__dirname), '../dist');
@@ -24,7 +26,6 @@ app.get('/', (req, res) => {
 
 let rooms = {};
 let players = [];
-let requiredBots = [1];
 
 
 io.on('connection', (socket) => {
@@ -49,21 +50,39 @@ io.on('connection', (socket) => {
 
     socket.on('leaveRoom', () => {
         const roomId = findRoomBySocketId(socket.id);
-        leaveRoom(roomId, socket);
         if (rooms[roomId]) {
-            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
+            leaveRoom(roomId, socket);
         }
+            // io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
     });
 
     socket.on('changeLobbyPosition', (position) => {
         const roomId = findRoomBySocketId(socket.id);
-        rooms[roomId].clients.forEach((client) => {
-            if (client.socketId === socket.id) {
-                client.position = position;
-                console.log(client, 'client')
-            }
-        })
-        io.to(parseInt(roomId)).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
+        if (rooms[roomId]) {
+            rooms[roomId].clients.forEach((client) => {
+                if (client.socketId === socket.id) {
+                    client.position = position;
+                }
+            })
+            const positionsArray= getPositionsArray(roomId);
+            io.to(parseInt(roomId)).emit('updateLobby', positionsArray);
+        }
+    })
+    socket.on('addBotOnPosition', (position) => {
+        const roomId = findRoomBySocketId(socket.id);
+        if (rooms[roomId]) {
+            rooms[roomId].bots.push(new Bot(position));
+            const positionsArray= getPositionsArray(roomId);
+            io.to(parseInt(roomId)).emit('updateLobby', positionsArray);
+        }
+    })
+    socket.on('removeBotFromPosition', (position) => {
+        const roomId = findRoomBySocketId(socket.id);
+        if (rooms[roomId]) {
+            rooms[roomId].bots = rooms[roomId].bots.filter((bot) => bot.position !== position);
+            const positionsArray= getPositionsArray(roomId);
+            io.to(parseInt(roomId)).emit('updateLobby', positionsArray);
+        }
     })
 
     // socket.on('requestOnDataFromServer', () => {
@@ -142,7 +161,6 @@ io.on('connection', (socket) => {
             clientsSockets = getAllSocketsFromRoom(roomId);
             const areAllNeedForBot = findOutAreAllNeedForBot(roomId, clientsSockets.length);
             if (areAllNeedForBot) {
-                rooms[roomId].bots = botFunctions.createBots(requiredBots);
                 io.to(parseInt(roomId)).emit('sendBots', rooms[roomId].bots);
             }
         }
@@ -347,34 +365,57 @@ function findOutAreAllNeedForBot(roomId, length) {
         return false;
     }
 }
-function initPlayers(roomId, sockets) {
+function clientPositionInit(roomId, myClient) {
+    if (rooms[roomId]) {
+        let availablePositions = POSITIONS;
+        rooms[roomId].clients.forEach((client) => {
+            availablePositions = availablePositions.filter((number) => number !== client.position);
+        })
+        const myPosition = Math.min(...availablePositions);
+        myClient.position = myPosition;
+    }
 }
-
+function getPositionsArray(roomId) {
+    let positionsArray = [];
+    if (rooms[roomId]) {
+        rooms[roomId].clients.forEach((client) => {
+            positionsArray.push({
+                position: client.position,
+                socketId: client.socketId
+            });
+        })
+        rooms[roomId].bots.forEach((bot) => {
+            positionsArray.push({
+                position: bot.position,
+                socketId: 'bot'
+            });
+        })
+    }
+    return positionsArray;
+}
 
 
 function joinRoom(roomId, socket) {
     socket.emit('requestForCookie');
     socket.on('sentCookie', (userId) => {
         if (rooms[roomId].clients) {
-            rooms[roomId].clients.push(new Client(socket.id, userId));
+            const client = new Client(socket.id, userId);
+            rooms[roomId].clients.push(client);
             socket.join(parseInt(roomId));
+            clientPositionInit(roomId, client);
+            const positionsArray= getPositionsArray(roomId);
             socket.emit('joinedRoom', roomId);
-            console.log(rooms[roomId].clients.length)
-            console.log("rooms[roomId].clients.length")
-           // console.log(socket.id, ' joined the room ', roomId);
-            //io.to(socket.id).emit('updatePlayerCards', rooms[roomId]);
-            io.to(parseInt(roomId)).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
+            console.log('user with sicket.id: ', socket.id, ' joined room: ', roomId);
+            io.to(parseInt(roomId)).emit('updateLobby', positionsArray);
         } else {
             socket.emit('wrongId');
         }
     });
 }
 function leaveRoom(roomId, socket) {
-    if (rooms[roomId].clients) {
-        socket.leave(roomId);
-        console.log(socket.id, ' left the room with id: ', roomId);
-        // broadcastRoomUpdate(roomId);
-    }
+    socket.leave(roomId);
+
+    console.log(socket.id, ' left the room with id: ', roomId);
 }
 function joinBack(socket) {
     const roomId = findRoomBySocketId(socket.id);
