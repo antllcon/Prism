@@ -73,8 +73,6 @@ io.on('connection', (socket) => {
         const roomId = findRoomBySocketId(socket.id);
         if (rooms[roomId]) {
             rooms[roomId].bots.push(new Bot(position));
-            console.log(rooms[roomId].bots);
-            console.log('rooms[roomId].bots');
             const positionsArray= getPositionsArray(roomId);
             io.to(parseInt(roomId)).emit('updateLobby', positionsArray);
         }
@@ -90,7 +88,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('произошел disconnect');
-        let roomId = findRoomByUserId(socket.id);
+        let roomId = findRoomBySocketId(socket.id);
         const client = findClientBySocketId(roomId, socket.id)
         if (rooms[roomId]) {
             client.setLastSeen(Date.now());
@@ -123,9 +121,9 @@ io.on('connection', (socket) => {
         if (rooms[roomId]) {
             const client = findClientBySocketId(roomId, socket.id);
             client.setNeedForPlayer();
-            let clientsSockets = getAllSocketsFromRoom(roomId);
-            rooms[roomId].players = playerFunctions.createPlayers(clientsSockets);
-            
+            let playersPositions = getPlayersPositions(roomId);
+            rooms[roomId].players = playerFunctions.createPlayers(playersPositions);
+            clientsSockets = getAllSocketsFromRoom(roomId);
             const areAllNeedForPlayer = findOutAreAllNeedForPlayer(roomId, clientsSockets.length);
             if (areAllNeedForPlayer) {
                 io.to(parseInt(roomId)).emit('sendPlayers', rooms[roomId].players)
@@ -138,11 +136,12 @@ io.on('connection', (socket) => {
         if (rooms[roomId]) {
             const client = findClientBySocketId(roomId, socket.id);
             client.setNeedForBot();
-            let clientsSockets = []
-            clientsSockets = getAllSocketsFromRoom(roomId);
+            let botsPositions = []
+            botsPositions = getBotsPositions(roomId);
+            const clientsSockets = getAllSocketsFromRoom;
             const areAllNeedForBot = findOutAreAllNeedForBot(roomId, clientsSockets.length);
             if (areAllNeedForBot) {
-                rooms[roomId].bots = botFunctions.createBots(requiredBots);
+                rooms[roomId].bots = botFunctions.createBots(botsPositions);
                 io.to(parseInt(roomId)).emit('sendBots', rooms[roomId].bots);
             }
         }
@@ -166,6 +165,7 @@ io.on('connection', (socket) => {
         console.log('произошел redirect');
         socket.emit('requestForCookie');
         socket.on('sentCookie', (userId) => {
+            console.log(userId, 'userId');
             const roomId = findRoomByUserId(userId);
             const client = findClientByUserIdFromRemoved(roomId, userId);
             if (client) {
@@ -174,7 +174,10 @@ io.on('connection', (socket) => {
                     rooms[roomId].clients.push(client);
                 }
             }
-            socket.join(parseInt(roomId));
+            console.log(roomId);
+            console.log('roomId');
+            socket.join(roomId);
+            // console.log(socket);
         })
     })
 
@@ -183,7 +186,7 @@ io.on('connection', (socket) => {
         // const userId = getUserIdFromCookie(socket);
         socket.emit('requestForCookie');
         socket.on('sentCookie', (userId) => {
-            const roomId = findRoomBySocketId(socket.id);
+            const roomId = findRoomByUserId(userId);
             rooms[roomId].clients.push(new Client(socket.id, userId));
             const client = findClientByUserIdFromRemoved(roomId, userId);
             // client.setSocketId(socket.id);
@@ -192,7 +195,7 @@ io.on('connection', (socket) => {
                 // Проверяем, был ли клиент в комнате и прошло ли достаточно времени
                 if (Date.now() - lastSeen < RECONNECT_TIMEOUT) {
                     client.setSocketId(socket.id);
-                    socket.join(roomId);
+                    socket.join(parseInt(roomId));
                 }
             }
         })
@@ -334,7 +337,7 @@ function findRoomBySocketId(id) {
 function findRoomByUserId(id) {
     let foundId;
     Object.keys(rooms).forEach(roomId => {
-        rooms[roomId].clients.forEach(client => {
+        rooms[roomId].removedClients.forEach(client => {
             if (id === client.getUserId()) {
                 foundId = roomId;
             }
@@ -368,7 +371,7 @@ function findClientByUserIdFromRemoved(roomId, userId) {
 }
 function findClientBySocketId(roomId, socketId) {
     let foundClient = null;
-    if (rooms[roomId].clients) {
+    if (rooms[roomId]) {
         rooms[roomId].clients.forEach(client => {
             if (socketId === client.getSocketId()) {
                 foundClient =  client;
@@ -439,6 +442,7 @@ function getPositionsArray(roomId) {
 function joinRoom(roomId, socket) {
     socket.emit('requestForCookie');
     socket.on('sentCookie', (userId) => {
+        console.log(userId, 'userId');
         if (rooms[roomId].clients) {
             const client = new Client(socket.id, userId);
             rooms[roomId].clients.push(client);
@@ -454,9 +458,30 @@ function joinRoom(roomId, socket) {
     });
 }
 function leaveRoom(roomId, socket) {
-    const client = findClientBySocketId();
+    const client = findClientBySocketId(roomId, socket.id);
     socket.leave(roomId);
     rooms[roomId].removedClients.push(client);
     rooms[roomId].clients = rooms[roomId].clients.filter((client) => client.socketId !== socket.id);
     console.log(socket.id, ' left the room with id: ', roomId);
+}
+function getPlayersPositions(roomId) {
+    let playersPositions = [];
+    if (rooms[roomId]) {
+        rooms[roomId].clients.forEach((client) => {
+            playersPositions.push({
+                position: client.position,
+                socketId: client.socketId
+            });
+        })
+    }
+    return playersPositions;
+}
+function getBotsPositions(roomId) {
+    let botsPositions = [];
+    if (rooms[roomId]) {
+        rooms[roomId].bots.forEach((bot) => {
+            botsPositions.push(bot.position);
+        })
+    }
+    return botsPositions;
 }
