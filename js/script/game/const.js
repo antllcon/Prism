@@ -7,12 +7,11 @@ export const dark = "#333";
 export const black = "#111";
 export const white = "#FFF";
 
-
 export const GAME_STATES = {
     START: "start",
     PLAY: "play",
     VICTORY: "victory",
-    PAUSE: "pause"
+    ROUND: "round"
 }
 
 export const TEAM_STATES = {

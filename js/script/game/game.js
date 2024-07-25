@@ -1,5 +1,4 @@
-import {game, lastState} from "./model";
-import {COLORS, TEAM_STATES} from "./const";
+import {COLORS, GAME_STATES, TEAM_STATES} from "./const";
 import {movePoint, resetPoint, resetPoints, updateVisibilityPoints} from "../point/point"
 import {getMyPlayer, resetAllPlayers} from "../player/player"
 import {resetAllBots} from "../bot/bot"
@@ -7,28 +6,32 @@ import {score, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
-import {main, ctx, activePlayers, activeBots, points, socket} from "../../script";
+import {main, activePlayers, activeBots, points, socket} from "../../script";
 import {updateAbilityScale} from "../player/progressBar/progressBar";
 import {BOT_STATES} from "../bot/const";
 import {PLAYER_STATES} from "../player/const";
 import {DEFAULT_POINTS, pointHeightActivationSize} from "../point/const";
+import {game} from "./model";
 
 export function countdown() {
-    //let inputTime = Date.now(); // возможно вообще не нужен
     const background = document.createElement('div');
     const countdownGif = document.createElement('img');
-    document.body.appendChild(background);
-    background.classList.add('background-countdown');
-    background.appendChild(countdownGif);
+    backgroundTemplate(background, countdownGif);
     countdownGif.src = './src/assets/img/cat.gif';
     playCountdown();
+
     setTimeout(() => {
         playGameTheme();
         background.remove();
         countdownGif.remove();
-        lastState.lastTime = Date.now();
-        main();
+        game.setState(GAME_STATES.PLAY);
     }, 4200);
+}
+
+export function backgroundTemplate(background, gif) {
+    document.body.appendChild(background);
+    background.classList.add("background-countdown");
+    background.appendChild(gif);
 }
 
 function resetLevel() {
@@ -79,14 +82,23 @@ function resetLevel() {
         background.remove();
         scoreGif.remove();
         resetPoints();
-        lastState.lastTime = Date.now();
         main();
     }, 2000)
 
     setTimeout(fadeOutScore, 6800); // Устанавливаем таймер для исчезновения счёта
 }
 
+let coutdownExist = true;
+
 export function updateEntities(dt, now) {
+
+    if (game.getState() === GAME_STATES.START) {
+        if (coutdownExist) {
+            countdown();
+            coutdownExist = false;
+        }
+    }
+
     const player = getMyPlayer(activePlayers);
     let isSomeoneDead = false;
     updateAbilityScale(dt, player);
