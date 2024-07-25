@@ -10,7 +10,7 @@ export function handleInput(dt) {
         player.direction = "left";
 
         player.progressBar.x = player.x;
-        player.progressBar.y = player.y - 50;
+        player.progressBar.y = player.y - 60;
     }
     if (input.isDown('RIGHT') || input.isDown('d')) {
 
@@ -20,7 +20,7 @@ export function handleInput(dt) {
         player.direction = "right";
 
         player.progressBar.x = player.x;
-        player.progressBar.y = player.y - 50;
+        player.progressBar.y = player.y - 60;
     }
     if (input.isDown('DOWN') || input.isDown('s')) {
 
@@ -30,14 +30,14 @@ export function handleInput(dt) {
         player.direction = "down";
 
         player.progressBar.x = player.x;
-        player.progressBar.y = player.y - 50;
+        player.progressBar.y = player.y - 60;
     }
     if (input.isDown('UP') || input.isDown('w')) {
 
         player.x += 0;
         player.y += player.speed * dt * (-1);
         player.progressBar.x = player.x;
-        player.progressBar.y = player.y - 50;
+        player.progressBar.y = player.y - 60;
         player.direction = "up";
 
     }
@@ -133,7 +133,6 @@ export function drawPlayer(activePlayers) {
                 player.state = PLAYER_STATES.ACTIVE;
             }
         }
-        if (player.id === mainPlayer.id) {
             ctx.strokeStyle = player.progressBar.progressEmptyColor;
             ctx.lineWidth = 2;
             ctx.strokeRect(player.progressBar.x, player.progressBar.y, player.progressBar.width, player.progressBar.height);
@@ -155,7 +154,7 @@ export function drawPlayer(activePlayers) {
                 ctx.fillText(countdownText, player.x, player.y - 30);
             }
         }
-    });
+    );
 }
 
 
@@ -175,13 +174,13 @@ export function getMyPlayer(players) {
 
 export function resetAllPlayers() {
     for (let i = 0; i < activePlayers.length; i++) {
-        activePlayers[i].setX(DEFAULT_PLAYERS.x[i]);
-        activePlayers[i].setY(DEFAULT_PLAYERS.y[i]);
-        activePlayers[i].progressBar.setX(activePlayers[i].x);
-        activePlayers[i].progressBar.setY(activePlayers[i].y - 60);
-        activePlayers[i].setAbilityScale(0);
-        activePlayers[i].progressBar.update(activePlayers[i].getAbilityScale());
-        activePlayers[i].renaissance();
+        activePlayers[i].x = (DEFAULT_PLAYERS.x[i]);
+        activePlayers[i].y = (DEFAULT_PLAYERS.y[i]);
+        activePlayers[i].progressBar.x = (activePlayers[i].x);
+        activePlayers[i].progressBar.y = (activePlayers[i].y - 60);
+        activePlayers[i].abilityScale = (0);
+        activePlayers[i].progressBar.progress = (activePlayers[i].abilityScale);
+        activePlayers[i].state = PLAYER_STATES.ACTIVE;
     }
 }
 
@@ -207,7 +206,7 @@ export function updatePlayers(players, socketId) {
 }
 
 function updatePlayer(player, playerFromServer) {
-    playerFromServer.x ? player.setX(playerFromServer.x) : null;
-    playerFromServer.y ? player.setY(playerFromServer.y) : null;
-    playerFromServer.state ? player.setState(playerFromServer.state) : null;
+    playerFromServer.x ? player.x = (playerFromServer.x) : null;
+    playerFromServer.y ? player.y = (playerFromServer.y) : null;
+    playerFromServer.state ? player.state = (playerFromServer.state) : null;
 }

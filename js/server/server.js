@@ -2,13 +2,13 @@ const BotFunctions = require('./bot/bot.js');
 const botFunctions = new BotFunctions;
 const PlayerFunctions = require('./player/player.js');
 const playerFunctions = new PlayerFunctions;
+const createBonuses = require('./bonuses/bonusFunctions.js')
 
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const path = require('path');
 const io = require('socket.io')(http);
-
 
 const Client = require('./client.js');
 const Player = require('./player.js');
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 
 let rooms = {};
 let players = [];
-let requiredBots = [1];
+let requiredBots = [2];
 
 
 io.on('connection', (socket) => {
@@ -35,11 +35,12 @@ io.on('connection', (socket) => {
             rooms[roomId] = {
                 clients: [],
                 players: [],
-                bots: []
+                bots: [],
+                bonuses: []
             };
             console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
-
+            rooms[roomId].bonuses = createBonuses();
         }
     });
 
@@ -50,25 +51,7 @@ io.on('connection', (socket) => {
     socket.on('leaveRoom', () => {
         const roomId = findRoomBySocketId(socket.id);
         leaveRoom(roomId, socket);
-        if (rooms[roomId]) {
-            io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
-        }
     });
-
-    socket.on('changeLobbyPosition', (position) => {
-        const roomId = findRoomBySocketId(socket.id);
-        rooms[roomId].clients.forEach((client) => {
-            if (client.socketId === socket.id) {
-                client.position = position;
-                console.log(client, 'client')
-            }
-        })
-        io.to(parseInt(roomId)).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
-    })
-
-    // socket.on('requestOnDataFromServer', () => {
-    //     socket.emit('dataFromServer', players);
-    // })
 
     socket.on('disconnect', () => {
         console.log('произошел disconnect');
@@ -98,9 +81,10 @@ io.on('connection', (socket) => {
     socket.on('playerIsReady', () => {
         const roomId  = findRoomBySocketId(socket.id);
         const client = findClientBySocketId(roomId, socket.id);
-        if (client.getIsReady()) {
+        if (!client.getIsReady()) {
             client.setReady();
-        } else {
+        }
+        if (client.getIsReady()) {
             client.setNotReady();
         }
         let amountReadyClients = 0;
@@ -120,14 +104,10 @@ io.on('connection', (socket) => {
             const client = findClientBySocketId(roomId, socket.id);
             client.setNeedForPlayer();
             let clientsSockets = getAllSocketsFromRoom(roomId);
-            console.log(clientsSockets, 'clientsSockets');
             rooms[roomId].players = playerFunctions.createPlayers(clientsSockets);
             
             const areAllNeedForPlayer = findOutAreAllNeedForPlayer(roomId, clientsSockets.length);
             if (areAllNeedForPlayer) {
-                console.log(rooms[roomId].players);
-                console.log('rooms[roomId].players1337');
-                console.log(roomId, 'roomId');
                 io.to(parseInt(roomId)).emit('sendPlayers', rooms[roomId].players)
             }
         }
@@ -147,6 +127,20 @@ io.on('connection', (socket) => {
             }
         }
     })
+
+    socket.on('requestForBonuses', () => {
+        console.log("requestForBonuses")
+        const roomId = findRoomBySocketId(socket.id);
+        if (rooms[roomId]) {
+            const client = findClientBySocketId(roomId, socket.id);
+            client.setNeedForPlayer();//?
+           // rooms[roomId].bonuses = playerFunctions.createPlayers(clientsSockets);
+            /*rooms[roomId].bonuses = createBonuses();*/
+            socket.emit("sendBonuses", rooms[roomId].bonuses);
+        }
+    })
+
+
 
     socket.on('redirected', () => {
         console.log('произошел redirect');
@@ -199,13 +193,13 @@ io.on('connection', (socket) => {
         const playerFromClient = data.player;
         if (rooms[roomId]) {
             rooms[roomId].players.forEach(player => {
-                if (player.getId() === playerFromClient.getId()) {
-                    updatePlayer(player, playerFromClient);
+                if (player.getId() === playerFromClient.id) {
+                    playerFunctions.updatePlayer(player, playerFromClient);
                 }
             });
         }
         if (rooms[roomId]) {
-            botFunctions.botMovement(data.dt, rooms[roomId].bots, data.points);
+            botFunctions.botMovement(data.dt, rooms[roomId].bots, data.points, data.bonuses);
         }
         let dataFromServer = {
             bots: [],
@@ -216,8 +210,55 @@ io.on('connection', (socket) => {
             dataFromServer.players = rooms[roomId].players;
         }
 
-        io.to(roomId).emit('dataFromServer', dataFromServer);
+        io.to(parseInt(roomId)).emit('dataFromServer', dataFromServer);
     });
+
+    socket.on('updateEntityParams', (entity) => {
+
+        const roomId = findRoomBySocketId(socket.id)
+        if (entity.type === 'bot') {
+            rooms[roomId].bots.forEach((bot) => {
+                if (entity.id === bot.id) {
+                    bot.x = entity.x;
+                    bot.y = entity.y;
+                    bot.state = entity.state;
+                    bot.stunnedUntil = entity.stunnedUntil;
+                    bot.speed = entity.speed;
+                    bot.invisibleLasers = entity.invisibleLasers;
+                }
+            })
+        }
+
+        if (entity.type === 'player') {
+            rooms[roomId].players.forEach((player) => {
+                if (entity.id === player.id) {
+                    player.x = entity.x;
+                    player.y = entity.y;
+                    player.state = entity.state;
+                    player.stunnedUntil = entity.stunnedUntil;
+                    player.speed = entity.speed;
+                    player.invisibleLasers = entity.invisibleLasers;
+                }
+            })
+        }
+    })
+
+    socket.on('resetPlayers', () => {
+        console.log('ПОЛУЧИЛИ РЕСЕТ');
+        const roomId = findRoomBySocketId(socket.id);
+        playerFunctions.resetAllPlayers(rooms[roomId].players);
+        console.log(rooms[roomId].players, 'players');
+        socket.emit('playersReset', rooms[roomId].players);
+    })
+
+/*    socket.on('resetBots', () => {
+        console.log('ПОЛУЧИЛИ РЕСЕТ');
+        const roomId = findRoomBySocketId(socket.id);
+        botFunctions.resetAllBots(requiredBots, rooms[roomId].bots);
+        console.log(rooms[roomId].bots, 'bots');
+        socket.emit('botsReset', rooms[roomId].bots);
+      })*/
+
 });
 
 // function updatePlayer(player, transPlayer) {
@@ -359,11 +400,8 @@ function joinRoom(roomId, socket) {
             rooms[roomId].clients.push(new Client(socket.id, userId));
             socket.join(parseInt(roomId));
             socket.emit('joinedRoom', roomId);
-            console.log(rooms[roomId].clients.length)
-            console.log("rooms[roomId].clients.length")
-           // console.log(socket.id, ' joined the room ', roomId);
-            //io.to(socket.id).emit('updatePlayerCards', rooms[roomId]);
-            io.to(parseInt(roomId)).emit('updatePlayerLobbyInfo', rooms[roomId].clients);
+            console.log(socket.id, ' joined the room ', roomId);
+            // broadcastRoomUpdate(roomId);
         } else {
             socket.emit('wrongId');
         }

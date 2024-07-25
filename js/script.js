@@ -1,29 +1,27 @@
-import {game, gameState, lastState} from "./script/game/model";
-import {drawPoints, createPoints} from "./script/point/point";
-import {botMovement, drawBot, createBots, initBotAnimation, updateBots} from "./script/bot/bot";
+import {game} from "./script/game/model";
+
+import {drawPoints, createPoints, initPointAnimation} from "./script/point/point";
+import {initBotAnimation} from "./script/bot/bot";
 import {
     handleInput,
-    createPlayers,
     getMyPlayer,
     initPlayerAnimation,
-    findPlayerBySocketId,
     updatePlayers,
     setPlayerWithIdAsMain
 } from "./script/player/player";
-import {SCORE, score} from "./script/score/model";
-import {drawFinalScore, drawScore, fadeOutScore} from "./script/score/score";
-import {countdown, drawBackground, updateEntities} from "./script/game/game";
+import {drawScore, fadeOutScore} from "./script/score/score";
+import {updateEntities} from "./script/game/game";
 import {checkCollisions} from "./controller/bounds";
 import {drawCharacters} from "./view";
 import {io} from "socket.io-client";
 import {drawBonuses, initBonuses} from "./script/bonuses/bonus";
-import {BaseBonus} from "./script/bonuses/BaseBonus";
+import {GAME_TIME, LAST_TIME} from "./script/game/const";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
 canvas.width = game.getWidth();
 canvas.height = game.getHeight();
-const socket = io();
+export const socket = io();
 
 export let activePlayers = [];
 export let points = [];
@@ -41,37 +39,33 @@ function init() {
     connect();
     //console.log(activeBots);
    // console.log('activeBots');
-
-    createPoints();
 }
 
 function render() {
     ctx.clearRect(0, 0, game.getWidth(), game.getHeight());
-    drawBackground();
+//    drawBackground();
     drawScore();
     drawBonuses();
     drawPoints();
     drawCharacters(activePlayers.concat(activeBots));
 }
 
-function update(dt) {
-    gameState.gameTime += dt;
+function update(dt, now) {
     // botMovement(dt);
     handleInput(dt);
     dataExchange(dt);
     checkCollisions(readyBonuses);
-    updateEntities(dt);
+    updateEntities(dt, now);
 
 
+    // перенести
     //отрисовка через readybonuses
     lastBonusAddTime += dt;
     if (lastBonusAddTime >= bonusAddInterval) {
         if (bonusIndex < bonuses.length) {
-            readyBonuses.push(bonuses[bonusIndex]);
-            console.log("+1 в readybonuses")
+            readyBonuses.push(bonuses[bonusIndex]); // Добавляем бонус в readyBonuses
+            //console.log("+1 в readybonuses")
             bonusIndex++;
-        } else {
-            console.log("No more bonuses to add.");
         }
         lastBonusAddTime = 0;
     }
@@ -80,24 +74,18 @@ function update(dt) {
 
 export function main() {
     let now = Date.now();
-    let dt = (now - lastState.lastTime) / 1000.0;
-    if (score.getTeam1() < 3 && score.getTeam2() < 3) {
-        update(dt);
-        render(dt);
-    } else {
-        drawBackground();
-        drawFinalScore();
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
-    }
-    lastState.lastTime = now;
+    let dt = (now - LAST_TIME.lastTime) / 1000.0;
+    GAME_TIME.gameTime += dt;
+    update(dt, now);
+    render();
+    LAST_TIME.lastTime = now;
     requestAnimFrame(main);
 }
 
+
 function connect() {
     socket.on('connect', () => {
-        console.log('Connected to server with id:', socket.id);
+        //console.log('Connected to server with id:', socket.id);
         socket.emit('redirected');
         sendCookie();
         initPlayers();
@@ -113,27 +101,28 @@ function initServerBonuses()
 {
     socket.emit('requestForBonuses');
     socket.on('sendBonuses', (serverBonuses) => {
-        console.log('sendBonuses вызван')
+       // console.log('sendBonuses вызван')
         bonuses = serverBonuses;
-        console.log(bonuses, 'before classes')
+       // console.log(bonuses, 'before classes')
 
         bonuses = initBonuses(bonuses);
-        console.log(bonuses)
+        //console.log(bonuses)
 
     })
 }
 
-
 function initPlayers() {
     socket.emit('requestForPlayers');
-    console.log('sendPlayers не вызван');
+    //console.log('sendPlayers не вызван');
     socket.on('sendPlayers', (players) => {
-        //console.log('sendPlayers вызван')
         activePlayers = players;
         setPlayerWithIdAsMain(socket.id);
-        //console.log(players, 'players from sendPlayers');
-        initPlayerAnimation()
-    })
+        initPlayerAnimation();
+        createPoints();
+        initPointAnimation();
+        console.log("init закончился");
+        main();
+    });
 }
 
 function initBots() {
@@ -151,7 +140,6 @@ function dataExchange(dt) {
     sendDataToServer(dt);
     getDataFromServer();
 }
-
 function sendDataToServer(dt) {
     let data = {
         player: getMyPlayer(activePlayers),
@@ -161,7 +149,6 @@ function sendDataToServer(dt) {
     };
     socket.emit('sendDataToServer', data);
 }
-
 function prepTransmittedPlayer(playerAsEntity) {
     return {
         id: playerAsEntity.getId(),
@@ -183,6 +170,7 @@ function getDataFromServer() {
 }
 
 
+
 window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
 };
@@ -195,19 +183,15 @@ function initEventListeners() {
     //     socket.emit('pageRefreshed');
     // });
 }
-
 function sendCookie() {
     const cookieValue = document.cookie.split('; ')
         .find(row => row.startsWith('userId='))
         ?.split('=')[1];
-    console.log(document.cookie, 'document.cookie');
+   // console.log(document.cookie, 'document.cookie');
     // Отправляем куки на сервер
     socket.emit('sentCookie', cookieValue);
 }
 
-
-
-
 setTimeout(fadeOutScore, 6800);
-countdown();
+// countdown();
 init();

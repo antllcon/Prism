@@ -14,7 +14,7 @@ class BotFunctions {
         return createdBots;
     }
     
-    resetAllBots() {
+    resetAllBots(requiredBots, activeBots) {
         for (let i = 0; i < activeBots.length; i++) {
             activeBots[i].x = BotConsts.DEFAULT_BOTS.x[requiredBots[i]];
             activeBots[i].y = BotConsts.DEFAULT_BOTS.y[requiredBots[i]];
@@ -224,6 +224,22 @@ class BotFunctions {
                     }
                 }
             }}
+        });
+
+        // Check collisions border
+        activeBots.forEach((bot) => {
+            if (bot.x < 0) {
+                // console.log(game.getWidth(), "getwidth bounds js")
+                bot.x = (GAME_CONSTS.canvasWidth - bot.size);
+            } else if (bot.x + bot.size > GAME_CONSTS.canvasWidth) {
+                bot.x = 0;
+            }
+        
+            if (bot.y < 0) {
+                bot.y = (GAME_CONSTS.canvasHeight - bot.size);
+            } else if (bot.y + bot.size > GAME_CONSTS.canvasHeight) {
+                bot.y = 0;
+            }
         });
     }
     findBotById(bots, id) {

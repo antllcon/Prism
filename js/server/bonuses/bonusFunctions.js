@@ -19,17 +19,17 @@ const bonuses = {
     },
     BONUS_TYPES: [
         // { type: 'base', class: BaseBonus, size: 20, color: '#FFFF00', team: 'neutral' },
-        { type: 'stopBot', class: StopBonus, size: 30, color: '#FF0000', team: 'neutral' },
-        { type: 'deactivatePoints', class: DeactivatePointsBonus, size: 30, color: '#05bbf4', team: 'neutral' },
         { type: 'changeColor', class: ChangeColorBonus, size: 30, color: '#00FF00', team: 'neutral' },
+        { type: 'stopOppositeTeamBonus', class: StopBonus, size: 30, color: '#FF0000', team: 'neutral' },
+        { type: 'deactivatePoints', class: DeactivatePointsBonus, size: 30, color: '#05bbf4', team: 'neutral' },
         { type: 'invisibleLaser', class: InvisibleLaserBonus, size: 30, color: '#ff7300', team: 'neutral' },
     ],
     AVAILABLE_BONUSES: [
-        { type: 'base', count: 5 },
-        { type: 'stopBot', count: 2 },
-        { type: 'deactivatePoints', count: 2 },
-        { type: 'changeColor', count: 2 },
-        { type: 'invisibleLaser', count: 2 }
+        // { type: 'base', count: 3 },
+        { type: 'invisibleLaser', count: 3 },
+        { type: 'changeColor', count: 3 },
+        { type: 'stopOppositeTeamBonus', count: 1 },
+        { type: 'deactivatePoints', count: 3 },
     ]
 };
 

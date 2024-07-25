@@ -2,7 +2,7 @@ const BaseBonus = require("./BaseBonus");
 class StopBonus extends BaseBonus {
     constructor(x, y, size, color, team) {
         super(x, y, size, color, team);
-        this.type = 'stopBot';
+        this.type = 'stopOppositeTeamBonus';
     }
    /* catch(entity, activeBots, activePlayers) {
         super.catch(entity);

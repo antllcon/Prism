@@ -10,12 +10,16 @@ export class Point {
         this.type = DEFAULT_POINTS.type[i];
         this.team = DEFAULT_POINTS.team;
         this.color = DEFAULT_POINTS.color;
-        this.angle = DEFAULT_POINTS.angle;
+        this.angle = DEFAULT_POINTS.angle[i];
         this.existTime = DEFAULT_POINTS.existTime;
         this.activationTime = null;
-        this.state = DEFAULT_POINTS.state[i];
+        this.state = DEFAULT_POINTS.state;
         this.speed = DEFAULT_POINTS.speed;
         this.direction = DEFAULT_POINTS.direction;
+        this.image = new Image();
+        this.load = DEFAULT_POINTS.load;
+        this.count = DEFAULT_POINTS.count;
+        this.tick = DEFAULT_POINTS.tick;
     }
 
     getId() {return this.id;}
@@ -33,6 +37,12 @@ export class Point {
     getState() {return this.state;}
     getSpeed() {return this.speed;}
     getDirection() {return this.direction;}
+
+    getImage() {return this.image;}
+    getLoad() {return this.load;}
+    getCount() {return this.count;}
+    getTick() {return this.tick;}
+
     setId(id) {this.id = id;}
     setX(x) {this.x = x;}
     setY(y) {this.y = y;}
@@ -48,6 +58,12 @@ export class Point {
     setState(state) {this.state = state;}
     setSpeed(speed) {this.speed = speed;}
     setDirection(direction) {this.direction = direction;}
+
+    setImage(image) {this.image.src = image;}
+    setLoad(load) {this.load = load;}
+    setCount(count) {this.count = count;}
+    setTick(tick) {this.tick = tick;}
+
     isActive() {return this.state === POINT_STATES.ACTIVE;}
     isInactive() {return this.state === POINT_STATES.INACTIVE;}
     isInvisible() {return this.state === POINT_STATES.INVISIBLE;}
@@ -64,5 +80,7 @@ export class Point {
         this.x += x;
         this.y += y;
     }
+
+    // возможно не надо - не надо
     deactivate() {this.setInactive();}
 }
