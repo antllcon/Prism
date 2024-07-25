@@ -7,7 +7,7 @@ export function drawScore() {
     ctx.globalAlpha = scoreAlpha;
     ctx.fillStyle = score.getColor();
     ctx.font = "100px Font Over";
-    ctx.fillText(`${score.getTeamOne()}:${score.getTeamTwo()}`, 50, 100 );
+    ctx.fillText(`${score.getTeamPurple()}:${score.getTeamYellow()}`, 50, 100 );
     ctx.restore();
 }
 
@@ -17,22 +17,22 @@ export function drawFinalScore() {
 
     backgroundTemplate(background, scoreGif);
 
-    if (score.getTeamOne() === 0 && score.getTeamTwo() === 3) {
+    if (score.getTeamPurple() === 0 && score.getTeamYellow() === 3) {
         scoreGif.src = "./src/assets/img/0-3.gif";
     }
-    if (score.getTeamOne() === 1 && score.getTeamTwo() === 3) {
+    if (score.getTeamPurple() === 1 && score.getTeamYellow() === 3) {
         scoreGif.src = "./src/assets/img/1-3.gif";
     }
-    if (score.getTeamOne() === 2 && score.getTeamTwo() === 3) {
+    if (score.getTeamPurple() === 2 && score.getTeamYellow() === 3) {
         scoreGif.src = "./src/assets/img/2-3.gif";
     }
-    if (score.getTeamOne() === 3 && score.getTeamTwo() === 0) {
+    if (score.getTeamPurple() === 3 && score.getTeamYellow() === 0) {
         scoreGif.src = "./src/assets/img/3-0.gif";
     }
-    if (score.getTeamOne() === 3 && score.getTeamTwo() === 1) {
+    if (score.getTeamPurple() === 3 && score.getTeamYellow() === 1) {
         scoreGif.src = "./src/assets/img/3-1.gif";
     }
-    if (score.getTeamOne() === 3 && score.getTeamTwo() === 2) {
+    if (score.getTeamPurple() === 3 && score.getTeamYellow() === 2) {
         scoreGif.src = "./src/assets/img/3-2.gif";
     }
 

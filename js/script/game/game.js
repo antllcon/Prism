@@ -27,28 +27,36 @@ function resetLevel() {
 
     //scoreGif.src = getScoreGifUrl(teamOneScore, teamTwoScore);
 
-    if (score.getTeamOne() === 0 && score.getTeamTwo() === 1) {
+    if (score.getTeamPurple() === 0 && score.getTeamYellow() === 1) {
+        playDeathPlayer();
         scoreGif.src = "./src/assets/img/0-1.gif";
     }
-    if (score.getTeamOne() === 0 && score.getTeamTwo() === 2) {
+    if (score.getTeamPurple() === 0 && score.getTeamYellow() === 2) {
+        playDeathPlayer();
         scoreGif.src = "./src/assets/img/0-2.gif";
     }
-    if (score.getTeamOne() === 1 && score.getTeamTwo() === 0) {
+    if (score.getTeamPurple() === 1 && score.getTeamYellow() === 0) {
+        playDeathPlayer();
         scoreGif.src = "./src/assets/img/1-0.gif";
     }
-    if (score.getTeamOne() === 1 && score.getTeamTwo() === 1) {
+    if (score.getTeamPurple() === 1 && score.getTeamYellow() === 1) {
+        playDeathPlayer();
         scoreGif.src = "./src/assets/img/1-1.gif";
     }
-    if (score.getTeamOne() === 1 && score.getTeamTwo() === 2) {
+    if (score.getTeamPurple() === 1 && score.getTeamYellow() === 2) {
+        playDeathPlayer();
         scoreGif.src = "./src/assets/img/1-2.gif";
     }
-    if (score.getTeamOne() === 2 && score.getTeamTwo() === 0) {
+    if (score.getTeamPurple() === 2 && score.getTeamYellow() === 0) {
+        playDeathPlayer();
         scoreGif.src = "./src/assets/img/2-0.gif";
     }
-    if (score.getTeamOne() === 2 && score.getTeamTwo() === 1) {
+    if (score.getTeamPurple() === 2 && score.getTeamYellow() === 1) {
+        playDeathPlayer();
         scoreGif.src = "./src/assets/img/2-1.gif";
     }
-    if (score.getTeamOne() === 2 && score.getTeamTwo() === 2) {
+    if (score.getTeamPurple() === 2 && score.getTeamYellow() === 2) {
+        playDeathPlayer();
         scoreGif.src = "./src/assets/img/2-2.gif";
     }
 
@@ -72,6 +80,40 @@ export function backgroundTemplate(background, gif) {
 
 let existCountdown = true;
 
+function getDeadTeam(players) {
+    let purpleAlive = 0;
+    let purpleDead = 0;
+    let yellowAlive = 0;
+    let yellowDead = 0;
+
+    // Подсчитываем количество живых и мертвых игроков в каждой команде
+    players.forEach(player => {
+        if (player.getTeam() === TEAM_STATES.PURPLE) {
+            if (player.isDead()) {
+                purpleDead++;
+            } else {
+                purpleAlive++;
+            }
+        } else if (player.getTeam() === TEAM_STATES.YELLOW) {
+            if (player.isDead()) {
+                yellowDead++;
+            } else {
+                yellowAlive++;
+            }
+        }
+    });
+
+    // Проверяем, есть ли команда, у которой все игроки мертвы
+    if (purpleAlive === 0 && purpleDead > 0) {
+        return TEAM_STATES.PURPLE;
+    }
+
+    if (yellowAlive === 0 && yellowDead > 0) {
+        return TEAM_STATES.YELLOW;
+    }
+
+    return false;
+}
 export function updateEntities(dt, now) {
     if (game.getState() === GAME_STATES.start) {
         if (existCountdown) {
@@ -102,32 +144,17 @@ export function updateEntities(dt, now) {
                 updateVisibilityPoints(point);
             }
         });
-        // доделать по командам
-        activePlayers.forEach(player => {
-            if (activePlayers.every(player => player.isDead())) {
-                if (player.getTeam() === TEAM_STATES.PURPLE) {
-                    score.increaseTeamTwo();
-                } else if (player.getTeam() === TEAM_STATES.YELLOW) {
-                    playDeathPlayer();
-                    score.increaseTeamOne();
-                }
-                console.log("Все игроки мертвы!");
-                game.setState(GAME_STATES.round);
-            }
-        });
-        activeBots.forEach(bot => {
-            if (activeBots.every(bot => bot.isDead())) {
-                console.log(activeBots);
-                if (bot.getTeam() === TEAM_STATES.PURPLE) {
-                    score.increaseTeamTwo();
-                } else if (bot.getTeam() === TEAM_STATES.YELLOW) {
-                    playDeathPlayer();
-                    score.increaseTeamOne();
-                }
-                console.log("Боты умерли");
-                game.setState(GAME_STATES.round);
-            }
-        });
+
+        let deadTeam = getDeadTeam(activePlayers.concat(activeBots));
+        if (deadTeam === TEAM_STATES.PURPLE) {
+            score.increaseTeamPurple();
+            game.setState(GAME_STATES.round);
+        }
+        if (deadTeam === TEAM_STATES.YELLOW) {
+            score.increaseTeamYellow();
+            game.setState(GAME_STATES.round);
+        }
+
     }
     // должно переходить в pause
     if (game.getState() === GAME_STATES.round) {
@@ -166,4 +193,3 @@ export function countdown() {
         game.setState(GAME_STATES.play);
     }, 4200)
 }
-

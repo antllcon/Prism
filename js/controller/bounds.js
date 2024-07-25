@@ -1,7 +1,6 @@
 import {getMyPlayer} from "../script/player/player";
 import {activePlayers, activeBots, points} from "../script";
 import {game} from "../script/game/model";
-import {PLAYER_STATES} from "../script/player/const";
 import {playLaserAppearance} from "../sound/laserAppearanceAudio";
 
 function checkLaserBounds() {
@@ -20,7 +19,7 @@ function checkLaserBounds() {
             ];
 
             for (const corner of playerCorners) {
-                // расчитываем удаленность угловой точки игрока от центра лазера
+                // рассчитываем удаленность угловой точки игрока от центра лазера
                 const dx = corner.x - point.getX();
                 const dy = corner.y - point.getY();
 
