@@ -3,6 +3,7 @@ const ProgressBar = require('./progressBar/progressBar.js')
 
 class Player {
     constructor(i, id) {
+        this.position = i;
         this.type = PlayerConsts.DEFAULT_PLAYERS.type;
         this.id = id;
         this.main = false;

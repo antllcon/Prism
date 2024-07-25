@@ -61,7 +61,7 @@ export function initPlayerAnimation() {
         if (player.image == null) {
             player.image = new Image();
         }
-        player.image.src = "./src/assets/sprites/player/right.png";
+        player.image.src = "./src/assets/sprites/purple/right.png";
         player.image.onload = () => {
             player.load = true;
         }

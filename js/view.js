@@ -8,24 +8,38 @@ export function drawCharacters(arrayCharacters) {
 
     arrayCharacters.forEach(character => {
         if (character.state === PLAYER_STATES.STUNNED || character.state === PLAYER_STATES.ACTIVE) {
-            ctx.fillStyle = character.color;
-            ctx.fillRect(character.x, character.y, character.size, character.size);
             if (character.load) {
                 let spritePath;
-                if (character.type === 'bot') {
+                if (character.position === 0) {
                     switch (character.direction) {
-                        case "up": spritePath = "./src/assets/sprites/bot/up.png"; break;
-                        case "down": spritePath = "./src/assets/sprites/bot/down.png"; break;
-                        case "left": spritePath = "./src/assets/sprites/bot/left.png"; break;
-                        case "right": spritePath = "./src/assets/sprites/bot/right.png"; break;
+                        case "up": spritePath = "./src/assets/sprites/dark-purple/up.png"; break;
+                        case "down": spritePath = "./src/assets/sprites/dark-purple/down.png"; break;
+                        case "left": spritePath = "./src/assets/sprites/dark-purple/left.png"; break;
+                        case "right": spritePath = "./src/assets/sprites/dark-purple/right.png"; break;
                     }
                 }
-                if (character.type === 'player') {
+                if (character.position === 1) {
                     switch (character.direction) {
-                        case "up": spritePath = "./src/assets/sprites/player/up.png"; break;
-                        case "down": spritePath = "./src/assets/sprites/player/down.png"; break;
-                        case "left": spritePath = "./src/assets/sprites/player/left.png"; break;
-                        case "right": spritePath = "./src/assets/sprites/player/right.png"; break;
+                        case "up": spritePath = "./src/assets/sprites/purple/up.png"; break;
+                        case "down": spritePath = "./src/assets/sprites/purple/down.png"; break;
+                        case "left": spritePath = "./src/assets/sprites/purple/left.png"; break;
+                        case "right": spritePath = "./src/assets/sprites/purple/right.png"; break;
+                    }
+                }
+                if (character.position === 2) {
+                    switch (character.direction) {
+                        case "up": spritePath = "./src/assets/sprites/yellow/up.png"; break;
+                        case "down": spritePath = "./src/assets/sprites/yellow/down.png"; break;
+                        case "left": spritePath = "./src/assets/sprites/yellow/left.png"; break;
+                        case "right": spritePath = "./src/assets/sprites/yellow/right.png"; break;
+                    }
+                }
+                if (character.position === 3) {
+                    switch (character.direction) {
+                        case "up": spritePath = "./src/assets/sprites/dark-yellow/up.png"; break;
+                        case "down": spritePath = "./src/assets/sprites/dark-yellow/down.png"; break;
+                        case "left": spritePath = "./src/assets/sprites/dark-yellow/left.png"; break;
+                        case "right": spritePath = "./src/assets/sprites/dark-yellow/right.png"; break;
                     }
                 }
 
@@ -52,6 +66,10 @@ export function drawCharacters(arrayCharacters) {
                     character.count = 0;
                 }
             }
+        }
+        if (!character.load) {
+            ctx.fillStyle = character.color;
+            ctx.fillRect(character.x, character.y, character.size, character.size);
         }
         // updateEntities
         // исправить

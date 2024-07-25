@@ -22,7 +22,7 @@ export function initBotAnimation() {
         if (bot.image === null) {
             bot.image = new Image();
         }
-        bot.image.src = ("./src/assets/sprites/bot/left.png");
+        bot.image.src = ("./src/assets/sprites/yellow/left.png");
         bot.image.onload = () => {
             bot.load = true;
         }
