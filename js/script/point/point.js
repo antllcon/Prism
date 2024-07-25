@@ -18,21 +18,12 @@ export function resetPoints() {
     }
 }
 
-export function initPointAnimation() {
-    points.forEach(point => {
-        point.setImage("./src/assets/sprites/point/line-point.png");
-        point.getImage().onload = () => {
-            point.setLoad(true);
-        };
-    });
-}
-
 export function drawPoints() {
     let spriteSize = 50;
     points.forEach(point => {
         if (point.isActive()) {
             if (point.isTypeCross()) {
-                point.setAngle(point.getAngle() + Math.PI / 180);
+                point.setAngle(point.getAngle() + Math.PI / 1000);
                 ctx.save();
                 ctx.translate(point.getX(), point.getY());
                 ctx.rotate(point.getAngle());

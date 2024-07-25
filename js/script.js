@@ -1,11 +1,10 @@
 import {game} from "./script/game/model";
 
 import {drawPoints, createPoints, initPointAnimation} from "./script/point/point";
-import {initBotAnimation} from "./script/bot/bot";
 import {
     handleInput,
     getMyPlayer,
-    initPlayerAnimation,
+    // initPlayerAnimation,
     updatePlayers,
     setPlayerWithIdAsMain
 } from "./script/player/player";
@@ -16,6 +15,8 @@ import {drawCharacters} from "./view";
 import {io} from "socket.io-client";
 import {drawBonuses, initBonuses} from "./script/bonuses/bonus";
 import {GAME_STATES, GAME_TIME, LAST_TIME} from "./script/game/const";
+import {initAnimation} from "./view";
+
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -118,10 +119,11 @@ function initPlayers() {
         activePlayers = data.players;
         playersPositions = data.positions;
         setPlayerWithIdAsMain(socket.id);
-        initPlayerAnimation();
+        //initPlayerAnimation();
         createPoints();
-        initPointAnimation();
-        console.log("init закончился");
+        // console.log("init закончился");
+        console.log(activePlayers.concat(activeBots));
+        initAnimation(activePlayers.concat(activeBots));
         main();
     });
 }
@@ -132,7 +134,7 @@ function initBots() {
         botsPositions = data.positions;
         //console.log(bots, 'bots from sendBots');
         activeBots = data.bots;
-        initBotAnimation();
+        // initBotAnimation();
     })
 }
 

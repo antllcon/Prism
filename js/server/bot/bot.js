@@ -263,8 +263,13 @@ class BotFunctions {
         botFromServer.color ? bot.setColor(botFromServer.color) : null;
         botFromServer.state ? bot.setState(botFromServer.state) : null;
     }
-    
-    
+    resetAllBots(bots) {
+        bots.forEach((bot) => {
+            bot.x = (BotConsts.DEFAULT_BOTS.x[bot.position]);
+            bot.y = (BotConsts.DEFAULT_BOTS.y[bot.position]);
+            bot.state = BotConsts.BOT_STATES.ACTIVE;
+        })
+    }
     /* let closestBonus = null;
                 let closestDistance = Infinity;
     

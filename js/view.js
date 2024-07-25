@@ -1,6 +1,38 @@
-import { ctx } from "./script";
+import {activeBots, activePlayers, ctx, socket} from "./script";
 import { PLAYER_STATES, DEFAULT_PLAYERS, ABILITY_SCALE_MAX } from "./script/player/const";
 import {getMyPlayer} from "./script/player/player";
+
+export function initAnimation(arrayCharacters) {
+   arrayCharacters.forEach(character => {
+       if (character.image === null) {
+           character.image = new Image();
+       }
+       if (character.position === 0) {
+           character.image.src = "./src/assets/sprites/dark-purple/right.png";
+           character.image.onload = () => {
+               character.load = true;
+           }
+       }
+       if (character.position === 1) {
+           character.image.src = "./src/assets/sprites/purple/right.png";
+           character.image.onload = () => {
+               character.load = true;
+           }
+       }
+       if (character.position === 2) {
+           character.image.src = "./src/assets/sprites/yellow/right.png";
+           character.image.onload = () => {
+               character.load = true;
+           }
+       }
+       if (character.position === 3) {
+           character.image.src = "./src/assets/sprites/dark-yellow/right.png";
+           character.image.onload = () => {
+               character.load = true;
+           }
+       }
+   })
+}
 
 export function drawCharacters(arrayCharacters) {
     const endAnimation = 9;
@@ -8,27 +40,41 @@ export function drawCharacters(arrayCharacters) {
 
     arrayCharacters.forEach(character => {
         if (character.state === PLAYER_STATES.STUNNED || character.state === PLAYER_STATES.ACTIVE) {
-            ctx.fillStyle = character.color;
-            ctx.fillRect(character.x, character.y, character.size, character.size);
+
             if (character.load) {
                 let spritePath;
-                if (character.type === 'bot') {
+                if (character.position === 0) {
                     switch (character.direction) {
-                        case "up": spritePath = "./src/assets/sprites/bot/up.png"; break;
-                        case "down": spritePath = "./src/assets/sprites/bot/down.png"; break;
-                        case "left": spritePath = "./src/assets/sprites/bot/left.png"; break;
-                        case "right": spritePath = "./src/assets/sprites/bot/right.png"; break;
+                        case "up": spritePath = "./src/assets/sprites/dark-purple/up.png"; break;
+                        case "down": spritePath = "./src/assets/sprites/dark-purple/down.png"; break;
+                        case "left": spritePath = "./src/assets/sprites/dark-purple/left.png"; break;
+                        case "right": spritePath = "./src/assets/sprites/dark-purple/right.png"; break;
                     }
                 }
-                if (character.type === 'player') {
+                if (character.position === 1) {
                     switch (character.direction) {
-                        case "up": spritePath = "./src/assets/sprites/player/up.png"; break;
-                        case "down": spritePath = "./src/assets/sprites/player/down.png"; break;
-                        case "left": spritePath = "./src/assets/sprites/player/left.png"; break;
-                        case "right": spritePath = "./src/assets/sprites/player/right.png"; break;
+                        case "up": spritePath = "./src/assets/sprites/purple/up.png"; break;
+                        case "down": spritePath = "./src/assets/sprites/purple/down.png"; break;
+                        case "left": spritePath = "./src/assets/sprites/purple/left.png"; break;
+                        case "right": spritePath = "./src/assets/sprites/purple/right.png"; break;
                     }
                 }
-
+                if (character.position === 2) {
+                    switch (character.direction) {
+                        case "up": spritePath = "./src/assets/sprites/yellow/up.png"; break;
+                        case "down": spritePath = "./src/assets/sprites/yellow/down.png"; break;
+                        case "left": spritePath = "./src/assets/sprites/yellow/left.png"; break;
+                        case "right": spritePath = "./src/assets/sprites/yellow/right.png"; break;
+                    }
+                }
+                if (character.position === 3) {
+                    switch (character.direction) {
+                        case "up": spritePath = "./src/assets/sprites/dark-yellow/up.png"; break;
+                        case "down": spritePath = "./src/assets/sprites/dark-yellow/down.png"; break;
+                        case "left": spritePath = "./src/assets/sprites/dark-yellow/left.png"; break;
+                        case "right": spritePath = "./src/assets/sprites/dark-yellow/right.png"; break;
+                    }
+                }
                 if (spritePath) {
                     character.image.src = spritePath;
                 }
@@ -51,6 +97,9 @@ export function drawCharacters(arrayCharacters) {
                 if (character.count=== endAnimation) {
                     character.count = 0;
                 }
+            } else {
+                ctx.fillStyle = character.color;
+                ctx.fillRect(character.x, character.y, character.size, character.size);
             }
         }
         // updateEntities
@@ -66,6 +115,11 @@ export function drawCharacters(arrayCharacters) {
             character.state = PLAYER_STATES.ACTIVE;
         }
         }
+
+
+        // вот это
+
+
 
         // в рендер
         if (character.type === 'player'){

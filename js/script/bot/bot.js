@@ -17,17 +17,6 @@ export function createBots(requiredBots) {
     return createdBots;
 }
 
-export function initBotAnimation() {
-    activeBots.forEach(bot => {
-        if (bot.image === null) {
-            bot.image = new Image();
-        }
-        bot.image.src = ("./src/assets/sprites/bot/left.png");
-        bot.image.onload = () => {
-            bot.load = true;
-        }
-    })
-}
 // переписать drawcharacters
 export function drawBot() {
 
@@ -75,10 +64,13 @@ export function drawBot() {
                 bot.count = (0);
             }
         }
-        if (bot.state === BOT_STATES.STUNNED && bot.stunnedUntil < Date.now()) {
+        // && bot.stunnedUntil < Date.now()
+        if (bot.state === BOT_STATES.STUNNED) {
             startStunTimer(bot, DURATION_DISABILITY);
             bot.stunnedUntil = 0;
             bot.speed = (DEFAULT_BOTS.speed);
+            //ВОТ ЭТО ДОБАВИЛИ
+            bot.state = BOT_STATES.ACTIVE;
 
             if (bot.state === BOT_STATES.DEAD) {
                 bot.state = BOT_STATES.ACTIVE;

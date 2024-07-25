@@ -56,17 +56,9 @@ export function handleInput(dt) {
     }
 }
 
-export function initPlayerAnimation() {
-    activePlayers.forEach(player => {
-        if (player.image == null) {
-            player.image = new Image();
-        }
-        player.image.src = "./src/assets/sprites/player/right.png";
-        player.image.onload = () => {
-            player.load = true;
-        }
-    })
-}
+// export function initPlayerAnimation() {
+//
+// }
 
 export function drawPlayer(activePlayers) {
     const spriteSize = 64;
@@ -75,6 +67,7 @@ export function drawPlayer(activePlayers) {
     activePlayers.forEach(player => {
         if (player.isAlive()|| player.isStunned()) {
             ctx.fillStyle = player.getColor();
+            ctx.scoreAlpha = 1;
             ctx.fillRect(player.x, player.y, player.getSize(), player.getSize());
 
             if (player.load) {
@@ -173,15 +166,16 @@ export function getMyPlayer(players) {
 }
 
 export function resetAllPlayers() {
-    for (let i = 0; i < playersPositions; i++) {
-        activePlayers[i].x = (DEFAULT_PLAYERS.x[playersPositions[i]]);
-        activePlayers[i].y = (DEFAULT_PLAYERS.y[playersPositions[i]]);
-        activePlayers[i].progressBar.x = (activePlayers[i].x);
-        activePlayers[i].progressBar.y = (activePlayers[i].y - 60);
-        activePlayers[i].abilityScale = (0);
-        activePlayers[i].progressBar.progress = (activePlayers[i].abilityScale);
-        activePlayers[i].state = PLAYER_STATES.ACTIVE;
-    }
+    console.log(playersPositions)
+    activePlayers.forEach((player, i) => {
+        player.x = (DEFAULT_PLAYERS.x[playersPositions[i].position]);
+        player.y = (DEFAULT_PLAYERS.y[playersPositions[i].position]);
+        player.progressBar.x = (player.x);
+        player.progressBar.y = (player.y - 60);
+        player.abilityScale = (0);
+        player.progressBar.progress = (player.abilityScale);
+        player.state = PLAYER_STATES.ACTIVE;
+    });
 }
 
 export function findPlayerBySocketId(socketId) {

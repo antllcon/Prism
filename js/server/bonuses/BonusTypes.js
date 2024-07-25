@@ -23,11 +23,16 @@ const bonuses = {
         { type: 'invisibleLaser', class: InvisibleLaserBonus, size: 30, color: '#ff7300', team: 'neutral' },
     ],
     AVAILABLE_BONUSES: [
-        { type: 'base', count: 5 },
-        { type: 'stopOppositeTeamBonus', count: 2 },
-        { type: 'deactivatePoints', count: 2 },
-        { type: 'changeColor', count: 2 },
-        { type: 'invisibleLaser', count: 2 }
+        //{ type: 'base', count: 5 },
+        { type: 'stopOppositeTeamBonus', count: 1 },
+        { type: 'stopOppositeTeamBonus', count: 1 },
+        { type: 'deactivatePoints', count: 1 },
+        { type: 'changeColor', count: 1 },
+        { type: 'invisibleLaser', count: 1 },
+        { type: 'stopOppositeTeamBonus', count: 1 },
+        { type: 'deactivatePoints', count: 1 },
+        { type: 'changeColor', count: 1 },
+        { type: 'invisibleLaser', count: 1 }
     ]
 };
 

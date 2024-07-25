@@ -30,11 +30,42 @@ export function initBonuses(bonusData: Array<{ color: string; size: number; team
 export function drawBonuses(): void {
     //@ts-ignore
     readyBonuses.forEach((bonus) => {
-        ctx.beginPath();
-        ctx.arc(bonus.x, bonus.y, bonus.size, 0, 2 * Math.PI);
-        ctx.fillStyle = bonus.color;
-        ctx.fill();
-        ctx.closePath();
+        if (bonus.color === '#FF0000') {
+            let bonusImage = new Image();
+            bonusImage.src = './src/assets/img/bonus-stop.png';
+            ctx.drawImage(
+                bonusImage,
+                bonus.x,
+                bonus.y
+            )
+        }
+        if (bonus.color === '#05bbf4') {
+            let bonusImage = new Image();
+            bonusImage.src = './src/assets/img/bonus-deactive.png';
+            ctx.drawImage(
+                bonusImage,
+                bonus.x,
+                bonus.y
+            )
+        }
+        if (bonus.color === '#00FF00') {
+            let bonusImage = new Image();
+            bonusImage.src = './src/assets/img/bonus-change-color.png';
+            ctx.drawImage(
+                bonusImage,
+                bonus.x,
+                bonus.y
+            )
+        }
+        if (bonus.color === '#ff7300') {
+            let bonusImage = new Image();
+            bonusImage.src = './src/assets/img/bonus-invisible.png';
+            ctx.drawImage(
+                bonusImage,
+                bonus.x,
+                bonus.y
+            )
+        }
     });
 }
 

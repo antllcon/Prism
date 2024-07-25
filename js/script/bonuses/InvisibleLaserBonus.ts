@@ -18,6 +18,7 @@ export class InvisibleLaserBonus extends BaseBonus {
         //протестить
         teamMembers.forEach(player => {
             player.invisibleLasers = true;
+            player.scoreAlpha = 0.5;
             // console.log(player.invisibleLasers, 'поймал InvisibleLaserBonus')
             if (player instanceof Bot) {
                 player.invisibleLasers = true;
@@ -25,6 +26,7 @@ export class InvisibleLaserBonus extends BaseBonus {
             }
             //надо на сервер данные посылать
             setTimeout(() => {
+                player.scoreAlpha = 1;
                 player.invisibleLasers = false;
                 socket.emit('updateEntityParams', player);
             }, 5000);

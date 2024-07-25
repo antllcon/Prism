@@ -234,6 +234,12 @@ io.on('connection', (socket) => {
         })
     });
 
+    socket.on('resetAll', () => {
+        const roomId = findRoomBySocketId(socket.id);
+        botFunctions.resetAllBots(rooms[roomId].bots)
+        playerFunctions.resetAllPlayers(rooms[roomId].players)
+    })
+
     socket.on('sendDataToServer', (data) => {
         const roomId = findRoomBySocketId(socket.id);
         const playerFromClient = data.player;

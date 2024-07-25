@@ -15,16 +15,16 @@ class PlayerFunctions {
         return mainPlayer || {};
     }
     
-    resetAllPlayers(activePlayers) {
-        for (let i = 0; i < activePlayers.length; i++) {
-            activePlayers[i].x = (PlayerConsts.DEFAULT_PLAYERS.x[i]);
-            activePlayers[i].y = (PlayerConsts.DEFAULT_PLAYERS.y[i]);
-            activePlayers[i].progressBar.x = (activePlayers[i].x);
-            activePlayers[i].progressBar.y = (activePlayers[i].y - 60);
-            activePlayers[i].abilityScale = 0;
-            activePlayers[i].progressBar.progress = 0;
-            activePlayers[i].state = PlayerConsts.PLAYER_STATES.ACTIVE;
-        }
+    resetAllPlayers(players) {
+        players.forEach((player) => {
+            player.x = (PlayerConsts.DEFAULT_PLAYERS.x[player.position]);
+            player.y = (PlayerConsts.DEFAULT_PLAYERS.y[player.position]);
+            player.progressBar.x = (player.x);
+            player.progressBar.y = (player.y - 60);
+            player.abilityScale = 0;
+            player.progressBar.progress = 0;
+            player.state = PlayerConsts.PLAYER_STATES.ACTIVE;
+        })
     }
     
     findPlayerBySocketId(activePlayers, socketId) {

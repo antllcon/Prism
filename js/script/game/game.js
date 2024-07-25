@@ -5,13 +5,13 @@ import {score, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
 import {playGameTheme} from "../../sound/gameThemeAudio";
-import {activePlayers, activeBots, points} from "../../script";
+import {activePlayers, activeBots, points, socket} from "../../script";
 import {updateAbilityScale} from "../player/progressBar/progressBar";
 import {PLAYER_STATES} from "../player/const";
 import {DEFAULT_POINTS, pointHeightActivationSize} from "../point/const";
 import {game} from "./model";
-import {drawFinalScore} from "../score/score";
 import {resetAllBots} from "../bot/bot";
+import {drawFinalScore} from "../score/score";
 
 function resetLevel() {
     /* socket.emit('resetPlayers')
@@ -21,6 +21,10 @@ function resetLevel() {
          })
      })*/
 //непонятно когда работаета когда нет
+
+
+
+
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
     let background = document.createElement("div");
@@ -53,12 +57,16 @@ function resetLevel() {
         scoreGif.src = "./src/assets/img/2-2.gif";
     }
 
+    game.setState("");
+
     setTimeout(() => {
         background.remove();
         scoreGif.remove();
         resetPoints();
         resetAllPlayers();
         resetAllBots();
+        socket.emit('resetAll');
+        console.log(activePlayers)
         game.setState(GAME_STATES.PLAY);
     }, 1000)
 
@@ -126,7 +134,6 @@ export function updateEntities(dt, now) {
         drawFinalScore();
     }
 }
-
 
 function getDeadTeam(players) {
     let purpleAlive = 0;
