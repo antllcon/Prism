@@ -23,7 +23,6 @@ body {
 
 .canvas {
     margin: 0 auto;
-    width: 75%;
-    height: 65%;
+    height: 75%;
     border: 5px solid black;
 }
