@@ -54,7 +54,7 @@ PlayerConsts = {
             canvasHeight / 3,
             (canvasHeight * 2) / 3,
         ],
-        size: 30,
+        size: 20,
         speed: 300,
         team: [TEAM_STATES.PURPLE, TEAM_STATES.PURPLE, TEAM_STATES.YELLOW, TEAM_STATES.YELLOW],
         color: [COLORS.PURPLE, COLORS.PURPLE, COLORS.YELLOW, COLORS.YELLOW],

@@ -21,8 +21,6 @@ function resetLevel() {
          })
      })*/
 //непонятно когда работаета когда нет
-    resetAllPlayers();
-    resetAllBots();
     scoreAlphaState.scoreAlpha = 0.2; // Сброс прозрачности счёта
 
     let background = document.createElement("div");
@@ -59,8 +57,8 @@ function resetLevel() {
         background.remove();
         scoreGif.remove();
         resetPoints();
-        resetPlayers();
-        resetBots();
+        resetAllPlayers();
+        resetAllBots();
         game.setState(GAME_STATES.PLAY);
     }, 1000)
 

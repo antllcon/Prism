@@ -96,7 +96,7 @@ class BotFunctions {
             }
     
             function findActivePointInArea(point) {
-                if (point.state === GAME_CONSTS.POINT_STATES.ACTIVE) {
+                if (point.state === GAME_CONSTS.POINT_STATES.ACTIVE && point.team !== bot.team) {
                     if (loopIndexActive === 0) {
                         idInactive = 0;
                         dxMinActive = point.x - bot.getX();
