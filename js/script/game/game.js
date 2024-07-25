@@ -1,7 +1,6 @@
 import {COLORS, GAME_STATES, TEAM_STATES} from "./const";
 import {resetPoints} from "../point/point"
-import {getMyPlayer, resetPlayers} from "../player/player"
-import {resetBots} from "../bot/bot"
+import {getMyPlayer, resetAllPlayers} from "../player/player"
 import {score, scoreAlphaState} from "../score/model";
 import {fadeOutScore} from "../score/score";
 import {playCountdown} from "../../sound/countdownAudio";
@@ -12,6 +11,7 @@ import {PLAYER_STATES} from "../player/const";
 import {DEFAULT_POINTS, pointHeightActivationSize} from "../point/const";
 import {game} from "./model";
 import {drawFinalScore} from "../score/score";
+import {resetAllBots} from "../bot/bot";
 
 function resetLevel() {
     /* socket.emit('resetPlayers')

@@ -450,9 +450,6 @@ function initEventListeners() {
             socket.on('roomIsReady', () => {
                 window.location.href = "game.html";
             })
-            setTimeout(() => {
-                window.location.href = "game.html";
-            }, 1000);
         });
     }
 

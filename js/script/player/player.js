@@ -172,7 +172,7 @@ export function getMyPlayer(players) {
     return mainPlayer || {};
 }
 
-export function resetPlayers() {
+export function resetAllPlayers() {
     for (let i = 0; i < activePlayers.length; i++) {
         activePlayers[i].x = (DEFAULT_PLAYERS.x[i]);
         activePlayers[i].y = (DEFAULT_PLAYERS.y[i]);
