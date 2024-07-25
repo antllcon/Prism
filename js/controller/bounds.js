@@ -59,7 +59,7 @@ function checkLaserBounds() {
                         }
                         if (point.isTypeLine() && point.getTeam() !== player.team) {
                             if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
-                                corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
+                                corner.x >= point.x - point.size && corner.x <= point.x + point.size) {
                                 player.state = PLAYER_STATES.DEAD;
                             }
                         }
@@ -110,7 +110,7 @@ function checkLaserBounds() {
                             }
                             if (point.isTypeLine() && point.getTeam() !== bot.team) {
                                 if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
-                                    corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
+                                    corner.x >= point.x - point.size && corner.x <= point.x + point.size) {
                                     bot.state = BOT_STATES.DEAD;
                                     socket.emit('updateEntityParams', bot)
                                 }
