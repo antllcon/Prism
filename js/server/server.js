@@ -115,8 +115,8 @@ io.on('connection', (socket) => {
         } else {
             client.setNotReady();
         }
+
         let amountReadyClients = 0;
-        console.log(rooms[roomId].clients, 'clients');
         rooms[roomId].clients.forEach(client => {
             if (client.isReady) {
                 amountReadyClients++;
@@ -136,10 +136,17 @@ io.on('connection', (socket) => {
             const client = findClientBySocketId(roomId, socket.id);
             client.setNeedForPlayer();
             let playersPositions = getPlayersPositions(roomId);
+            console.log(playersPositions, "playersPositions")
             rooms[roomId].players = playerFunctions.createPlayers(playersPositions);
+            console.log(rooms[roomId].players , "rooms[roomId].players ")
             clientsSockets = getAllSocketsFromRoom(roomId);
             const areAllNeedForPlayer = findOutAreAllNeedForPlayer(roomId, clientsSockets.length);
+            console.log('i want to see areAllNeedForPlayer')
+            console.log('that is ', areAllNeedForPlayer)
+            console.log(rooms)
             if (areAllNeedForPlayer) {
+                console.log('rooms[roomId].players')
+                console.log(rooms[roomId].players)
                 io.to(parseInt(roomId)).emit('sendPlayers', rooms[roomId].players)
             }
         }
@@ -162,7 +169,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('requestForBonuses', () => {
-        console.log("requestForBonuses")
+
         const roomId = findRoomBySocketId(socket.id);
         if (rooms[roomId]) {
             const client = findClientBySocketId(roomId, socket.id);
@@ -190,8 +197,7 @@ io.on('connection', (socket) => {
                     rooms[roomId].clients.push(client);
                 }
             }
-            console.log(roomId);
-            console.log('roomId');
+
             socket.join(parseInt(roomId));
             // console.log(socket);
         })
