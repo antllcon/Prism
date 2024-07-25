@@ -163,8 +163,6 @@ function prepTransmittedPlayer(playerAsEntity) {
 
 function getDataFromServer() {
     socket.on('dataFromServer', (data) => {
-        // Получение массива данных
-        // извлечение лазеров, ботов, игроков
         updatePlayers(data.players, socket.id);
         activeBots = data.bots;
     })
