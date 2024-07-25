@@ -29,36 +29,39 @@ function checkLaserBounds() {
                 const dy = corner.y - point.y;
                 const rotatedX = cos * dx + sin * dy;
                 const rotatedY = -sin * dx + cos * dy;
-                if (point.isInactive() &&
-                    rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
-                    rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
-                    point.setActive();
-                    point.setTeam(player.team);
-                    point.setActivationTime(Date.now());
-                }
-                if (point.isActive()) {
-                    if (point.isTypeCross() && point.getTeam() !== player.team) {
-                        if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
-                            (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
-                            player.state = BOT_STATES.DEAD;
-                        }
+
+                if (player.state !== PLAYER_STATES.DEAD) {
+                    if (point.isInactive() &&
+                        rotatedX > -point.getWidth() && rotatedX < point.getWidth() &&
+                        rotatedY > -point.getHeight() && rotatedY < point.getHeight()) {
+                        point.setActive();
+                        point.setTeam(player.team);
+                        point.setActivationTime(Date.now());
                     }
-                    if (point.isTypeTrigraph() && point.getTeam() !== player.team) {
-                        const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3];
-                        angles.forEach(angle => {
-                            const angleSin = Math.sin(angle);
-                            const angleCos = Math.cos(angle);
-                            const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
-                            const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
-                            if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
+                    if (point.isActive()) {
+                        if (point.isTypeCross() && point.getTeam() !== player.team) {
+                            if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
+                                (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
+                                player.state = BOT_STATES.DEAD;
+                            }
+                        }
+                        if (point.isTypeTrigraph() && point.getTeam() !== player.team) {
+                            const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3];
+                            angles.forEach(angle => {
+                                const angleSin = Math.sin(angle);
+                                const angleCos = Math.cos(angle);
+                                const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
+                                const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
+                                if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
+                                    player.state = PLAYER_STATES.DEAD;
+                                }
+                            });
+                        }
+                        if (point.isTypeLine() && point.getTeam() !== player.team) {
+                            if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
+                                corner.x >= point.x - point.size && corner.x <= point.x + point.size) {
                                 player.state = PLAYER_STATES.DEAD;
                             }
-                        });
-                    }
-                    if (point.isTypeLine() && point.getTeam() !== player.team) {
-                        if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
-                            corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
-                            player.state = PLAYER_STATES.DEAD;
                         }
                     }
                 }
@@ -75,39 +78,42 @@ function checkLaserBounds() {
                     const dy = corner.y - point.y;
                     const rotatedX = cos * dx + sin * dy;
                     const rotatedY = -sin * dx + cos * dy;
-                    if (point.isInactive() &&
-                        rotatedX > -point.getWidth() / 2 && rotatedX < point.getWidth() / 2 &&
-                        rotatedY > -point.getHeight() / 2 && rotatedY < point.getHeight() / 2) {
-                        point.setActive();
-                        point.setTeam(bot.team);
-                        point.setActivationTime(Date.now());
-                    }
-                    if (point.isActive()) {
-                        if (point.isTypeCross() && point.getTeam() !== bot.team) { // Крест
-                            if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
-                                (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
-                                bot.state = BOT_STATES.DEAD;
-                                socket.emit('updateEntityParams', bot)
-                            }
+
+                    if (bot.state !== BOT_STATES.DEAD) {
+                        if (point.isInactive() &&
+                            rotatedX > -point.getWidth() && rotatedX < point.getWidth() &&
+                            rotatedY > -point.getHeight() && rotatedY < point.getHeight()) {
+                            point.setActive();
+                            point.setTeam(bot.team);
+                            point.setActivationTime(Date.now());
                         }
-                        if (point.isTypeTrigraph() && point.getTeam() !== bot.team) { // Три-радиус
-                            const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
-                            angles.forEach(angle => {
-                                const angleSin = Math.sin(angle);
-                                const angleCos = Math.cos(angle);
-                                const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
-                                const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
-                                if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
+                        if (point.isActive()) {
+                            if (point.isTypeCross() && point.getTeam() !== bot.team) { // Крест
+                                if ((Math.abs(rotatedX) < point.size / 2 && Math.abs(rotatedY) < point.getWidth() / 2) ||
+                                    (Math.abs(rotatedY) < point.size / 2 && Math.abs(rotatedX) < point.getWidth() / 2)) {
                                     bot.state = BOT_STATES.DEAD;
                                     socket.emit('updateEntityParams', bot)
                                 }
-                            });
-                        }
-                        if (point.isTypeLine() && point.getTeam() !== bot.team) {
-                            if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
-                                corner.x >= point.x - point.size / 2 && corner.x <= point.x + point.size / 2) {
-                                bot.state = BOT_STATES.DEAD;
-                                socket.emit('updateEntityParams', bot)
+                            }
+                            if (point.isTypeTrigraph() && point.getTeam() !== bot.team) { // Три-радиус
+                                const angles = [0, 2 * Math.PI / 3, -2 * Math.PI / 3]; // 0, 120, -120 углы
+                                angles.forEach(angle => {
+                                    const angleSin = Math.sin(angle);
+                                    const angleCos = Math.cos(angle);
+                                    const rotatedRayX = angleCos * rotatedX - angleSin * rotatedY;
+                                    const rotatedRayY = angleSin * rotatedX + angleCos * rotatedY;
+                                    if (rotatedRayX > 0 && rotatedRayX < point.size / 2 && Math.abs(rotatedRayY) < point.getHeight() / 2) {
+                                        bot.state = BOT_STATES.DEAD;
+                                        socket.emit('updateEntityParams', bot)
+                                    }
+                                });
+                            }
+                            if (point.isTypeLine() && point.getTeam() !== bot.team) {
+                                if (corner.y >= point.y - point.getWidth() / 2 && corner.y <= point.y + point.getWidth() / 2 &&
+                                    corner.x >= point.x - point.size && corner.x <= point.x + point.size) {
+                                    bot.state = BOT_STATES.DEAD;
+                                    socket.emit('updateEntityParams', bot)
+                                }
                             }
                         }
                     }

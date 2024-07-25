@@ -1,4 +1,5 @@
 import {COLORS} from "../game/const";
+import {VICTORY_SCORE} from "./const";
 
 export const scoreAlphaState = {
     scoreAlpha: 0.2,
@@ -7,34 +8,32 @@ export const scoreAlphaState = {
 export class Score{
     constructor(){
         this.color = COLORS.WHITE;
-        this.team1 = 0;
-        this.team2 = 0;
+        this.teamPurple = 0;
+        this.teamYellow = 0;
     }
 
     getColor() {
         return this.color;
     }
 
-    getTeam1() {
-        return this.team1;
+    getTeamPurple() {
+        return this.teamPurple;
     }
-    getTeam2() {
-        return this.team2;
+    getTeamYellow() {
+        return this.teamYellow;
     }
 
     increaseTeamYellow() {
-        this.team2++;
+        this.teamYellow++;
     }
 
     increaseTeamPurple() {
-        this.team1++;
+        this.teamPurple++;
+    }
+
+    isVictoryScore() {
+        return this.teamPurple >= VICTORY_SCORE || this.teamYellow >= VICTORY_SCORE;
     }
 }
 
 export const score = new Score();
-
-export let SCORE = {
-    color: COLORS.WHITE,
-    team1: 0,
-    team2: 0,
-};

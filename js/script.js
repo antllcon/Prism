@@ -15,7 +15,7 @@ import {checkCollisions} from "./controller/bounds";
 import {drawCharacters} from "./view";
 import {io} from "socket.io-client";
 import {drawBonuses, initBonuses} from "./script/bonuses/bonus";
-import {GAME_TIME, LAST_TIME} from "./script/game/const";
+import {GAME_STATES, GAME_TIME, LAST_TIME} from "./script/game/const";
 
 let canvas = document.getElementById("canvas");
 export let ctx = canvas.getContext("2d");
@@ -37,8 +37,6 @@ let bonusIndex = 0;
 
 function init() {
     connect();
-    //console.log(activeBots);
-   // console.log('activeBots');
 }
 
 function render() {
@@ -51,10 +49,12 @@ function render() {
 }
 
 function update(dt, now) {
-    // botMovement(dt);
-    handleInput(dt);
-    dataExchange(dt);
-    checkCollisions(readyBonuses);
+    if (game.getState() === GAME_STATES.PLAY) {
+        // botMovement(dt);
+        handleInput(dt);
+        dataExchange(dt);
+        checkCollisions(readyBonuses);
+    }
     updateEntities(dt, now);
 
 
@@ -97,13 +97,12 @@ function connect() {
 
 //initBotAnimation(); bonuses
 
-function initServerBonuses()
-{
+function initServerBonuses() {
     socket.emit('requestForBonuses');
     socket.on('sendBonuses', (serverBonuses) => {
-       console.log('sendBonuses вызван')
+       // console.log('sendBonuses вызван')
         bonuses = serverBonuses;
-       // console.log(bonuses, 'before classes')
+        // console.log(bonuses, 'before classes')
 
         bonuses = initBonuses(bonuses);
         //console.log(bonuses)
@@ -113,8 +112,8 @@ function initServerBonuses()
 
 function initPlayers() {
     socket.emit('requestForPlayers');
+    //console.log('sendPlayers не вызван');
     socket.on('sendPlayers', (players) => {
-        console.log('sendPlayers вызван');
         activePlayers = players;
         setPlayerWithIdAsMain(socket.id);
         initPlayerAnimation();
@@ -140,6 +139,7 @@ function dataExchange(dt) {
     sendDataToServer(dt);
     getDataFromServer();
 }
+
 function sendDataToServer(dt) {
     let data = {
         player: getMyPlayer(activePlayers),
@@ -149,6 +149,7 @@ function sendDataToServer(dt) {
     };
     socket.emit('sendDataToServer', data);
 }
+
 function prepTransmittedPlayer(playerAsEntity) {
     return {
         id: playerAsEntity.getId(),
@@ -170,7 +171,6 @@ function getDataFromServer() {
 }
 
 
-
 window.requestAnimFrame = window.requestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
 };
@@ -183,11 +183,12 @@ function initEventListeners() {
     //     socket.emit('pageRefreshed');
     // });
 }
+
 function sendCookie() {
     const cookieValue = document.cookie.split('; ')
         .find(row => row.startsWith('userId='))
         ?.split('=')[1];
-   // console.log(document.cookie, 'document.cookie');
+    // console.log(document.cookie, 'document.cookie');
     // Отправляем куки на сервер
     socket.emit('sentCookie', cookieValue);
 }

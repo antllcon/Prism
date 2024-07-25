@@ -98,7 +98,7 @@ export function drawBot() {
     });
 }
 
-export function resetAllBots() {
+export function resetBots() {
     for (let i = 0; i < activeBots.length; i++) {
         activeBots[i].x = (DEFAULT_BOTS.x[requiredBots[i]]);
         activeBots[i].y = (DEFAULT_BOTS.y[requiredBots[i]]);
