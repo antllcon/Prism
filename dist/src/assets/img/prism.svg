@@ -8,6 +8,7 @@
 </g>
 <path d="M604.3 560.783L840 -80.5004L1743.5 -80.5L1743.5 142.5L604.3 560.783Z" fill="url(#paint0_linear_28_23)"/>
 <path d="M131.234 729.676L465.097 210.73L726.536 725.436L131.234 729.676Z" id="prisma-front-side" fill-opacity="0.64" stroke="white"/>
+<text id="menu-text" x="40%" y="95%" text-anchor="middle" fill="white" font-family="Font Over" font-size="50" opacity="0">TO MENU</text>
 <defs>
 <filter id="filter0_d_28_23" x="0.0584297" y="433.461" width="623.749" height="245.639" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
