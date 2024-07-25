@@ -148,6 +148,8 @@ function callback(html) {
 }
 
 function transitionToPage(file) {
+    removeCardEventListeners();
+    removeEventListeners();
     loadHTML(file, (html) => {
         callback(html);
         if (
@@ -161,7 +163,6 @@ function transitionToPage(file) {
             const chapterCodeElement = document.querySelector('.chapter__code');
             chapterCodeElement.textContent = globalRoomId;
         }
-
         initEventListeners();
     });
 }
@@ -357,78 +358,35 @@ function initEventListeners() {
     cardBox = document.getElementById('card-container');
 
     if (buttonLogo) {
-        buttonLogo.addEventListener('click', () => { transitionToPage("menu.html"); });
+        buttonLogo.addEventListener('click', onClickButtonLogo);
     }
 
     if (buttonBot) {
-        buttonBot.addEventListener('click', () => {transitionToPage('with_bot.html')});
+        buttonBot.addEventListener('click', onClickButtonBot);
     }
 
     if (buttonPlayer) {
-        buttonPlayer.addEventListener('click', () => {
-           if (!(document.cookie.indexOf('userId') > -1)) {
-                setCookie();
-                sendCookie();
-            }
-            transitionToPage('with-player.html');
-        });
+        buttonPlayer.addEventListener('click', onClickButtonPlayer);
     }
 
     if (button1vs1) {
-        button1vs1.addEventListener('click', () => {
-            window.location.href = 'game.html';
-        });
+        button1vs1.addEventListener('click', onClickButton1vs1);
     }
 
     if (button2vs2) {
-        button2vs2.addEventListener('click', () => {
-            transitionToPage('lobby.html');
-        });
+        button2vs2.addEventListener('click', onClickButton2vs2);
     }
 
     if (buttonLobby) {
-        buttonLobby.addEventListener('click', () => {
-
-
-            socket.emit('createRoom');
-            socket.on('requestForCookie', () => {
-                sendCookie();
-            })
-            socket.on('joinedRoom', (roomId) => {
-                // console.log("вызван button lobby")
-                globalRoomId = roomId;
-                transitionToPage('lobby.html');
-            });
-        });
+        buttonLobby.addEventListener('click', onClickButtonLobby);
     }
 
     if (buttonConnect) {
-        buttonConnect.addEventListener('click', () => {
-            inputRoomId.classList.toggle("input-for-code");
-        });
+        buttonConnect.addEventListener('click', onClickButtonConnect);
     }
 
     if (inputRoomId) {
-        inputRoomId.addEventListener('input', () => {
-            inputRoomId.value = inputRoomId.value.replace(/\D/g, '');
-            if (inputRoomId.value.length === 6) {
-                let codeRoom = document.getElementById('input-code').value;
-                socket.emit('joinRoom', codeRoom);
-                socket.on('requestForCookie', () => {
-                    sendCookie();
-                })
-                socket.on('joinedRoom', (roomId) => {
-                    globalRoomId = roomId;
-                    transitionToPage('lobby.html');
-                });
-                socket.on('wrongId', () => {
-                    // добавить обработку несуществующего айди комнаты
-                });
-            }
-            if (inputRoomId.value.length > 6) {
-                inputRoomId.value = inputRoomId.value.slice(0, 6);
-            }
-        });
+        inputRoomId.addEventListener('input', onInputRoomId);
     }
 
     if (cardBox) {
@@ -439,31 +397,20 @@ function initEventListeners() {
             setStyleCard(i);
         }
         setId();
-
+        removeCardEventListeners();
         initCardsEventListeners();
     }
 
     if (buttonPlay) {
-        buttonPlay.addEventListener('click', () => {
-            buttonPlay.textContent = 'READY';
-            socket.emit('playerIsReady');
-            socket.on('roomIsReady', () => {
-                window.location.href = "game.html";
-            })
-        });
+        buttonPlay.addEventListener('click', onClickButtonPlay);
     }
 
     if (buttonLeave) {
-        buttonLeave.addEventListener('click', () => {
-            socket.emit('leaveRoom');
-            transitionToPage("with-player.html");
-        });
+        buttonLeave.addEventListener('click', onClickButtonLeave);
     }
 
     if (buttonMenu) {
-        buttonMenu.addEventListener('click', () => {
-            transitionToPage('menu.html');
-        });
+        buttonMenu.addEventListener('click', onClickButtonMenu);
     }
 
     // window.addEventListener('beforeunload', function(e) {
@@ -473,6 +420,73 @@ function initEventListeners() {
     //     socket.emit('pageRefreshed');
     // })
 
+}
+function onClickButtonLogo() {
+    transitionToPage("menu.html");
+}
+function onClickButtonBot() {
+    transitionToPage('with_bot.html')
+}
+function onClickButtonPlayer() {
+    if (!(document.cookie.indexOf('userId') > -1)) {
+        setCookie();
+        sendCookie();
+    }
+    transitionToPage('with-player.html');
+}
+function onClickButton1vs1() {
+    window.location.href = 'game.html';
+}
+function onClickButton2vs2() {
+    transitionToPage('lobby.html');
+}
+function onClickButtonLobby() {
+    socket.emit('createRoom');
+            socket.on('requestForCookie', () => {
+                sendCookie();
+            })
+            socket.on('joinedRoom', (roomId) => {
+                // console.log("вызван button lobby")
+                globalRoomId = roomId;
+                transitionToPage('lobby.html');
+            });
+}
+function onClickButtonConnect() {
+    inputRoomId.classList.toggle("input-for-code");
+}
+function onInputRoomId() {
+    inputRoomId.value = inputRoomId.value.replace(/\D/g, '');
+    if (inputRoomId.value.length === 6) {
+        let codeRoom = document.getElementById('input-code').value;
+        socket.emit('joinRoom', codeRoom);
+        socket.on('requestForCookie', () => {
+            sendCookie();
+        })
+        socket.on('joinedRoom', (roomId) => {
+            globalRoomId = roomId;
+            transitionToPage('lobby.html');
+        });
+        socket.on('wrongId', () => {
+            // добавить обработку несуществующего айди комнаты
+        });
+    }
+    if (inputRoomId.value.length > 6) {
+        inputRoomId.value = inputRoomId.value.slice(0, 6);
+    }
+}
+function onClickButtonPlay() {
+    buttonPlay.textContent = 'READY';
+    socket.emit('playerIsReady');
+    socket.on('roomIsReady', () => {
+        window.location.href = "game.html";
+    })
+}
+function onClickButtonLeave() {
+    socket.emit('leaveRoom');
+    transitionToPage("with-player.html");
+}
+function onClickButtonMenu() {
+    transitionToPage('menu.html');
 }
 function removeEventListeners() {
     buttonLogo = document.getElementById('logo');
@@ -490,113 +504,47 @@ function removeEventListeners() {
     cardBox = document.getElementById('card-container');
 
     if (buttonLogo) {
-        buttonLogo.addEventListener('click', () => { transitionToPage("menu.html"); });
+        buttonLogo.removeEventListener('click', onClickButtonLogo);
     }
 
     if (buttonBot) {
-        buttonBot.addEventListener('click', () => {transitionToPage('with_bot.html')});
+        buttonBot.removeEventListener('click', onClickButtonBot);
     }
 
     if (buttonPlayer) {
-        buttonPlayer.addEventListener('click', () => {
-           if (!(document.cookie.indexOf('userId') > -1)) {
-                setCookie();
-                sendCookie();
-            }
-            transitionToPage('with-player.html');
-        });
+        buttonPlayer.removeEventListener('click', onClickButtonPlayer);
     }
 
     if (button1vs1) {
-        button1vs1.addEventListener('click', () => {
-            window.location.href = 'game.html';
-        });
+        button1vs1.removeEventListener('click', onClickButton1vs1);
     }
 
     if (button2vs2) {
-        button2vs2.addEventListener('click', () => {
-            transitionToPage('lobby.html');
-        });
+        button2vs2.removeEventListener('click', onClickButton2vs2);
     }
 
     if (buttonLobby) {
-        buttonLobby.addEventListener('click', () => {
-
-
-            socket.emit('createRoom');
-            socket.on('requestForCookie', () => {
-                sendCookie();
-            })
-            socket.on('joinedRoom', (roomId) => {
-                // console.log("вызван button lobby")
-                globalRoomId = roomId;
-                transitionToPage('lobby.html');
-            });
-        });
+        buttonLobby.removeEventListener('click', onClickButtonLobby);
     }
 
     if (buttonConnect) {
-        buttonConnect.addEventListener('click', () => {
-            inputRoomId.classList.toggle("input-for-code");
-        });
+        buttonConnect.removeEventListener('click', onClickButtonConnect);
     }
 
     if (inputRoomId) {
-        inputRoomId.addEventListener('input', () => {
-            inputRoomId.value = inputRoomId.value.replace(/\D/g, '');
-            if (inputRoomId.value.length === 6) {
-                let codeRoom = document.getElementById('input-code').value;
-                socket.emit('joinRoom', codeRoom);
-                socket.on('requestForCookie', () => {
-                    sendCookie();
-                })
-                socket.on('joinedRoom', (roomId) => {
-                    globalRoomId = roomId;
-                    transitionToPage('lobby.html');
-                });
-                socket.on('wrongId', () => {
-                    // добавить обработку несуществующего айди комнаты
-                });
-            }
-            if (inputRoomId.value.length > 6) {
-                inputRoomId.value = inputRoomId.value.slice(0, 6);
-            }
-        });
-    }
-
-    if (cardBox) {
-        console.log('зашли')
-        for (let i = 0; i < 4; i++) {
-            console.log(places[i].status)
-            loadCard(places[i].status, i);
-            setStyleCard(i);
-        }
-        setId();
-
-        initCardsEventListeners();
+        inputRoomId.removeEventListener('click', onInputRoomId);
     }
 
     if (buttonPlay) {
-        buttonPlay.addEventListener('click', () => {
-            buttonPlay.textContent = 'READY';
-            socket.emit('playerIsReady');
-            socket.on('roomIsReady', () => {
-                window.location.href = "game.html";
-            })
-        });
+        buttonPlay.removeEventListener('click', onClickButtonPlay);
     }
 
     if (buttonLeave) {
-        buttonLeave.addEventListener('click', () => {
-            socket.emit('leaveRoom');
-            transitionToPage("with-player.html");
-        });
+        buttonLeave.removeEventListener('click', onClickButtonLeave);
     }
 
     if (buttonMenu) {
-        buttonMenu.addEventListener('click', () => {
-            transitionToPage('menu.html');
-        });
+        buttonMenu.removeEventListener('click', onClickButtonMenu);
     }
 }
 function removeCardEventListeners() {
@@ -705,6 +653,7 @@ loadHTML('menu.html', (html) => {
     callback(html);
     playMenuTheme();
     loadToMainPageLink();
+    removeEventListeners();
     initEventListeners();
 
 });
