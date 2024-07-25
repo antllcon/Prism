@@ -45,7 +45,18 @@ io.on('connection', (socket) => {
     });
 
     socket.on('joinRoom', (roomId) => {
-        joinRoom(parseInt(roomId), socket);
+        let isClientUniq = true;
+        if (rooms[roomId]) {
+            rooms[roomId].clients.forEach((client) => {
+                if (client.socketId === socket.id) {
+                    console.log('в join стучится копия клиента ', socket.id);
+                    isClientUniq = false;
+                }
+            })
+        }
+        if (isClientUniq) {
+            joinRoom(parseInt(roomId), socket);
+        }
     });
 
     socket.on('leaveRoom', () => {
@@ -105,12 +116,16 @@ io.on('connection', (socket) => {
             client.setNotReady();
         }
         let amountReadyClients = 0;
+        console.log(rooms[roomId].clients, 'clients');
         rooms[roomId].clients.forEach(client => {
-            if (client.getIsReady()) {
+            if (client.isReady) {
                 amountReadyClients++;
             }
         })
+        console.log(amountReadyClients);
+        console.log(rooms[roomId].clients.length);
         if (amountReadyClients === rooms[roomId].clients.length) {
+            console.log('room is ready');
             io.to(parseInt(roomId)).emit('roomIsReady')
         }
     })
@@ -164,9 +179,11 @@ io.on('connection', (socket) => {
         console.log('произошел redirect');
         socket.emit('requestForCookie');
         socket.on('sentCookie', (userId) => {
-            console.log(userId, 'userId');
+            console.log(userId, 'userId not null');
             const roomId = findRoomByUserId(userId);
             const client = findClientByUserIdFromRemoved(roomId, userId);
+            console.log(client, 'client from removed');
+            console.log(socket.id, 'socket.id');
             if (client) {
                 client.setSocketId(socket.id);
                 if (rooms[roomId]) {
@@ -175,7 +192,7 @@ io.on('connection', (socket) => {
             }
             console.log(roomId);
             console.log('roomId');
-            socket.join(roomId);
+            socket.join(parseInt(roomId));
             // console.log(socket);
         })
     })
