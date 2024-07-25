@@ -2,11 +2,11 @@ const Player = require("./model.js");
 const PlayerConsts = require("./const.js");
 
 class PlayerFunctions {
-    createPlayers(clients) {
+    createPlayers(playersPositions) {
         let createdPlayers = [];
-        for (let i = 0; i < clients.length; i++) {
-            createdPlayers[i] = new Player(i, clients[i]);
-        }
+        playersPositions.forEach(position => {
+            createdPlayers.push(new Player(position.position, position.socketId))
+        });
         return createdPlayers
     }
     

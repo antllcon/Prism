@@ -101,7 +101,7 @@ function initServerBonuses()
 {
     socket.emit('requestForBonuses');
     socket.on('sendBonuses', (serverBonuses) => {
-       // console.log('sendBonuses вызван')
+       console.log('sendBonuses вызван')
         bonuses = serverBonuses;
        // console.log(bonuses, 'before classes')
 
@@ -113,8 +113,8 @@ function initServerBonuses()
 
 function initPlayers() {
     socket.emit('requestForPlayers');
-    //console.log('sendPlayers не вызван');
     socket.on('sendPlayers', (players) => {
+        console.log('sendPlayers вызван');
         activePlayers = players;
         setPlayerWithIdAsMain(socket.id);
         initPlayerAnimation();

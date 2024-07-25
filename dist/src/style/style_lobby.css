@@ -151,6 +151,11 @@
     cursor: pointer;
 }
 
+.arrow-left-none,
+.arrow-right-none {
+    display: none;
+}
+
 .arrow-left {
     left: 12px;
 }
@@ -160,7 +165,7 @@
 }
 
 .player-count {
-    margin: 10px 0 0px 20px;
+    margin: 10px 0 0 20px;
     color: white;
     font: 700 38px Font_Over;
     background-color: inherit;
@@ -189,6 +194,11 @@
     border: none;
     cursor: pointer;
     transition: transform 0.3s ease-out;
+}
+
+.pick-card {
+    color: black;
+    background-color: white;
 }
 
 .get {

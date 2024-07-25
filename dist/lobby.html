@@ -12,7 +12,7 @@
 
     <div class="lobby">
         <h2 class="lobby-title">PRISM</h2>
-        <p class="lobby-count-players">PLAYERS 3/4</p>
+        <p class="lobby-count-players">PLAYERS 1/4</p>
     </div>
 
     <div class="card-container" id="card-container"></div>
@@ -29,7 +29,7 @@
     </div>
 
     <template id="waiting-template">
-        <div class="player" style="background-color: #B22DF1;">
+        <div class="player">
             <div class="player-card-top">
                 <button class="button-left">
                     <i class="arrow-left"></i>
@@ -41,15 +41,14 @@
                     <i class="arrow-right"></i>
                 </button>
             </div>
-            <!-- нельзя просто так взять и поменять размер шрифта -->
-            <span class="player-count" style="color: #AE8418; font-size: 30px; text-align: center">WAIT...</span>
-            <button class="player-get get-bot" id="get-bot" onclick="">PLAY WITH BOT</button>
-            <button class="player-get get-player" id="get-player" onclick="">PICK CARD</button>
+            <span class="player-count">WAIT...</span>
+            <button class="player-get get-bot" onclick="">PLAY WITH BOT</button>
+            <button class="player-get get-player" onclick="">PICK CARD</button>
         </div>
     </template>
 
     <template id="bot-template">
-        <div class="player" style="background-color: #B22DF1;">
+        <div class="player">
             <div class="player-card-top">
                 <button class="button-left">
                     <i class="arrow-left"></i>
@@ -63,12 +62,12 @@
             </div>
             <span class="player-count">BOT</span>
             <span class="player-name">neon killer</span>
-            <button class="player-get get-wait" id="get-wait" onclick="">DELETE BOT</button>
+            <button class="player-get get-wait" onclick="">DELETE BOT</button>
         </div>
     </template>
 
-    <template id="player-template">
-        <div class="player" style="background-color: #B22DF1;">
+    <template id="my-player-template">
+        <div class="player">
             <div class="player-card-top">
                 <button class="button-left">
                     <i class="arrow-left"></i>
@@ -82,7 +81,26 @@
             </div>
             <span class="player-count">PLAYER 1</span>
             <span class="player-name">neon killer</span>
-            <button class="get get-wait" id="get" onclick=""></button>
+            <button class="get get-wait" onclick=""></button>
+        </div>
+    </template>
+
+    <template id="player-template">
+        <div class="player">
+            <div class="player-card-top">
+                <button class="button-left">
+                    <i class="arrow-left-none"></i>
+                </button>
+                <div class="player-img-container">
+                    <img class="player-img" alt="" src="src/assets/img/kandinsky-download-1719222086261%201.svg">
+                </div>
+                <button class="button-right">
+                    <i class="arrow-right-none"></i>
+                </button>
+            </div>
+            <span class="player-count">PLAYER 1</span>
+            <span class="player-name">neon killer</span>
+            <button class="get get-wait" onclick=""></button>
         </div>
     </template>
     <script src="menu.js" type="application/javascript"></script>
