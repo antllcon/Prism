@@ -36,7 +36,8 @@ io.on('connection', (socket) => {
             rooms[roomId] = {
                 clients: [],
                 players: [],
-                bots: []
+                bots: [],
+                removedClients: []
             };
             console.log('Room created with id: ', roomId);
             joinRoom(roomId, socket);
@@ -52,8 +53,9 @@ io.on('connection', (socket) => {
         const roomId = findRoomBySocketId(socket.id);
         if (rooms[roomId]) {
             leaveRoom(roomId, socket);
+            const positionsArray = getPositionsArray(roomId);
+            io.to(parseInt(roomId)).emit('updateLobby', positionsArray);
         }
-            // io.to(roomId).emit('updatePlayerLobbyInfo', rooms[roomId].length);
     });
 
     socket.on('changeLobbyPosition', (position) => {
@@ -64,7 +66,7 @@ io.on('connection', (socket) => {
                     client.position = position;
                 }
             })
-            const positionsArray= getPositionsArray(roomId);
+            const positionsArray = getPositionsArray(roomId);
             io.to(parseInt(roomId)).emit('updateLobby', positionsArray);
         }
     })
@@ -85,33 +87,14 @@ io.on('connection', (socket) => {
         }
     })
 
-    // socket.on('requestOnDataFromServer', () => {
-    //     socket.emit('dataFromServer', players);
-    // })
-
     socket.on('disconnect', () => {
         console.log('произошел disconnect');
-        socket.emit('requestForCookie');
-        socket.on('sentCookie', (userId) => {
-            let roomId = findRoomByUserId(socket.id);
-            const client = findClientByUserId(roomId, userId);
-            client.setSocketId(socket.id);
-            if (roomId) {
-                client.setLastSeen(Date.now());
-                leaveRoom(roomId, socket);
-            }
-        })
-        // УДАЛЕНИЕ КЛИЕНТА ИЗ КОМНАТЫ. 
-        // roomId = findRoomBySocketId(socket.id);
-        // if (rooms[roomId]) {
-        //     for (const client of rooms[roomId]) {
-        //         // Используем filter для создания нового массива без элементов, равных 2
-        //         const clients = rooms[roomId].filter((client) => client.getSocketId() !==  socket.id);
-        //         rooms[roomId] = clients;
-        //     }
-        //     console.log(rooms[roomId], 'room');
-        // }
-        
+        let roomId = findRoomByUserId(socket.id);
+        const client = findClientBySocketId(roomId, socket.id)
+        if (rooms[roomId]) {
+            client.setLastSeen(Date.now());
+            leaveRoom(roomId, socket);
+        }
     })
 
     socket.on('playerIsReady', () => {
@@ -171,11 +154,14 @@ io.on('connection', (socket) => {
         socket.emit('requestForCookie');
         socket.on('sentCookie', (userId) => {
             const roomId = findRoomByUserId(userId);
-            const client = findClientByUserId(roomId, userId);
+            const client = findClientByUserIdFromRemoved(roomId, userId);
             if (client) {
                 client.setSocketId(socket.id);
+                if (rooms[roomId]) {
+                    rooms[roomId].clients.push(client);
+                }
             }
-            joinBack(socket);
+            socket.join(parseInt(roomId));
         })
     })
 
@@ -186,7 +172,7 @@ io.on('connection', (socket) => {
         socket.on('sentCookie', (userId) => {
             const roomId = findRoomBySocketId(socket.id);
             rooms[roomId].clients.push(new Client(socket.id, userId));
-            const client = findClientByUserId(roomId, userId);
+            const client = findClientByUserIdFromRemoved(roomId, userId);
             // client.setSocketId(socket.id);
             const lastSeen = client.getLastSeen();
             if (rooms[roomId].clients && lastSeen) {
@@ -203,12 +189,16 @@ io.on('connection', (socket) => {
         console.log('произошел refresh');
         socket.emit('requestForCookie');
         socket.on('sentCookie', (userId) => {
-            const roomId = findRoomByUserId(userId);
-            // rooms[roomId].push(new Client(socket.id, userId));
             console.log(rooms[roomId], 'rooms[roomId] refresh');
-            const client = findClientByUserId(roomId, userId);
-            client.setSocketId(socket.id);
-            joinBack(socket);
+            const roomId = findRoomByUserId(userId);
+            const client = findClientByUserIdFromRemoved(roomId, userId);
+            if (client) {
+                client.setSocketId(socket.id);
+                if (rooms[roomId]) {
+                    rooms[roomId].clients.push(client);
+                }
+            }
+            socket.join(parseInt(roomId));
         })
     });
 
@@ -306,13 +296,13 @@ function getUserIdFromCookie(socket) {
         return result;
     })
 }
-function findClientByUserId(roomId, userId) {
+function findClientByUserIdFromRemoved(roomId, userId) {
     let foundClient = null;
     if (rooms[roomId]) {
-        rooms[roomId].clients.forEach(client => {
-        if (userId == client.getUserId()) {
-            foundClient =  client;
-        } 
+        rooms[roomId].removedClients.forEach(client => {
+            if (userId == client.getUserId()) {
+                foundClient = client;
+            } 
         })
     }
     return foundClient;
@@ -336,7 +326,7 @@ function getAllSocketsFromRoom(roomId) {
     return sockets;
 }
 function saveSocketIdIntoClient(roomId, userId) {
-    const client = findClientByUserId(roomId, userId);
+    const client = findClientByUserIdFromRemoved(roomId, userId);
     client.setSocketId(socket.id);
 }
 function findOutAreAllNeedForPlayer(roomId, length) {
@@ -413,13 +403,9 @@ function joinRoom(roomId, socket) {
     });
 }
 function leaveRoom(roomId, socket) {
+    const client = findClientBySocketId();
     socket.leave(roomId);
-
+    rooms[roomId].removedClients.push(client);
+    rooms[roomId].clients = rooms[roomId].clients.filter((client) => client.socketId !== socket.id);
     console.log(socket.id, ' left the room with id: ', roomId);
-}
-function joinBack(socket) {
-    const roomId = findRoomBySocketId(socket.id);
-    if (rooms[roomId]) {
-        socket.join(parseInt(roomId));
-    }
 }
