@@ -12,7 +12,6 @@ const io = require('socket.io')(http);
 const POSITIONS = [0, 1, 2, 3]
 
 const Client = require('./client.js');
-const Player = require('./player.js');
 const Bot = require("./bot/model");
 
 const RECONNECT_TIMEOUT = 60 * 1000; // 60 секунд
@@ -25,8 +24,6 @@ app.get('/', (req, res) => {
 });
 
 let rooms = {};
-let players = [];
-
 
 io.on('connection', (socket) => {
     socket.on('createRoom', () => {
@@ -74,6 +71,8 @@ io.on('connection', (socket) => {
         const roomId = findRoomBySocketId(socket.id);
         if (rooms[roomId]) {
             rooms[roomId].bots.push(new Bot(position));
+            console.log(rooms[roomId].bots);
+            console.log('rooms[roomId].bots');
             const positionsArray= getPositionsArray(roomId);
             io.to(parseInt(roomId)).emit('updateLobby', positionsArray);
         }
@@ -268,9 +267,8 @@ function findRoomBySocketId(id) {
     });
     if (foundId) {
         return foundId;
-    } else {
-        return false;
     }
+    return false;
 }
 function findRoomByUserId(id) {
     let foundId;
@@ -311,7 +309,7 @@ function findClientBySocketId(roomId, socketId) {
     let foundClient = null;
     if (rooms[roomId].clients) {
         rooms[roomId].clients.forEach(client => {
-            if (socketId == client.getSocketId()) {
+            if (socketId === client.getSocketId()) {
                 foundClient =  client;
             } 
         })
@@ -336,11 +334,7 @@ function findOutAreAllNeedForPlayer(roomId, length) {
             amount++;
         }
     });
-    if (amount === length) {
-        return true;
-    } else {
-        return false;
-    }
+    return amount === length;
 }
 function findOutAreAllNeedForBot(roomId, length) {
     let amount = 0;
@@ -349,11 +343,7 @@ function findOutAreAllNeedForBot(roomId, length) {
             amount++;
         }
     });
-    if (amount === length) {
-        return true;
-    } else {
-        return false;
-    }
+    return amount === length;
 }
 function clientPositionInit(roomId, myClient) {
     if (rooms[roomId]) {
