@@ -83,16 +83,21 @@ io.on('connection', (socket) => {
         const client = findClientBySocketId(roomId, socket.id);
         if (!client.getIsReady()) {
             client.setReady();
-        }
-        if (client.getIsReady()) {
+            console.log(client.isReady, 'client is ready')
+        } else {
             client.setNotReady();
+            console.log(client.isReady, 'client is not ready')
         }
+
+
         let amountReadyClients = 0;
         rooms[roomId].clients.forEach(client => {
             if (client.getIsReady()) {
                 amountReadyClients++;
+                console.log(amountReadyClients);
             }
         })
+        console.log(rooms[roomId].clients)
         if (amountReadyClients === rooms[roomId].clients.length) {
             io.to(parseInt(roomId)).emit('roomIsReady')
         }
@@ -343,7 +348,7 @@ function findClientByUserId(roomId, userId) {
 function findClientBySocketId(roomId, socketId) {
     let foundClient = null;
     if (rooms[roomId].clients) {
-        rooms[roomId].clients.forEach(client => {
+        rooms[roomId].clients.forEach((client) => {
             if (socketId == client.getSocketId()) {
                 foundClient =  client;
             } 
@@ -401,6 +406,7 @@ function joinRoom(roomId, socket) {
             socket.join(parseInt(roomId));
             socket.emit('joinedRoom', roomId);
             console.log(socket.id, ' joined the room ', roomId);
+            //console.log(rooms[roomId].clients, 'joinRoom')
             // broadcastRoomUpdate(roomId);
         } else {
             socket.emit('wrongId');
