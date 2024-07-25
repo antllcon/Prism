@@ -134,7 +134,11 @@ io.on('connection', (socket) => {
             if (areAllNeedForPlayer) {
                 console.log('rooms[roomId].players')
                 console.log(rooms[roomId].players)
-                io.to(parseInt(roomId)).emit('sendPlayers', rooms[roomId].players)
+                let data = {
+                    positions: playersPositions,
+                    players: rooms[roomId].players
+                }
+                io.to(parseInt(roomId)).emit('sendPlayers', data)
             }
         }
     })
@@ -149,8 +153,13 @@ io.on('connection', (socket) => {
             const clientsSockets = getAllSocketsFromRoom;
             const areAllNeedForBot = findOutAreAllNeedForBot(roomId, clientsSockets.length);
             if (areAllNeedForBot) {
+                let data = {
+                    positions: botsPositions,
+                    bots: rooms[roomId].bots
+                }
                 rooms[roomId].bots = botFunctions.createBots(botsPositions);
-                io.to(parseInt(roomId)).emit('sendBots', rooms[roomId].bots);
+                console.log(rooms[roomId].bots);
+                io.to(parseInt(roomId)).emit('sendBots', data);
             }
         }
     })

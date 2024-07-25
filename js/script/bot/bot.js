@@ -3,7 +3,7 @@ import { Bot } from './model';
 import { GAME } from '../game/model';
 import { Point } from '../point/model';
 import { POINT_STATES } from '../point/const';
-import { ctx, activeBots, requiredBots, points, readyBonuses } from '../../script';
+import { ctx, activeBots, requiredBots, points, readyBonuses, botsPositions } from '../../script';
 import { yellow } from '../game/const';
 
 export function createBots(requiredBots) {
@@ -100,8 +100,8 @@ export function drawBot() {
 
 export function resetAllBots() {
     for (let i = 0; i < activeBots.length; i++) {
-        activeBots[i].x = (DEFAULT_BOTS.x[requiredBots[i]]);
-        activeBots[i].y = (DEFAULT_BOTS.y[requiredBots[i]]);
+        activeBots[i].x = (DEFAULT_BOTS.x[botsPositions[i]]);
+        activeBots[i].y = (DEFAULT_BOTS.y[botsPositions[i]]);
         activeBots[i].state = BOT_STATES.ACTIVE;
     }
 }

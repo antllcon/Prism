@@ -27,7 +27,8 @@ export let activePlayers = [];
 export let points = [];
 export let bonuses = [];
 export let readyBonuses = [];
-export let requiredBots = [2, 3];
+export let botsPositions;
+export let playersPositions;
 export let activeBots = [];
 
 
@@ -113,8 +114,9 @@ function initServerBonuses() {
 function initPlayers() {
     socket.emit('requestForPlayers');
     //console.log('sendPlayers не вызван');
-    socket.on('sendPlayers', (players) => {
-        activePlayers = players;
+    socket.on('sendPlayers', (data) => {
+        activePlayers = data.players;
+        playersPositions = data.positions;
         setPlayerWithIdAsMain(socket.id);
         initPlayerAnimation();
         createPoints();
@@ -126,9 +128,10 @@ function initPlayers() {
 
 function initBots() {
     socket.emit('requestForBots');
-    socket.on('sendBots', (bots) => {
+    socket.on('sendBots', (data) => {
+        botsPositions = data.positions;
         //console.log(bots, 'bots from sendBots');
-        activeBots = bots;
+        activeBots = data.bots;
         initBotAnimation();
     })
 }

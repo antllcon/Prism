@@ -1,5 +1,5 @@
 import {DEFAULT_PLAYERS, ABILITY_SCALE_MAX, MAX_SPEED, PLAYER_STATES, ABILITY_DURATION} from "./const";
-import {ctx, activePlayers} from "../../script";
+import {ctx, activePlayers, playersPositions} from "../../script";
 
 export function handleInput(dt) {
     const player = getMyPlayer(activePlayers);
@@ -173,9 +173,9 @@ export function getMyPlayer(players) {
 }
 
 export function resetAllPlayers() {
-    for (let i = 0; i < activePlayers.length; i++) {
-        activePlayers[i].x = (DEFAULT_PLAYERS.x[i]);
-        activePlayers[i].y = (DEFAULT_PLAYERS.y[i]);
+    for (let i = 0; i < playersPositions; i++) {
+        activePlayers[i].x = (DEFAULT_PLAYERS.x[playersPositions[i]]);
+        activePlayers[i].y = (DEFAULT_PLAYERS.y[playersPositions[i]]);
         activePlayers[i].progressBar.x = (activePlayers[i].x);
         activePlayers[i].progressBar.y = (activePlayers[i].y - 60);
         activePlayers[i].abilityScale = (0);
