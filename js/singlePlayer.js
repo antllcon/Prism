@@ -366,7 +366,7 @@ function drawScore() {
     ctx.save();
     ctx.globalAlpha = scoreAlpha;
     ctx.fillStyle = SCORE.color;
-    ctx.font = "100px Font Over";
+    ctx.font = "100px Font_Over";
     ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 50, 100 );
     ctx.restore();
 }
@@ -375,7 +375,7 @@ function drawFinalScore() {
     ctx.save();
     ctx.globalAlpha = scoreAlpha;
     ctx.fillStyle = SCORE.color;
-    ctx.font = "700px Font Over";
+    ctx.font = "700px Font_Over";
     ctx.fillText(`${SCORE.team1}:${SCORE.team2}`, 270, 750);
     ctx.restore();
 }
