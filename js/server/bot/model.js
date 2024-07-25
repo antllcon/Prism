@@ -1,6 +1,7 @@
 const BotConsts = require('./const.js');
 class Bot {
     constructor(i) {
+        this.position = i;
         this.id = BotConsts.DEFAULT_BOTS.id[i];
         this.type = BotConsts.DEFAULT_BOTS.type;
         this.x = BotConsts.DEFAULT_BOTS.x[i];
